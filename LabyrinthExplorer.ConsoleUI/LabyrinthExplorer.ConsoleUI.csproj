@@ -7,4 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LabyrinthExplorer.Logic\LabyrinthExplorer.Logic.csproj" />
+  </ItemGroup>
+
 </Project>
