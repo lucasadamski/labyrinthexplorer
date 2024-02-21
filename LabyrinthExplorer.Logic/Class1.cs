@@ -1,6 +1,6 @@
 ﻿namespace LabyrinthExplorer.Logic
 {
-    public class Class1
+    public class GameEngine
     {
 
     }
