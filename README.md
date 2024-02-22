@@ -1,9 +1,9 @@
-# labyrinthexplorer
+## Labyrinth Explorer
 
 	You are a brave player who walkins in a 2D level looking from a bird eye camera. You are bound within wall limits, you have to achievie your goal which is to open the doors to the next level. During this game you will encounter different challenges like finding keys to open locked doors, avoid traps that damage your health, fight/avoid enemies that can kill you. Every next level will have more and more challanges, such as coutdown to finish the level, number of moves you can make. 
 
 
-Programming objectives:
+# Programming objectives:
     1. Object Oriented design (encapsulation, polymorphism, inheritance).
     2. NTier/Separation of concers. UI is independent of Business Logic, so it hopefully will be easy to port App to different UI.
     3. SQL Server Database.
@@ -11,11 +11,11 @@ Programming objectives:
     5. Config File.
     6. Programming To Interface principle.
 
-Concept art:
+# Concept art:
+<img width="611" alt="image" src="https://github.com/lucasadamski/labyrinthexplorer/assets/12997783/68822fca-16a9-46ac-b3cf-e20b0e9444f8">
 
 
-
-Features:
+# Features:
 
 	After completion of level: you have statistics, how long it took you to complete level, how many enemies you killed, how many traps you touched, how many keys you have collected, how many doors opened.
 
@@ -28,7 +28,7 @@ Features:
 	Database will be a SQL Server Database with levels maps, items, and player scores and names.
 
 
-	
+# Behaviours
 Player behaviour:
     • Human controls player thru input: up, down, left, right, escape, use key, use weapon, pick up item, open doors.
     • He has amount of life (100 pts)
@@ -61,7 +61,7 @@ Trap behaviour:
 
 
 
-Design:
+# Design:
 
 Item
     • Every Item has a position, model, and name, interactionType (pickup, kill, damage, open, close)
@@ -72,7 +72,8 @@ Iteraction:
 State:
     • 
 
-					Sequence of Algorithms
+
+# Cycles of Algorithms
 
 Communication Cycle:
     1. Beggining of Communication Cycle
@@ -117,10 +118,11 @@ Drawing A Frame in GameEngine:
     4. Send Canvas in DTO to UI
 
 
-					Meanings
+Communication Protocol 
+(Database <-> Game Engine <-> UI)
 
 Canvas Symbols Game Engine -> UI Translation:
-    • @ - User Player
+    • P - User Player
     • D - Unlocked Closed Door
     • O - Open Door
     • L - Locked Closed Door
@@ -128,16 +130,39 @@ Canvas Symbols Game Engine -> UI Translation:
     • | - Veritcal Wall
     • + - Corner Wall
     • X - Trap
-    • $ - Enemy
+    • E - Enemy
     • K - Key
     • W - Weapon
 
 
 				Methods
-    • bool gameEngine.RequestChangePosition(Coordinates)
     • bool gameEngine.RequestOpenDoorsFromPosition(Coordinates)
     • bool gameEngine.RequestDoDamageFromPosition(Coordinates)
     • bool gameEngine.RequestOpenDoorFromPosition(Coordinates)
     • bool gameEngine.RequestChangePosition(Coordinates from, Coordinates to)
     • bool gameEngine.RequestPickUpItemFromPosition(Coordinates)
     • 
+
+
+Level Initialization Sequence:
+       Level Map of char[][] is Stored in DataBase.
+    1. Load up Map of char[][] from Database.
+    2. Send Map to Game Engine.
+    3. Game Engine parses each char item to GameElement
+        1. If(Map.Char == is '-') then new Wall() etc. 
+        2. If Map.Char is Item, Player -> Add them to List of Players or Inventory
+    4. Now GameEngine stores Map idenpentently, as a [][] of Game Elements and have it's own inventory of items and list of players.
+    5. Connection to Database terminated.
+
+
+
+
+
+# Class Hierarchy Graph:
+
+<img width="599" alt="image" src="https://github.com/lucasadamski/labyrinthexplorer/assets/12997783/3a7be428-e507-42fc-962f-ca6aba3ec5b6">
+
+
+# N-Tier / Separation Of Concers Graph Design:
+
+<img width="473" alt="image" src="https://github.com/lucasadamski/labyrinthexplorer/assets/12997783/c8fa0bc0-db32-4cd3-8f8e-eff073630161">
