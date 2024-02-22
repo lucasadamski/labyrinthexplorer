@@ -8,5 +8,11 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
 {
     public class Weapon : ItemElement
     {
+        public Weapon() { }
+        public Weapon(int x, int y)
+        {
+            Name = "Weapon";
+            Position = new Coordinates(x, y);
+        }
     }
 }

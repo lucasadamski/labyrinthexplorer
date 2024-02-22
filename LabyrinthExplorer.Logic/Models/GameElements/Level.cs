@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LabyrinthExplorer.Logic.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -23,7 +24,9 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
 {
     public class Level
     {
+        public DTO DTO { get; set; } = new DTO();
         public Coordinates Size { get; set; }
         public char[][] Map { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LabyrinthExplorer.Logic.Models.GameElements
+namespace LabyrinthExplorer.Logic.Models.GameElements.BuildingElements
 {
-    public abstract class BuildingElement : GameElement
+    abstract public class Wall : BuildingElement
     {
     }
 }

@@ -8,8 +8,13 @@ using System.Threading.Tasks;
 
 namespace LabyrinthExplorer.Data.Repositories
 {
-    public class GlabalRepository : IGlobalRepository
+    public class GlobalRepository : IGlobalRepository
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>NEW INSTANCE of Level</returns>
         public Level GetLevel(string name)
         {
             Level level = new Level();
@@ -17,12 +22,14 @@ namespace LabyrinthExplorer.Data.Repositories
             {
                 level.Map = new char[5][]
                   {
-                          new char[5] { '+' , '-', '-', '-', '+'}
+                          new char[5] { '+', '-', '-', '-', '+'}
                         , new char[5] { '|', 'P', ' ', ' ', '|' }
                         , new char[5] { '|', ' ', ' ', ' ', '|' }
                         , new char[5] { '|', ' ', ' ', ' ', '|' }
                         , new char[5] { '+', '-', '-', '-', '+' }
                   };
+                level.Name = "test";
+                level.Size = new Logic.Models.Coordinates(level.Map.Length, level.Map[0].Length);
             }
             else
             {
@@ -34,6 +41,8 @@ namespace LabyrinthExplorer.Data.Repositories
                         , new char[5] { '|', ' ', ' ', ' ', '|' }
                         , new char[5] { '+', '-', '-', '-', '+' }
                   };
+                level.Name = "test";
+                level.Size = new Logic.Models.Coordinates(level.Map.Length, level.Map[0].Length);
             }
             return level;
         }

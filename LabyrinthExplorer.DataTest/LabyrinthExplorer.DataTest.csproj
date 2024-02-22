@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LabyrinthExplorer.Data\LabyrinthExplorer.Data.csproj" />
     <ProjectReference Include="..\LabyrinthExplorer.Logic\LabyrinthExplorer.Logic.csproj" />
   </ItemGroup>
 

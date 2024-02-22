@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 
 namespace LabyrinthExplorer.Logic.Models.GameElements
 {
-    public class NPCPlayer : CharacterElement
+    public class EmptySpace : GameElement
     {
-        public NPCPlayer() { }
-        public NPCPlayer(int x, int y)
+        public EmptySpace() { }
+        public EmptySpace(int x, int y)
         {
-            Name = "NPC Player";
+            Name = "Empty Space";
             Position = new Coordinates(x, y);
         }
-        public List<Coordinates> PatrolMap { get; set; }
     }
 }

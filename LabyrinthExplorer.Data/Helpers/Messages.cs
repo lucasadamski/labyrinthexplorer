@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LabyrinthExplorer.Logic.Models.GameElements
+namespace LabyrinthExplorer.Data.Helpers
 {
-    public class Door : BuildingElement
+    internal class Messages
     {
     }
 }
