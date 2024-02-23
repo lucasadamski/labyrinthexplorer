@@ -14,6 +14,6 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Name = "NPC Player";
             Position = new Coordinates(x, y);
         }
-        public List<Coordinates> PatrolMap { get; set; }
+        public List<Coordinates> PatrolMap { get; set; } = new List<Coordinates>();
     }
 }

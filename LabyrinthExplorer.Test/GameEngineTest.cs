@@ -5,6 +5,7 @@ using LabyrinthExplorer.Data.Helpers;
 using LabyrinthExplorer.Data.Repositories.Infrastructure;
 using LabyrinthExplorer.Data.Repositories;
 using LabyrinthExplorer.Logic.Models.GameElements.BuildingElements;
+using System.Linq;
 
 namespace LabyrinthExplorer.Test
 {
@@ -51,7 +52,7 @@ namespace LabyrinthExplorer.Test
                  {
                           new GameElement[5] { new CornerWall(0,0) , new HorizontalWall(0, 1), new HorizontalWall(0, 2), new HorizontalWall(0, 3), new CornerWall(0, 4) }
                         , new GameElement[5] { new VerticalWall(1, 0), new UserPlayer(1, 1), new EmptySpace(1, 2), new EmptySpace(1, 3), new VerticalWall(1, 4) }
-                        , new GameElement[5] { new VerticalWall(2, 0), new EmptySpace(2, 1), new EmptySpace(2, 2), new EmptySpace(1, 3), new VerticalWall(2, 4) }
+                        , new GameElement[5] { new VerticalWall(2, 0), new EmptySpace(2, 1), new EmptySpace(2, 2), new EmptySpace(2, 3), new VerticalWall(2, 4) }
                         , new GameElement[5] { new VerticalWall(3, 0), new EmptySpace(3, 1), new EmptySpace(3, 2), new EmptySpace(3, 3), new VerticalWall(3, 4) }
                         , new GameElement[5] { new CornerWall(4, 0), new HorizontalWall(4, 1), new HorizontalWall(4, 2), new HorizontalWall(4, 3), new CornerWall(4, 4) }
                  };
@@ -65,6 +66,109 @@ namespace LabyrinthExplorer.Test
                     Assert.AreEqual(map[i][j].Position.Y, GE.Map[i][j].Position.Y);
                 }
             }
+        }
+
+        [TestMethod]
+        public void InitalizeUserPlayerTest()
+        {
+            //One Player
+            char[][] map = new char[5][]
+                {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+                };
+            
+            GameEngine GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            bool result = GE.logger.Message.ToString().Contains("InitializeUserPlayer: Found User Player at (1,1)");
+            Console.WriteLine(GE.logger.Message.ToString());
+            Assert.AreEqual(true, result);
+
+            //No Player
+            map = new char[5][]
+                {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+                };
+
+            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            result = GE.logger.Message.ToString().Contains("InitializeUserPlayer: Initialized User Player at (1,1)");
+            Console.WriteLine(GE.logger.Message.ToString());
+            Assert.AreEqual(true, result);
+
+            //3 Players
+            map = new char[5][]
+                {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', 'P', ' ', '|' }
+                        , new char[5] { '|', ' ', 'P', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+                };
+
+            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            result = GE.logger.Message.ToString().Contains("ParseCanvasToMap: Found more than 1 User Player. User Player changed to EmptySpace.");
+            Console.WriteLine(GE.logger.Message.ToString());
+            Assert.AreEqual(true, result);
+        }
+        [TestMethod]
+        public void InitalizeNPCPlayersTest()
+        {
+            //One NPC
+            char[][] map = new char[5][]
+                {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'E', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+                };
+
+            GameEngine GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            bool result = GE.logger.Message.ToString().Contains("InitializeNPCPlayer: Found NPCPlayer 1 at (1,1)");
+            Console.WriteLine(GE.logger.Message.ToString());
+            Assert.AreEqual(true, result);
+
+            //No NPC
+            map = new char[5][]
+                {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+                };
+
+            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            result = GE.logger.Message.ToString().Contains("InitializeNPCPlayer: Added 0 NPC Players.");
+            Console.WriteLine(GE.logger.Message.ToString());
+            Assert.AreEqual(true, result);
+
+            //3 NPCs
+            map = new char[5][]
+                {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'E', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', 'E', ' ', '|' }
+                        , new char[5] { '|', ' ', 'E', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+                };
+
+            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            result = GE.logger.Message.ToString().Contains("InitializeNPCPlayer: Added 3 NPC Players.");
+            Console.WriteLine(GE.logger.Message.ToString());
+            Assert.AreEqual(true, result);
         }
     }
 }

@@ -8,8 +8,8 @@ namespace LabyrinthExplorer.Logic.DTOs
 {
     public class DTO
     {
-        public bool Success { get; set; }
-        public bool Error { get; set; }
+        public bool Success { get; set; } = true;
+        public bool Error { get; set; } = false;
         public string? Message { get; set; }
         public DTO(bool success)
         {

@@ -1,8 +1,10 @@
-﻿using LabyrinthExplorer.Data.Repositories.Infrastructure;
+﻿using LabyrinthExplorer.Data.Helpers;
+using LabyrinthExplorer.Data.Repositories.Infrastructure;
 using LabyrinthExplorer.Logic.Models.GameElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +12,37 @@ namespace LabyrinthExplorer.Data.Repositories
 {
     public class GlobalRepository : IGlobalRepository
     {
+        private Level injectedLevel = new Level();
+        private Level testLevel;
+
+        public GlobalRepository()
+        {
+            testLevel = new Level()
+            {
+                Map = new char[5][]
+                  {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+                  },
+                Name = Settings.TEST_LEVEL,
+                Size = new Logic.Models.Coordinates(5, 5)
+        };
+        }
+
+        public GlobalRepository(char[][] injectedCanvas)
+        {
+            injectedLevel = new Level()
+            {
+                Map = injectedCanvas,
+                Name = Settings.INJECTED_LEVEL,
+                Size = new Logic.Models.Coordinates(injectedCanvas.Length, injectedCanvas[0].Length)
+            };
+        }
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -18,33 +51,16 @@ namespace LabyrinthExplorer.Data.Repositories
         public Level GetLevel(string name)
         {
             Level level = new Level();
-            if (name == "test")
+            if (name == Settings.TEST_LEVEL)
             {
-                level.Map = new char[5][]
-                  {
-                          new char[5] { '+', '-', '-', '-', '+'}
-                        , new char[5] { '|', 'P', ' ', ' ', '|' }
-                        , new char[5] { '|', ' ', ' ', ' ', '|' }
-                        , new char[5] { '|', ' ', ' ', ' ', '|' }
-                        , new char[5] { '+', '-', '-', '-', '+' }
-                  };
-                level.Name = "test";
-                level.Size = new Logic.Models.Coordinates(level.Map.Length, level.Map[0].Length);
+                return testLevel;
             }
-            else
+            else if (name == Settings.INJECTED_LEVEL)
             {
-                level.Map = new char[5][]
-                  {
-                          new char[5] { '+' , '-', '-', '-', '+'}
-                        , new char[5] { '|', 'P', ' ', ' ', '|' }
-                        , new char[5] { '|', ' ', ' ', ' ', '|' }
-                        , new char[5] { '|', ' ', ' ', ' ', '|' }
-                        , new char[5] { '+', '-', '-', '-', '+' }
-                  };
-                level.Name = "test";
-                level.Size = new Logic.Models.Coordinates(level.Map.Length, level.Map[0].Length);
+                return injectedLevel;
             }
-            return level;
+           
+            return testLevel;
         }
     }
 }
