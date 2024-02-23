@@ -170,5 +170,57 @@ namespace LabyrinthExplorer.Test
             Console.WriteLine(GE.logger.Message.ToString());
             Assert.AreEqual(true, result);
         }
+
+        [TestMethod]
+        public void InitalizeInventoryTest()
+        {
+            //One Item
+            char[][] map = new char[5][]
+                {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '|', 'K', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+                };
+
+            GameEngine GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            bool result = GE.logger.Message.ToString().Contains("InitializeInventory: Found 1 Items");
+            Console.WriteLine(GE.logger.Message.ToString());
+            Assert.AreEqual(true, result);
+
+            //No Item
+            map = new char[5][]
+                {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+                };
+
+            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            result = GE.logger.Message.ToString().Contains("InitializeInventory: Found 0 Items");
+            Console.WriteLine(GE.logger.Message.ToString());
+            Assert.AreEqual(true, result);
+
+            //3 Items
+            map = new char[5][]
+                {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', 'K', '|' }
+                        , new char[5] { '|', ' ', 'W', ' ', '|' }
+                        , new char[5] { '|', ' ', 'K', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+                };
+
+            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            result = GE.logger.Message.ToString().Contains("InitializeInventory: Found 3 Items");
+            Console.WriteLine(GE.logger.Message.ToString());
+            Assert.AreEqual(true, result);
+        }
     }
 }

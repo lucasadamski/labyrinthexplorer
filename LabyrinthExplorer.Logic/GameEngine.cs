@@ -18,7 +18,7 @@ namespace LabyrinthExplorer.Logic
         public UserPlayer? UserPlayer { get; set; } = new UserPlayer();
         public List<NPCPlayer> NPCPlayer { get; set; } = new List<NPCPlayer>();
         public Level Level { get; set; } = new Level();
-        public List<ItemElement> Inventory { get; set; }
+        public List<ItemElement> Inventory { get; set; } = new List<ItemElement>();
         public GameElement[][] Map { get; set; }
         public char[][] Canvas { get; set; }
 
@@ -42,6 +42,7 @@ namespace LabyrinthExplorer.Logic
             }
             
             NPCPlayer.AddRange(InitializeNPCPlayers(Map));
+            Inventory.AddRange(InitializeInventory(Map));
 
             logger.Log("END: GameEngine Contructor");
         }
@@ -51,12 +52,12 @@ namespace LabyrinthExplorer.Logic
             Level output = repository.GetLevel(levelName);
             if (output.DTO.Success == true)
             {
-                logger.Log($"LoadLevel: Loaded Level ${levelName}");
+                logger.Log($"LoadLevel: Loaded Level {levelName}");
                 return output;
             }
             else
             {
-                logger.LogError($"LoadLevel: Can't load level ${levelName} from Repository");
+                logger.LogError($"LoadLevel: Can't load level {levelName} from Repository");
                 return new Level();
             }
         }
@@ -125,7 +126,7 @@ namespace LabyrinthExplorer.Logic
                 }
             }
 
-            logger.Log($"ParseCanvasToMap: Parsed Canvas to Map of ${counter} elements.");
+            logger.Log($"ParseCanvasToMap: Parsed Canvas to Map of {counter} elements.");
             return output;
         }
 
@@ -179,7 +180,25 @@ namespace LabyrinthExplorer.Logic
             logger.Log($"InitializeNPCPlayer: Added {counter - 1} NPC Players.");
             return npcPlayers;
         }
-
+        public List<ItemElement> InitializeInventory(GameElement[][] mapOfElements)
+        {
+            List<ItemElement> inventory = new List<ItemElement>();
+            uint counter = 1;
+            for (int i = 0; i < mapOfElements.Length; i++)
+            {
+                for (int j = 0; j < mapOfElements[i].Length; j++)
+                {
+                    if (mapOfElements[i][j] is ItemElement item)
+                    {
+                        logger.Log($"InitializeInventory: Found {item.Name} at ({i},{j})");
+                        inventory.Add((ItemElement)mapOfElements[i][j]);
+                        counter++;
+                    }
+                }
+            }
+            logger.Log($"InitializeInventory: Found {counter - 1} Items");
+            return inventory;
+        }
         private char[][] DeepCopyCanvas(char[][] input)
         {
             int sizeA = input.Length;
