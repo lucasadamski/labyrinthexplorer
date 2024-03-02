@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LabyrinthExplorer.Logic.DTOs
 {
-    public class GameEngineInputDTO
+    public class GameEngineInputDTO //Communication Protocol between UI and GameEngine
     {
         public InputAction InputAction { get; set; } = InputAction.Unknown;
         public DTO DTO { get; set; } = new DTO();
