@@ -1,10 +1,13 @@
 ﻿using LabyrinthExplorer.Data.Helpers;
 using LabyrinthExplorer.Data.Repositories;
 using LabyrinthExplorer.Data.Repositories.Infrastructure;
+using LabyrinthExplorer.Logic.DTOs;
 using LabyrinthExplorer.Logic.Loggers;
+using LabyrinthExplorer.Logic.Models;
 using LabyrinthExplorer.Logic.Models.GameElements;
 using LabyrinthExplorer.Logic.Models.GameElements.BuildingElements;
 using System.Diagnostics.Metrics;
+using System.Security.Cryptography.X509Certificates;
 
 
 
@@ -21,6 +24,7 @@ namespace LabyrinthExplorer.Logic
         public List<ItemElement> Inventory { get; set; } = new List<ItemElement>();
         public GameElement[][] Map { get; set; }
         public char[][] Canvas { get; set; }
+        public InputAction InputAction{ get; set; }
 
 
         public GameEngine(string levelName, char[][]? injectedLevelCanvas = null)
@@ -215,6 +219,21 @@ namespace LabyrinthExplorer.Logic
             }
 
             return output;
+        }
+        public bool ReceiveInputDTO(GameEngineInputDTO input)
+        {
+            if (input.DTO.Success == true)
+            {
+                InputAction = input.InputAction;
+                logger.Log($"ReceiveInputDTO: Received InputAction: {InputAction.ToString()}");
+                return true;
+            }
+            else
+            {
+                InputAction = InputAction.Unknown;
+                logger.LogError($"ReceiveInputDTO: Error from UI: InputAction: {InputAction.ToString()}");
+                return false;
+            }//write test for that
         }
 
     }

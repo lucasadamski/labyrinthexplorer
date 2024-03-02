@@ -6,6 +6,8 @@ using LabyrinthExplorer.Data.Repositories.Infrastructure;
 using LabyrinthExplorer.Data.Repositories;
 using LabyrinthExplorer.Logic.Models.GameElements.BuildingElements;
 using System.Linq;
+using LabyrinthExplorer.Logic.DTOs;
+using NuGet.Frameworks;
 
 namespace LabyrinthExplorer.Test
 {
@@ -220,6 +222,17 @@ namespace LabyrinthExplorer.Test
 
             result = GE.logger.Message.ToString().Contains("InitializeInventory: Found 3 Items");
             Console.WriteLine(GE.logger.Message.ToString());
+            Assert.AreEqual(true, result);
+        }
+        [TestMethod]
+        public void ReceiveInputDTOTest()
+        {
+            GameEngine GE = new GameEngine(Settings.TEST_LEVEL);
+            GameEngineInputDTO GE_input = new GameEngineInputDTO();
+            GE_input.InputAction = Logic.Models.InputAction.Up;
+            GE.ReceiveInputDTO(GE_input);            
+            bool result = GE.logger.Message.ToString().Contains("ReceiveInputDTO: Received InputAction: Up");
+            Assert.AreEqual(GE.InputAction, GE_input.InputAction);
             Assert.AreEqual(true, result);
         }
     }
