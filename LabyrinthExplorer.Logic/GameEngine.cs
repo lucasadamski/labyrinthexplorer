@@ -50,6 +50,15 @@ namespace LabyrinthExplorer.Logic
 
             logger.Log("END: GameEngine Contructor");
         }
+        public GameEngineOutputDTO RunEngine(GameEngineInputDTO input)
+        {
+            //1.ReceiveInputDTO
+            //2.Translate InputDTO to InterActionDTO
+            //3. Send InterActionDTO to HumanPlayer
+            //4. Let Player Do his black Box
+            InputAction = ReceiveInputDTO(input);
+            throw new NotImplementedException();
+        }
 
         public Level LoadLevel(string levelName)
         {
@@ -220,20 +229,18 @@ namespace LabyrinthExplorer.Logic
 
             return output;
         }
-        public bool ReceiveInputDTO(GameEngineInputDTO input)
+        public InputAction ReceiveInputDTO(GameEngineInputDTO input) 
         {
             if (input.DTO.Success == true)
             {
-                InputAction = input.InputAction;
                 logger.Log($"ReceiveInputDTO: Received InputAction: {InputAction.ToString()}");
-                return true;
+                return input.InputAction;
             }
             else
             {
-                InputAction = InputAction.Unknown;
                 logger.LogError($"ReceiveInputDTO: Error from UI: InputAction: {InputAction.ToString()}");
-                return false;
-            }//write test for that
+                return InputAction.Unknown;
+            }
         }
 
     }
