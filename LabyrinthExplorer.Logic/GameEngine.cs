@@ -25,6 +25,7 @@ namespace LabyrinthExplorer.Logic
         public GameElement[][] Map { get; set; }
         public char[][] Canvas { get; set; }
         public InputAction InputAction{ get; set; }
+        public InterActionDTO UserPlayerInterActionDTO { get; set; } = new InterActionDTO();
 
 
         public GameEngine(string levelName, char[][]? injectedLevelCanvas = null)
@@ -57,7 +58,10 @@ namespace LabyrinthExplorer.Logic
             //3. Send InterActionDTO to HumanPlayer
             //4. Let Player Do his black Box
             InputAction = ReceiveInputDTO(input);
-            throw new NotImplementedException();
+            UserPlayerInterActionDTO = TranslateInputActionToInterAction(InputAction, UserPlayer.Position);
+
+
+            return new GameEngineOutputDTO(); //not implemented
         }
 
         public Level LoadLevel(string levelName)
@@ -242,6 +246,39 @@ namespace LabyrinthExplorer.Logic
                 return InputAction.Unknown;
             }
         }
+        public InterActionDTO TranslateInputActionToInterAction(InputAction inputAction, Coordinates coordinates)
+        {
+            InterActionDTO interActionDTO = new InterActionDTO();
+            interActionDTO.InputAction = inputAction;
 
+            //Generate LocalMapOfElements
+            try
+            {
+                interActionDTO.MapOfElements[0] = new GameElement[3];
+                interActionDTO.MapOfElements[0][0] = Map[coordinates.X - 1][coordinates.Y - 1]; // exception wyrzuca
+                interActionDTO.MapOfElements[0][1] = Map[coordinates.X - 1][coordinates.Y];
+                interActionDTO.MapOfElements[0][2] = Map[coordinates.X - 1][coordinates.Y + 1];
+
+                interActionDTO.MapOfElements[1] = new GameElement[3];
+                interActionDTO.MapOfElements[1][0] = Map[coordinates.X][coordinates.Y - 1];
+                interActionDTO.MapOfElements[1][1] = Map[coordinates.X][coordinates.Y];
+                interActionDTO.MapOfElements[1][2] = Map[coordinates.X][coordinates.Y + 1];
+
+                interActionDTO.MapOfElements[2] = new GameElement[3];
+                interActionDTO.MapOfElements[2][0] = Map[coordinates.X + 1][coordinates.Y - 1];
+                interActionDTO.MapOfElements[2][1] = Map[coordinates.X + 1][coordinates.Y];
+                interActionDTO.MapOfElements[2][2] = Map[coordinates.X + 1][coordinates.Y + 1];
+            }
+            catch (Exception e)
+            {
+                logger.LogError($"TranslateInputActionToInterAction: Can't convert input {inputAction} and coordinates X:{coordinates.X} Y:{coordinates.Y} " +
+                $"to InterActionDTO. Exception: {e.Message}");
+                return new InterActionDTO();
+            }            
+
+            logger.Log($"TranslateInputActionToInterAction: Converted input {inputAction} and coordinates X:{coordinates.X} Y:{coordinates.Y} " +
+                $"to InterActionDTO");
+            return interActionDTO;
+        }
     }
 }

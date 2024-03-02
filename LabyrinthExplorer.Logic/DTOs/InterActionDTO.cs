@@ -13,7 +13,7 @@ namespace LabyrinthExplorer.Logic.DTOs
     //along with input, so Player independly decides what to do with it
     public class InterActionDTO 
     {
-        public GameElement[][] MapOfElements { get; set; }
+        public GameElement[][] MapOfElements { get; set; } = new GameElement[3][];
         public DTO DTO { get; set; }
         public InputAction InputAction{ get; set; }
     }

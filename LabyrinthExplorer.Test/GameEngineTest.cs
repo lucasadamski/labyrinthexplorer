@@ -235,5 +235,27 @@ namespace LabyrinthExplorer.Test
             Assert.AreEqual(GE.InputAction, GE_input.InputAction);
             Assert.AreEqual(true, result);
         }
+
+        [TestMethod]
+        public void TranslateInputActionToInterActionTest()
+        {
+            char[][] map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '|', 'K', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+
+            GameEngine GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            GameEngineInputDTO GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Unknown };
+
+            GameEngineOutputDTO GEoutput = GE.RunEngine(GEinput);
+
+            bool result = GE.logger.Message.ToString().Contains("TranslateInputActionToInterAction: Converted input Unknown and coordinates X:1 Y:1 to InterActionDTO");
+            Assert.AreEqual(true, result);
+        }
     }
 }
