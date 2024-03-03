@@ -14,7 +14,7 @@ namespace LabyrinthExplorer.Logic.DTOs
     public class InterActionDTO 
     {
         public GameElement[][] MapOfElements { get; set; } = new GameElement[3][];
-        public DTO DTO { get; set; }
+        public DTO DTO { get; set; } = new DTO();
         public InputAction InputAction{ get; set; }
     }
 }

@@ -26,6 +26,7 @@ namespace LabyrinthExplorer.Logic
         public char[][] Canvas { get; set; }
         public InputAction InputAction{ get; set; }
         public InterActionDTO UserPlayerInterActionDTO { get; set; } = new InterActionDTO();
+        public InterActionDTO UserPlayerReturnedInterActionDTO { get; set; } = new InterActionDTO();
 
 
         public GameEngine(string levelName, char[][]? injectedLevelCanvas = null)
@@ -59,7 +60,7 @@ namespace LabyrinthExplorer.Logic
             //4. Let Player Do his black Box
             InputAction = ReceiveInputDTO(input);
             UserPlayerInterActionDTO = TranslateInputActionToInterAction(InputAction, UserPlayer.Position);
-
+            UserPlayerReturnedInterActionDTO = UserPlayer.ReceiveInterActionDTO(UserPlayerInterActionDTO);
 
             return new GameEngineOutputDTO(); //not implemented
         }

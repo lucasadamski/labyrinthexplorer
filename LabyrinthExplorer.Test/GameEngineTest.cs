@@ -257,5 +257,26 @@ namespace LabyrinthExplorer.Test
             bool result = GE.logger.Message.ToString().Contains("TranslateInputActionToInterAction: Converted input Unknown and coordinates X:1 Y:1 to InterActionDTO");
             Assert.AreEqual(true, result);
         }
+
+        //PlayerTest
+        [TestMethod]
+        public void ReceiveInterActionDTOTest()
+        {
+            GameElement[][] map = new GameElement[3][]
+                 {
+                          new GameElement[3] { new CornerWall(0,0) , new HorizontalWall(0, 1), new HorizontalWall(0, 2) }
+                        , new GameElement[3] { new VerticalWall(1, 0), new UserPlayer(1, 1), new EmptySpace(1, 2) }
+                        , new GameElement[3] { new VerticalWall(2, 0), new EmptySpace(2, 1), new EmptySpace(2, 2) }
+                 };
+            InterActionDTO interActionDTO = new InterActionDTO();
+            interActionDTO.MapOfElements = map;
+            interActionDTO.InputAction = Logic.Models.InputAction.Down;
+            UserPlayer up = new UserPlayer();
+            up.Position = new Logic.Models.Coordinates(1, 1);
+            up.Model = 'P';
+            InterActionDTO output = up.ReceiveInterActionDTO(interActionDTO);
+
+            Assert.AreEqual(typeof(UserPlayer), output.MapOfElements[2][1].GetType());
+        }
     }
 }

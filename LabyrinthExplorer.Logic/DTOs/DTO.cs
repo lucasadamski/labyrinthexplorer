@@ -10,7 +10,7 @@ namespace LabyrinthExplorer.Logic.DTOs
     {
         public bool Success { get; set; } = true;
         public bool Error { get; set; } = false;
-        public string? Message { get; set; }
+        public string Message { get; set; } = "";
         public DTO(bool success)
         {
             Success = success;

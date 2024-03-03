@@ -1,4 +1,5 @@
-﻿using LabyrinthExplorer.Logic.Models.GameElements;
+﻿using LabyrinthExplorer.Logic.DTOs;
+using LabyrinthExplorer.Logic.Models.GameElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,9 @@ namespace LabyrinthExplorer.Logic.Infrastructure
 {
     public interface IMove
     {
-        public bool MoveUp(GameElement element);
-        public bool MoveDown(GameElement element);
-        public bool MoveLeft(GameElement element);
-        public bool MoveRight(GameElement element);
+        public InterActionDTO MoveUp(InterActionDTO input);
+        public InterActionDTO MoveDown(InterActionDTO input);
+        public InterActionDTO MoveLeft(InterActionDTO input);
+        public InterActionDTO MoveRight(InterActionDTO input);
     }
 }
