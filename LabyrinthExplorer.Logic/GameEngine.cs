@@ -63,6 +63,8 @@ namespace LabyrinthExplorer.Logic
             UserPlayerInterActionDTO = TranslateInputActionToInterAction(InputAction, UserPlayer.Position);
             UserPlayerReturnedInterActionDTO = UserPlayer.ReceiveInterActionDTO(UserPlayerInterActionDTO);
             Map = ApplyInterActionDTOOnGameElementMap(Map, UserPlayerReturnedInterActionDTO);
+
+            Inventory = InitializeInventory(Map);
             GameEngineOutputDTO = PrepareGameEngineOutputDTO(Map, logger);
 
             return GameEngineOutputDTO; //not implemented

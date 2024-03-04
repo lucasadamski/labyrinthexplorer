@@ -10,9 +10,13 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
 {
     public class UserPlayer : CharacterElement, IMove
     {
-        public UserPlayer() { }
+        public UserPlayer() 
+        {
+            Inventory = new List<ItemElement>();
+        }
         public UserPlayer(int x, int y)
         {
+            Inventory = new List<ItemElement>();
             Name = "User Player";
             Position = new Coordinates(x, y);
             Model = 'P';
@@ -21,16 +25,25 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         public InterActionDTO MoveDown(InterActionDTO input)
         {
             InterActionDTO output = input;
-            if (input.MapOfElements[2][1] is EmptySpace e)
+            if (input.MapOfElements[2][1] is EmptySpace es)
             {
-                EmptySpace temp = e;
+                EmptySpace temp = es;
                 output.MapOfElements[2][1] = input.MapOfElements[1][1];
-                output.MapOfElements[1][1] = e;
+                output.MapOfElements[1][1] = es;
                 Position.X++;
-                e.Position.X--;
-                output.DTO.Message = "UserPlayer.MoveDown: Sucessfuly moved down to an empty space";
+                es.Position.X--;
+                output.DTO.Message = $"UserPlayer.MoveDown: Sucessfuly moved down to an {es.Name}";
             }
-            
+            if (input.MapOfElements[2][1] is ItemElement ie)
+            {
+                ie.Pickup(this);
+
+                output.MapOfElements[2][1] = input.MapOfElements[1][1];
+                output.MapOfElements[1][1] = new EmptySpace(input.CenterPosition.X, input.CenterPosition.Y);
+                Position.X++;
+                output.DTO.Message = $"UserPlayer.MoveDown: Sucessfuly moved down to an {ie.Name}. Picked up: {ie.Name}";
+            }
+
             return output;
         }
 

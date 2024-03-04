@@ -299,5 +299,51 @@ namespace LabyrinthExplorer.Test
 
             Assert.AreEqual('P', GEoutput.Frame[2][1]);
         }
+
+        [TestMethod]
+        public void GameEngineMoveDownTest()
+        {
+            //Move down to an Empty Space
+            char[][] map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '|', 'K', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+            GameEngine GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+            GameEngineInputDTO GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GameEngineOutputDTO GEoutput = GE.RunEngine(GEinput);
+            Assert.AreEqual('P', GEoutput.Frame[2][1]);
+
+            //Move down to an Key Item
+            map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', 'K', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GEoutput = GE.RunEngine(GEinput);
+            Assert.AreEqual('P', GEoutput.Frame[2][1]);
+
+            //Move down to a Weapon Item
+            map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', 'W', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GEoutput = GE.RunEngine(GEinput);
+            Assert.AreEqual('P', GEoutput.Frame[2][1]);
+        }
     }
 }
