@@ -278,5 +278,26 @@ namespace LabyrinthExplorer.Test
 
             Assert.AreEqual(typeof(UserPlayer), output.MapOfElements[2][1].GetType());
         }
+
+        [TestMethod]
+        public void RunEngineTest()
+        {
+            char[][] map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '|', 'K', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+
+            GameEngine GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            GameEngineInputDTO GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+
+            GameEngineOutputDTO GEoutput = GE.RunEngine(GEinput);
+
+            Assert.AreEqual('P', GEoutput.Frame[2][1]);
+        }
     }
 }

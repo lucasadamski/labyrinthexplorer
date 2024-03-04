@@ -9,9 +9,9 @@ namespace LabyrinthExplorer.Logic.DTOs
     public class GameEngineOutputDTO //Communication Protocol between UI and GameEngine
     {
         public char[][] Frame { get; set; }
-        public DTO DTO { get; set; }
-        public string Log { get; set; }
-        public string HUD { get; set; }
+        public DTO DTO { get; set; } = new DTO();
+        public string Log { get; set; } = "";
+        public string HUD { get; set; } = ""; //not implemented
 
     }
 }

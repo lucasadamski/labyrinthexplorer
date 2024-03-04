@@ -3,6 +3,7 @@ using LabyrinthExplorer.Logic.Models.GameElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,5 +17,6 @@ namespace LabyrinthExplorer.Logic.DTOs
         public GameElement[][] MapOfElements { get; set; } = new GameElement[3][];
         public DTO DTO { get; set; } = new DTO();
         public InputAction InputAction{ get; set; }
+        public Coordinates CenterPosition { get; set; } = new Coordinates(1, 1);
     }
 }
