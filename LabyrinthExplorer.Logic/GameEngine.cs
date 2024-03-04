@@ -235,6 +235,7 @@ namespace LabyrinthExplorer.Logic
                 }
             }
 
+            logger.Log($"DeepCopyCanvas: Success, Canvas size: {sizeA}x{sizeB}");
             return output;
         }
         public InputAction ReceiveInputDTO(GameEngineInputDTO input) 
@@ -303,10 +304,12 @@ namespace LabyrinthExplorer.Logic
             //Set Log
             output.Log = logger.Message.ToString();
 
+            logger.Log($"PrepareGameEngineOutputDTO: Success.");
             return output;
         }
         public GameElement[][] ApplyInterActionDTOOnGameElementMap(GameElement[][] elementMap, InterActionDTO input)
         {
+            logger.Log(input.DTO.Message); // Add to log UserPlayer Message
             try
             {
                 elementMap[input.CenterPosition.X - 1][input.CenterPosition.Y - 1] = input.MapOfElements[0][0];

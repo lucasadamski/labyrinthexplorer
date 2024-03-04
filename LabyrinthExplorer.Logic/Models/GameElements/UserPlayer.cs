@@ -28,8 +28,9 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 output.MapOfElements[1][1] = e;
                 Position.X++;
                 e.Position.X--;
+                output.DTO.Message = "UserPlayer.MoveDown: Sucessfuly moved down to an empty space";
             }
-            output.DTO.Message = "UserPlayer.MoveDown: Sucessfuly MovedDown";
+            
             return output;
         }
 
