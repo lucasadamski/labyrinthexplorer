@@ -363,6 +363,57 @@ namespace LabyrinthExplorer.Test
             GEoutput = GE.RunEngine(GEinput);
             Assert.AreEqual('P', GEoutput.Frame[2][1]);
             Assert.AreEqual(Settings.PLAYER_FULL_HEALTH - Settings.TRAP_DAMAGE, GE.UserPlayer.Health);
+
+            //1 Move down to a Vartical Wall
+            //2 Wall resists, stays in a place
+            //3 Player stays in a place as well
+            map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', '|', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GEoutput = GE.RunEngine(GEinput);
+            Assert.AreEqual('P', GEoutput.Frame[1][1]);
+            Assert.AreEqual('|', GEoutput.Frame[2][1]);
+
+            //1 Move down to a Horizontal Wall
+            //2 Wall resists, stays in a place
+            //3 Player stays in a place as well
+            map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', '-', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GEoutput = GE.RunEngine(GEinput);
+            Assert.AreEqual('P', GEoutput.Frame[1][1]);
+            Assert.AreEqual('-', GEoutput.Frame[2][1]);
+
+            //1 Move down to a Corner Wall
+            //2 Wall resists, stays in a place
+            //3 Player stays in a place as well
+            map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', '+', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GEoutput = GE.RunEngine(GEinput);
+            Assert.AreEqual('P', GEoutput.Frame[1][1]);
+            Assert.AreEqual('+', GEoutput.Frame[2][1]);
         }
     }
 }

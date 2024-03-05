@@ -1,5 +1,6 @@
 ﻿using LabyrinthExplorer.Logic.DTOs;
 using LabyrinthExplorer.Logic.Infrastructure;
+using LabyrinthExplorer.Logic.Models.GameElements.BuildingElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,8 +32,14 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 Position.X++;
                 es.Position.X--;
                 output.DTO.Message = $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an {es.Name}";
+                return output;
             }
-            if (input.MapOfElements[2][1] is ItemElement ie)
+            else if (input.MapOfElements[2][1] is Wall w)
+            {
+                output.DTO.Message = $"CharacterElement.MoveDown: Move Down Denied. {Name} can not move to {w.Name}";
+                return output;
+            }
+            else if (input.MapOfElements[2][1] is ItemElement ie)
             {
                 ie.Pickup(this);
 
@@ -40,9 +47,12 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 output.MapOfElements[1][1] = new EmptySpace(input.CenterPosition.X, input.CenterPosition.Y);
                 Position.X++;
                 output.DTO.Message = $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an {ie.Name}. Picked up: {ie.Name}";
+                return output;
             }
-
-            return output;
+            else
+            {
+                return output;
+            }
         }
 
         virtual public InterActionDTO MoveLeft(InterActionDTO input)
