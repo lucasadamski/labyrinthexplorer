@@ -14,7 +14,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Name = "Weapon";
             Position = new Coordinates(x, y);
         }
-        override public bool Pickup(UserPlayer player)
+        override public bool Pickup(CharacterElement player)
         {
             player.Inventory.Add(this);
             Visible = false;
