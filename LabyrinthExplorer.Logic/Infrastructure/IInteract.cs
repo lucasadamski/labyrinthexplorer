@@ -11,8 +11,7 @@ namespace LabyrinthExplorer.Logic.Infrastructure
     public interface IInteract
     {
         public bool Pickup(UserPlayer player);
-        public InterActionDTO UseDoor(InterActionDTO input);
-        public InterActionDTO DoDamage(InterActionDTO input);
-        public InterActionDTO UseWeapon(InterActionDTO input);
+        public bool UseDoor(UserPlayer player);
+        public bool DoDamage(CharacterElement playerDoneDamageTo);
     }
 }

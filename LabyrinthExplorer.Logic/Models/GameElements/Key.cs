@@ -24,18 +24,5 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Position.Y = 0;
             return true;
         }
-
-        override public InterActionDTO DoDamage(InterActionDTO input)
-        {
-            return input;
-        }
-        override public InterActionDTO UseDoor(InterActionDTO input)
-        {
-            return input;
-        }
-        override public InterActionDTO UseWeapon(InterActionDTO input)
-        {
-            return input;
-        }
     }
 }

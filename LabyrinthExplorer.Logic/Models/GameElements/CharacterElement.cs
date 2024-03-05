@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LabyrinthExplorer.Logic.DTOs;
+using LabyrinthExplorer.Logic.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +17,6 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         }
         public byte Health { get; set; }
         public List<ItemElement> Inventory { get; set; }
+
     }
 }
