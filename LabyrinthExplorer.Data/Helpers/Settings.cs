@@ -24,6 +24,7 @@ namespace LabyrinthExplorer.Data.Helpers
         public const char MODEL_WEAPON          = 'W';
         public const char MODEL_TRAP            = 'X';
         public const char MODEL_OPEN_DOOR       = 'O';
+        public const char MODEL_CLOSED_DOOR     = 'D';
         public const char MODEL_CORNER_WALL     = '+';
         public const char MODEL_HORIZONTAL_WALL = '-';
         public const char MODEL_VERTICAL_WALL   = '|';

@@ -49,6 +49,25 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 output.DTO.Message = $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an {ie.Name}. Picked up: {ie.Name}";
                 return output;
             }
+            else if (input.MapOfElements[2][1] is Door d)
+            {
+                if (d.Open == false)
+                {
+                    output.DTO.Message = $"CharacterElement.MoveDown: Move Down Denied. {Name} can not move to Closed {d.Name}";
+                    return output;
+                }
+                else if (d.Open == true)
+                {
+                    output.MapOfElements[2][1] = input.MapOfElements[1][1];
+                    output.MapOfElements[1][1] = new EmptySpace(input.CenterPosition.X, input.CenterPosition.Y);
+                    Position.X++;
+                    output.DTO.Message = $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an Open {d.Name}.";
+                    return output;
+                }
+                else
+                    return output;
+                
+            }
             else
             {
                 return output;
