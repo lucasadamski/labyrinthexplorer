@@ -13,6 +13,20 @@ namespace LabyrinthExplorer.Data.Helpers
 
         public const string PLAYER_NAME = "User Player";
 
+
+        //UI will use those to translate to sprites
+        public const string NAME_USER_PLAYER    = "User Player";
+        public const string NAME_NPC_PLAYER     = "NPC Player";
+        public const string NAME_KEY            = "Key";
+        public const string NAME_WEAPON         = "Weapon";
+        public const string NAME_TRAP           = "Trap";
+        public const string NAME_OPEN_DOOR      = "Open Door";
+        public const string NAME_CLOSED_DOOR    = "Closed Door";
+        public const string NAME_CORNER_WALL    = "Corner Wall";
+        public const string NAME_HORIZONTAL_WALL ="Horizontal Wall";
+        public const string NAME_VERTICAL_WALL  = "Vertical Wall";
+
+
         public const int PLAYER_FULL_HEALTH = 100;
         public const int TRAP_DAMAGE = 25;
         public const int ENEMY_DAMAGE = 50;
