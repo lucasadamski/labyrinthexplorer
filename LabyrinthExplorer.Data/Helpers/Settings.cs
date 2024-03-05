@@ -25,6 +25,7 @@ namespace LabyrinthExplorer.Data.Helpers
         public const string NAME_CORNER_WALL    = "Corner Wall";
         public const string NAME_HORIZONTAL_WALL ="Horizontal Wall";
         public const string NAME_VERTICAL_WALL  = "Vertical Wall";
+        public const string NAME_EMPTY_SPACE    = "Empty Space";
 
 
         public const int PLAYER_FULL_HEALTH = 100;
@@ -42,5 +43,6 @@ namespace LabyrinthExplorer.Data.Helpers
         public const char MODEL_CORNER_WALL     = '+';
         public const char MODEL_HORIZONTAL_WALL = '-';
         public const char MODEL_VERTICAL_WALL   = '|';
+        public const char MODEL_EMPTY_SPACE     = ' ';
     }
 }

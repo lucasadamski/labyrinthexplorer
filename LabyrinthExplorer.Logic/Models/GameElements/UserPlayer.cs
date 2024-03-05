@@ -14,13 +14,17 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         public UserPlayer() 
         {
             Inventory = new List<ItemElement>();
+            Name = Settings.NAME_USER_PLAYER;
+            Model = Settings.MODEL_USER_PLAYER;
+            Health = Settings.PLAYER_FULL_HEALTH;
+            Position = new Coordinates(1, 1);
         }
         public UserPlayer(int x, int y)
         {
             Inventory = new List<ItemElement>();
-            Name = Settings.PLAYER_NAME;
+            Name = Settings.NAME_USER_PLAYER;
+            Model = Settings.MODEL_USER_PLAYER;
             Position = new Coordinates(x, y);
-            Model = 'P';
             Health = Settings.PLAYER_FULL_HEALTH;
         }  
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LabyrinthExplorer.Data.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +11,8 @@ namespace LabyrinthExplorer.Logic.Models.GameElements.BuildingElements
     {
         public VerticalWall(int x, int y)
         {
-            Name = "Vertical Wall";
-            Model = '|';
+            Name = Settings.NAME_VERTICAL_WALL;
+            Model = Settings.MODEL_VERTICAL_WALL;
             Position = new Coordinates(x, y);
         }
     }

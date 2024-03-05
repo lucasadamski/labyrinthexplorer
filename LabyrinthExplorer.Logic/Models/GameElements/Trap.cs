@@ -10,11 +10,16 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
 {
     public class Trap : ItemElement
     {
-        public Trap() { }
+        public Trap() 
+        {
+            Name = Settings.NAME_TRAP;
+            Model = Settings.MODEL_TRAP;
+        }
         public Trap(int x, int y)
         {
             Position = new Coordinates(x, y);
-            Name = "Trap";
+            Name = Settings.NAME_TRAP;
+            Model = Settings.MODEL_TRAP;
         }
         override public bool Pickup(CharacterElement player)
         {

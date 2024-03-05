@@ -12,11 +12,12 @@ namespace LabyrinthExplorer.Logic.Models.GameElements.BuildingElements
     {
         public Door() 
         {
+            Name = Settings.NAME_CLOSED_DOOR;
             Model = Settings.MODEL_CLOSED_DOOR;
         }
         public Door(int x, int y)
         {
-            Name = "Unlocked Closed Door";
+            Name = Settings.NAME_CLOSED_DOOR;
             Position = new Coordinates(x, y);
             Model = Settings.MODEL_CLOSED_DOOR;
         }
@@ -24,6 +25,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements.BuildingElements
         {            
             Locked = locked;
             Model = Settings.MODEL_CLOSED_DOOR;
+            Name = Settings.NAME_CLOSED_DOOR;
         }
     }
 }
