@@ -121,7 +121,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Health -= amountOfDamage;
             if (Health < 1)
             {
-                Visible = false; //End of game
+                NotVisible = true; //End of game
             }
             return true;
         }

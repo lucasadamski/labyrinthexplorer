@@ -24,7 +24,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         override public bool Pickup(CharacterElement player)
         {
             player.Health -= Settings.TRAP_DAMAGE;//reimplement with interface
-            Visible = false;
+            NotVisible = true;
             return true;
         }
 
