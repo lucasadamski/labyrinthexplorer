@@ -18,7 +18,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         public byte Health { get; set; }
         public List<ItemElement> Inventory { get; set; }
 
-        public InterActionDTO MoveDown(InterActionDTO input)
+        virtual public InterActionDTO MoveDown(InterActionDTO input)
         {
             InterActionDTO output = input;
             if (input.MapOfElements[2][1] is EmptySpace es)
@@ -28,7 +28,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 output.MapOfElements[1][1] = es;
                 Position.X++;
                 es.Position.X--;
-                output.DTO.Message = $"UserPlayer.MoveDown: Sucessfuly moved down to an {es.Name}";
+                output.DTO.Message = $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an {es.Name}";
             }
             if (input.MapOfElements[2][1] is ItemElement ie)
             {
@@ -37,25 +37,52 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 output.MapOfElements[2][1] = input.MapOfElements[1][1];
                 output.MapOfElements[1][1] = new EmptySpace(input.CenterPosition.X, input.CenterPosition.Y);
                 Position.X++;
-                output.DTO.Message = $"UserPlayer.MoveDown: Sucessfuly moved down to an {ie.Name}. Picked up: {ie.Name}";
+                output.DTO.Message = $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an {ie.Name}. Picked up: {ie.Name}";
             }
 
             return output;
         }
 
-        public InterActionDTO MoveLeft(InterActionDTO input)
+        virtual public InterActionDTO MoveLeft(InterActionDTO input)
         {
-            throw new NotImplementedException();
+            return input;
         }
 
-        public InterActionDTO MoveRight(InterActionDTO input)
+        virtual public InterActionDTO MoveRight(InterActionDTO input)
         {
-            throw new NotImplementedException();
+            return input;
         }
 
-        public InterActionDTO MoveUp(InterActionDTO input)
+        virtual public InterActionDTO MoveUp(InterActionDTO input)
         {
-            throw new NotImplementedException();
+            return input;
+        }
+
+        virtual public InterActionDTO ReceiveInterActionDTO(InterActionDTO input)
+        {
+            InterActionDTO output = input;
+            switch (input.InputAction)
+            {
+                case InputAction.Up:
+                    output = MoveUp(input);
+                    break;
+                case InputAction.Right:
+                    output = MoveRight(input);
+                    break;
+                case InputAction.Down:              //Only implemented
+                    output = MoveDown(input);
+                    break;
+                case InputAction.Left:
+                    output = MoveLeft(input);
+                    break;
+                default:
+                    output.DTO.Message = $"ERROR: CharacterElement.ReceiveInterActionDTO: Input: {input.InputAction} not recognized";
+                    output.DTO.Success = false;
+                    output.DTO.Error = true;
+                    break;
+            }
+
+            return output;
         }
     }
 }

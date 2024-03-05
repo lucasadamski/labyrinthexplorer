@@ -10,6 +10,7 @@ namespace LabyrinthExplorer.Logic.Infrastructure
 {
     public interface IMove
     {
+        public InterActionDTO ReceiveInterActionDTO(InterActionDTO input);
         public InterActionDTO MoveUp(InterActionDTO input);
         public InterActionDTO MoveDown(InterActionDTO input);
         public InterActionDTO MoveLeft(InterActionDTO input);
