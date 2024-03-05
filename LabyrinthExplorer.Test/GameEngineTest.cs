@@ -344,6 +344,25 @@ namespace LabyrinthExplorer.Test
             GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
             GEoutput = GE.RunEngine(GEinput);
             Assert.AreEqual('P', GEoutput.Frame[2][1]);
+
+            //1 Move down to a Trap Item
+            //2 Player chagnes position one field down
+            //3 Trap does damage to Player Settings.TRAP_DAMAGE (25 BY DEFAULT)
+            //4 Trap dissapears
+            //5 Player health should be 85, or Settings.PLAYER_FULL_HEALTH(100) - TRAP_DAMAGE(25)
+            map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', 'X', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GEoutput = GE.RunEngine(GEinput);
+            Assert.AreEqual('P', GEoutput.Frame[2][1]);
+            Assert.AreEqual(Settings.PLAYER_FULL_HEALTH - Settings.TRAP_DAMAGE, GE.UserPlayer.Health);
         }
     }
 }

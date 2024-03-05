@@ -13,5 +13,6 @@ namespace LabyrinthExplorer.Logic.Infrastructure
         public bool Pickup(CharacterElement player);
         public bool UseDoor(CharacterElement player);
         public bool DoDamage(CharacterElement playerDoneDamageTo);
+        public bool DoDamage(byte amountOfDamage);
     }
 }

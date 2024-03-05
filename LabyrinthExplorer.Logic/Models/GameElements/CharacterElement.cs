@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LabyrinthExplorer.Logic.Models.GameElements
 {
-    public abstract class CharacterElement : GameElement, IMove
+    public abstract class CharacterElement : GameElement, IMove, IInteract
     {
         public CharacterElement() { }
         public CharacterElement(int x, int y)
@@ -17,6 +17,8 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         }
         public byte Health { get; set; }
         public List<ItemElement> Inventory { get; set; }
+
+       
 
         virtual public InterActionDTO MoveDown(InterActionDTO input)
         {
@@ -56,7 +58,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         virtual public InterActionDTO MoveUp(InterActionDTO input)
         {
             return input;
-        }
+        }      
 
         virtual public InterActionDTO ReceiveInterActionDTO(InterActionDTO input)
         {
@@ -84,5 +86,19 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
 
             return output;
         }
+
+        virtual public bool DoDamage(byte amountOfDamage)
+        {
+            Health -= amountOfDamage;
+            if (Health < 1)
+            {
+                Visible = false; //End of game
+            }
+            return true;
+        }
+
+        virtual public bool DoDamage(CharacterElement playerDoneDamageTo) => false;
+        virtual public bool UseDoor(CharacterElement player) => false;
+        virtual public bool Pickup(CharacterElement player) => false;
     }
 }
