@@ -11,7 +11,7 @@ namespace LabyrinthExplorer.Logic.Infrastructure
     public interface IInteract
     {
         public DTO Pickup(CharacterElement player);
-        public DTO UseDoor(CharacterElement player);
+        public DTO Use(CharacterElement player);
         public DTO DoDamage(CharacterElement playerDoneDamageTo);
         public DTO DoDamage(byte amountOfDamage);
     }

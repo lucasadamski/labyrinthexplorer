@@ -31,7 +31,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             {
                 output.Message += $"{this.Name} has done {Settings.ENEMY_DAMAGE} damage to {playerDoneDamageTo.Name}\n";
                 DTO temp = up.DoDamage(Settings.ENEMY_DAMAGE);
-                output.Message += temp.Message; 
+                output.Message += temp.Message;
                 return output;
             }
             return new DTO(false);

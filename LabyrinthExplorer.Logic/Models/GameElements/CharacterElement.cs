@@ -127,7 +127,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             return output;
         }
 
-        virtual public DTO DoDamage(byte amountOfDamage)
+        override public DTO DoDamage(byte amountOfDamage) //virtual
         {
             DTO output = new DTO();
             Health -= amountOfDamage;
@@ -140,8 +140,8 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             return output;
         }
 
-        virtual public DTO DoDamage(CharacterElement playerDoneDamageTo) => new DTO("Not implemented\n", false);
-        virtual public DTO UseDoor(CharacterElement player) => new DTO("Not implemented\n", false);
-        virtual public DTO Pickup(CharacterElement player) => new DTO("Not implemented\n", false);
+        //virtual public DTO DoDamage(CharacterElement playerDoneDamageTo) => new DTO("Not implemented\n", false);
+       // virtual public DTO Use(CharacterElement player) => new DTO("Not implemented\n", false);
+        //virtual public DTO Pickup(CharacterElement player) => new DTO("Not implemented\n", false);
     }
 }

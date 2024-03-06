@@ -29,8 +29,11 @@ namespace LabyrinthExplorer.Data.Helpers
 
 
         public const int PLAYER_FULL_HEALTH = 100;
+        public const int NPC_PLAYER_FULL_HEALTH = 100;
+
         public const int TRAP_DAMAGE = 25;
         public const int ENEMY_DAMAGE = 50;
+        public const int WEAPON_DAMAGE = 50;
 
         //UI will use those to translate to sprites
         public const char MODEL_USER_PLAYER     = 'P';

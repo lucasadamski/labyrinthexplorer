@@ -487,10 +487,38 @@ namespace LabyrinthExplorer.Test
             GE = new GameEngine(Settings.INJECTED_LEVEL, map);
             GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
             GEoutput = GE.RunEngine(GEinput);
-            Trace.Write(GEoutput.Log);
+            //Trace.Write(GEoutput.Log);
             Assert.AreEqual('P', GEoutput.Frame[1][1]);
             Assert.AreEqual('E', GEoutput.Frame[2][1]);
             Assert.AreEqual(Settings.PLAYER_FULL_HEALTH - Settings.ENEMY_DAMAGE, GE.UserPlayer.Health);
+        }
+
+        [TestMethod]
+        public void UseWeaponTest()
+        {
+            //1 up uses weapon
+            //2 npc receives damage 50
+            //3 npc health is 100 - 50 = 50
+            char[][] map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', 'E', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+
+            GameEngine GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            GameEngineInputDTO GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.UseWeapon };
+
+            GameEngineOutputDTO GEoutput = GE.RunEngine(GEinput);
+
+            Trace.Write(GEoutput.Log);
+            Assert.AreEqual('P', GEoutput.Frame[1][1]);
+            Assert.AreEqual('E', GEoutput.Frame[2][1]);
+            Assert.AreEqual(Settings.NPC_PLAYER_FULL_HEALTH - Settings.WEAPON_DAMAGE, GE.NPCPlayer.ElementAt(0).Health);
+            
         }
     }
 }
