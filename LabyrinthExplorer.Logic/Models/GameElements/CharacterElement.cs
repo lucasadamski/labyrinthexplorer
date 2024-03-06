@@ -25,6 +25,8 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         virtual public InterActionDTO MoveDown(InterActionDTO input)
         {
             InterActionDTO output = input;
+            DTO dtoOutput = new DTO();
+
             if (input.MapOfElements[2][1] is EmptySpace es)
             {
                 EmptySpace temp = es;
@@ -42,17 +44,8 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             }
             else if (input.MapOfElements[2][1] is ItemElement ie)
             {
-                if (ie.Pickup(this).Success == true)
-                {
-                    if (ie is Trap t)
-                    {
-                        output.DTO.Message += $"{t.Name} done {Settings.TRAP_DAMAGE} damage to {this.Name}\n";
-                    }
-                    else
-                    {
-                        output.DTO.Message += $"{this.Name} picked up {ie.Name}\n";
-                    }
-                }
+                dtoOutput = ie.Pickup(this);
+                output.DTO.Message += dtoOutput.Message;
 
                 output.MapOfElements[2][1] = input.MapOfElements[1][1];
                 output.MapOfElements[1][1] = new EmptySpace(input.CenterPosition.X, input.CenterPosition.Y);
@@ -81,10 +74,8 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             }
             else if (input.MapOfElements[2][1] is NPCPlayer npc)
             {
-                if (npc.DoDamage(this).Success == true)
-                {
-                    output.DTO.Message += $"DoDamage: {npc.Name} done {Settings.ENEMY_DAMAGE} damage to {this.Name}\n";
-                }
+                dtoOutput = npc.DoDamage(this);
+                output.DTO.Message += dtoOutput.Message;
                 output.DTO.Message += $"CharacterElement.MoveDown: Move Down Denied. {Name} can not move to {npc.Name}\n";
                 return output;
             }
@@ -140,7 +131,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         {
             DTO output = new DTO();
             Health -= amountOfDamage;
-            output.Message += $"{this.Name} took {amountOfDamage}\n";
+            output.Message += $"{this.Name} took {amountOfDamage} damage\n";
             if (Health < 1)
             {
                 NotVisible = true; //End of game in case of UserPlayer

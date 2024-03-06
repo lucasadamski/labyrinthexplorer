@@ -55,13 +55,12 @@ namespace LabyrinthExplorer.Logic
         }
         public GameEngineOutputDTO RunEngine(GameEngineInputDTO input)
         {
-            //1.ReceiveInputDTO
-            //2.Translate InputDTO to InterActionDTO
-            //3. Send InterActionDTO to HumanPlayer
-            //4. Let Player Do his black Box
             InputAction = ReceiveInputDTO(input);
             UserPlayerInterActionDTO = TranslateInputActionToInterAction(InputAction, UserPlayer.Position);
             UserPlayerReturnedInterActionDTO = UserPlayer.ReceiveInterActionDTO(UserPlayerInterActionDTO);
+            logger.AppendDTOMessage(UserPlayerReturnedInterActionDTO.DTO.Message);
+
+
             Map = ApplyInterActionDTOOnGameElementMap(Map, UserPlayerReturnedInterActionDTO);
 
             
@@ -244,7 +243,7 @@ namespace LabyrinthExplorer.Logic
         {
             if (input.DTO.Success == true)
             {
-                logger.Log($"ReceiveInputDTO: Received InputAction: {InputAction.ToString()}");
+                logger.Log($"ReceiveInputDTO: Received InputAction: {input.InputAction.ToString()}");
                 return input.InputAction;
             }
             else
@@ -311,7 +310,6 @@ namespace LabyrinthExplorer.Logic
         }
         public GameElement[][] ApplyInterActionDTOOnGameElementMap(GameElement[][] elementMap, InterActionDTO input)
         {
-            logger.Log(input.DTO.Message); // Add to log UserPlayer Message
             try
             {
                 elementMap[input.CenterPosition.X - 1][input.CenterPosition.Y - 1] = input.MapOfElements[0][0];

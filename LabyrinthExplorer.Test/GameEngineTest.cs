@@ -8,6 +8,7 @@ using LabyrinthExplorer.Logic.Models.GameElements.BuildingElements;
 using System.Linq;
 using LabyrinthExplorer.Logic.DTOs;
 using NuGet.Frameworks;
+using System.Diagnostics;
 
 namespace LabyrinthExplorer.Test
 {
@@ -486,6 +487,7 @@ namespace LabyrinthExplorer.Test
             GE = new GameEngine(Settings.INJECTED_LEVEL, map);
             GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
             GEoutput = GE.RunEngine(GEinput);
+            Trace.Write(GEoutput.Log);
             Assert.AreEqual('P', GEoutput.Frame[1][1]);
             Assert.AreEqual('E', GEoutput.Frame[2][1]);
             Assert.AreEqual(Settings.PLAYER_FULL_HEALTH - Settings.ENEMY_DAMAGE, GE.UserPlayer.Health);

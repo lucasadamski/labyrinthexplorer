@@ -24,6 +24,14 @@ namespace LabyrinthExplorer.Logic.Loggers
             Message = Message.AppendLine("***ERROR*** " + lineNumber++.ToString() + ": " + message);
         }
 
-
+        public void AppendDTOMessage(string message)
+        {
+            message = message.Trim();
+            string[] splitMessages = message.Split('\n');
+            foreach (string line in splitMessages)
+            {
+                Message = Message.AppendLine(lineNumber++.ToString() + ": " + line.Trim());
+            }
+        }
     }
 }
