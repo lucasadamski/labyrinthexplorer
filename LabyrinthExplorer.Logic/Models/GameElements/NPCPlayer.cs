@@ -1,7 +1,9 @@
 ﻿using LabyrinthExplorer.Data.Helpers;
+using LabyrinthExplorer.Logic.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,14 +24,17 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         }
         public List<Coordinates> PatrolMap { get; set; } = new List<Coordinates>();
 
-        override public bool DoDamage(CharacterElement playerDoneDamageTo)
+        override public DTO DoDamage(CharacterElement playerDoneDamageTo)
         {
+            DTO output = new DTO();
             if (playerDoneDamageTo is UserPlayer up)
             {
-                up.DoDamage(Settings.ENEMY_DAMAGE);
-                return true;
+                output.Message += $"{this.Name} has done {Settings.ENEMY_DAMAGE} to {playerDoneDamageTo}";
+                DTO temp = up.DoDamage(Settings.ENEMY_DAMAGE);
+                output.Message += temp.Message; 
+                return output;
             }
-            return false;
+            return new DTO(false);
         }
     }
 }

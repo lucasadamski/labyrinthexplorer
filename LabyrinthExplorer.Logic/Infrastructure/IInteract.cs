@@ -10,9 +10,9 @@ namespace LabyrinthExplorer.Logic.Infrastructure
 {
     public interface IInteract
     {
-        public bool Pickup(CharacterElement player);
-        public bool UseDoor(CharacterElement player);
-        public bool DoDamage(CharacterElement playerDoneDamageTo);
-        public bool DoDamage(byte amountOfDamage);
+        public DTO Pickup(CharacterElement player);
+        public DTO UseDoor(CharacterElement player);
+        public DTO DoDamage(CharacterElement playerDoneDamageTo);
+        public DTO DoDamage(byte amountOfDamage);
     }
 }

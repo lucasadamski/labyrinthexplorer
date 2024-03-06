@@ -1,4 +1,5 @@
 ﻿using LabyrinthExplorer.Data.Helpers;
+using LabyrinthExplorer.Logic.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +21,14 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Model = Settings.MODEL_WEAPON;
             Position = new Coordinates(x, y);
         }
-        override public bool Pickup(CharacterElement player)
+        override public DTO Pickup(CharacterElement player)
         {
-            player.Inventory.Add(this);
+            DTO output = new DTO($"{this.Name} has been picked up by {player.Name}");
+            player.Inventory.Add(this); //TODO use public interface method from Player
             NotVisible = true;
             Position.X = 0;
             Position.Y = 0;
-            return true;
+            return output;
         }
     }
 }

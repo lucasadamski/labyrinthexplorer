@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LabyrinthExplorer.Data.Helpers;
+using LabyrinthExplorer.Logic.DTOs;
 using LabyrinthExplorer.Logic.Models.GameElements.BuildingElements;
 
 namespace LabyrinthExplorer.Logic.Models.GameElements
@@ -21,11 +22,12 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Name = Settings.NAME_TRAP;
             Model = Settings.MODEL_TRAP;
         }
-        override public bool Pickup(CharacterElement player)
+        override public DTO Pickup(CharacterElement player)
         {
+            DTO output = new DTO($"{this.Name} has been stepped on by {player.Name}");
             player.Health -= Settings.TRAP_DAMAGE;//reimplement with interface
             NotVisible = true;
-            return true;
+            return output;
         }
 
     }

@@ -42,7 +42,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             }
             else if (input.MapOfElements[2][1] is ItemElement ie)
             {
-                if (ie.Pickup(this) == true)
+                if (ie.Pickup(this).Success == true)
                 {
                     if (ie is Trap t)
                     {
@@ -81,7 +81,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             }
             else if (input.MapOfElements[2][1] is NPCPlayer npc)
             {
-                if (npc.DoDamage(this) == true)
+                if (npc.DoDamage(this).Success == true)
                 {
                     output.DTO.Message += $"DoDamage: {npc.Name} done {Settings.ENEMY_DAMAGE} damage to {this.Name}";
                 }
@@ -136,18 +136,21 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             return output;
         }
 
-        virtual public bool DoDamage(byte amountOfDamage)
+        virtual public DTO DoDamage(byte amountOfDamage)
         {
+            DTO output = new DTO();
             Health -= amountOfDamage;
+            output.Message += $"{this.Name} took {amountOfDamage}";
             if (Health < 1)
             {
-                NotVisible = true; //End of game
+                NotVisible = true; //End of game in case of UserPlayer
+                output.Message += $"{this.Name} is dead.";
             }
-            return true;
+            return output;
         }
 
-        virtual public bool DoDamage(CharacterElement playerDoneDamageTo) => false;
-        virtual public bool UseDoor(CharacterElement player) => false;
-        virtual public bool Pickup(CharacterElement player) => false;
+        virtual public DTO DoDamage(CharacterElement playerDoneDamageTo) => new DTO("Not implemented", false);
+        virtual public DTO UseDoor(CharacterElement player) => new DTO("Not implemented", false);
+        virtual public DTO Pickup(CharacterElement player) => new DTO("Not implemented", false);
     }
 }
