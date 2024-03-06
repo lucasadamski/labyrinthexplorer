@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LabyrinthExplorer.Logic.Models.GameElements
 {
-    public abstract class CharacterElement : GameElement, IMove, IInteract
+    public abstract class CharacterElement : GameElement, IMove
     {
         public CharacterElement() { }
         public CharacterElement(int x, int y)
@@ -139,9 +139,5 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             }
             return output;
         }
-
-        //virtual public DTO DoDamage(CharacterElement playerDoneDamageTo) => new DTO("Not implemented\n", false);
-       // virtual public DTO Use(CharacterElement player) => new DTO("Not implemented\n", false);
-        //virtual public DTO Pickup(CharacterElement player) => new DTO("Not implemented\n", false);
     }
 }
