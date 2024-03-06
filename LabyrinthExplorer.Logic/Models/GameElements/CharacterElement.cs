@@ -127,7 +127,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             return output;
         }
 
-        override public DTO DoDamage(byte amountOfDamage) //virtual
+        override public DTO DoDamage(byte amountOfDamage)
         {
             DTO output = new DTO();
             Health -= amountOfDamage;
