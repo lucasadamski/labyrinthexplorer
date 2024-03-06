@@ -464,6 +464,31 @@ namespace LabyrinthExplorer.Test
             GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
             GEoutput = GE.RunEngine(GEinput);
             Assert.AreEqual('P', GEoutput.Frame[2][1]);
+
+
+            /******************************************************************************************
+             *          ENEMY TEST
+             ******************************************************************************************/
+
+            //1 Move down to a Enemy
+            //2 Enemy resists, stays in a place
+            //3 Player stays in a place as well
+            //4 Player takes damage from Enemy
+            //5 Check if health of Player lowered
+            map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', 'E', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GEoutput = GE.RunEngine(GEinput);
+            Assert.AreEqual('P', GEoutput.Frame[1][1]);
+            Assert.AreEqual('E', GEoutput.Frame[2][1]);
+            Assert.AreEqual(Settings.PLAYER_FULL_HEALTH - Settings.ENEMY_DAMAGE, GE.UserPlayer.Health);
         }
     }
 }

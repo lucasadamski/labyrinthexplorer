@@ -21,5 +21,15 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Position = new Coordinates(x, y);
         }
         public List<Coordinates> PatrolMap { get; set; } = new List<Coordinates>();
+
+        override public bool DoDamage(CharacterElement playerDoneDamageTo)
+        {
+            if (playerDoneDamageTo is UserPlayer up)
+            {
+                up.DoDamage(Settings.ENEMY_DAMAGE);
+                return true;
+            }
+            return false;
+        }
     }
 }
