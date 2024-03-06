@@ -32,12 +32,12 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 output.MapOfElements[1][1] = es;
                 Position.X++;
                 es.Position.X--;
-                output.DTO.Message += $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an {es.Name}";
+                output.DTO.Message += $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an {es.Name}\n";
                 return output;
             }
             else if (input.MapOfElements[2][1] is Wall w)
             {
-                output.DTO.Message += $"CharacterElement.MoveDown: Move Down Denied. {Name} can not move to {w.Name}";
+                output.DTO.Message += $"CharacterElement.MoveDown: Move Down Denied. {Name} can not move to {w.Name}\n";
                 return output;
             }
             else if (input.MapOfElements[2][1] is ItemElement ie)
@@ -46,25 +46,25 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 {
                     if (ie is Trap t)
                     {
-                        output.DTO.Message += $"{t.Name} done {Settings.TRAP_DAMAGE} damage to {this.Name}";
+                        output.DTO.Message += $"{t.Name} done {Settings.TRAP_DAMAGE} damage to {this.Name}\n";
                     }
                     else
                     {
-                        output.DTO.Message += $"{this.Name} picked up {ie.Name}";
+                        output.DTO.Message += $"{this.Name} picked up {ie.Name}\n";
                     }
                 }
 
                 output.MapOfElements[2][1] = input.MapOfElements[1][1];
                 output.MapOfElements[1][1] = new EmptySpace(input.CenterPosition.X, input.CenterPosition.Y);
                 Position.X++;
-                output.DTO.Message += $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an {ie.Name}.";
+                output.DTO.Message += $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an {ie.Name}\n";
                 return output;
             }
             else if (input.MapOfElements[2][1] is Door d)
             {
                 if (d.Open == false)
                 {
-                    output.DTO.Message += $"CharacterElement.MoveDown: Move Down Denied. {Name} can not move to Closed {d.Name}";
+                    output.DTO.Message += $"CharacterElement.MoveDown: Move Down Denied. {Name} can not move to {d.Name}\n";
                     return output;
                 }
                 else if (d.Open == true)
@@ -72,7 +72,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                     output.MapOfElements[2][1] = input.MapOfElements[1][1];
                     output.MapOfElements[1][1] = new EmptySpace(input.CenterPosition.X, input.CenterPosition.Y);
                     Position.X++;
-                    output.DTO.Message += $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an Open {d.Name}.";
+                    output.DTO.Message += $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an Open {d.Name}\n";
                     return output;
                 }
                 else
@@ -83,9 +83,9 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             {
                 if (npc.DoDamage(this).Success == true)
                 {
-                    output.DTO.Message += $"DoDamage: {npc.Name} done {Settings.ENEMY_DAMAGE} damage to {this.Name}";
+                    output.DTO.Message += $"DoDamage: {npc.Name} done {Settings.ENEMY_DAMAGE} damage to {this.Name}\n";
                 }
-                output.DTO.Message += $"CharacterElement.MoveDown: Move Down Denied. {Name} can not move to {npc.Name}";
+                output.DTO.Message += $"CharacterElement.MoveDown: Move Down Denied. {Name} can not move to {npc.Name}\n";
                 return output;
             }
             else
@@ -127,7 +127,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                     output = MoveLeft(input);
                     break;
                 default:
-                    output.DTO.Message += $"ERROR: CharacterElement.ReceiveInterActionDTO: Input: {input.InputAction} not recognized";
+                    output.DTO.Message += $"ERROR: CharacterElement.ReceiveInterActionDTO: Input: {input.InputAction} not recognized\n";
                     output.DTO.Success = false;
                     output.DTO.Error = true;
                     break;
@@ -140,17 +140,17 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         {
             DTO output = new DTO();
             Health -= amountOfDamage;
-            output.Message += $"{this.Name} took {amountOfDamage}";
+            output.Message += $"{this.Name} took {amountOfDamage}\n";
             if (Health < 1)
             {
                 NotVisible = true; //End of game in case of UserPlayer
-                output.Message += $"{this.Name} is dead.";
+                output.Message += $"{this.Name} is dead.\n";
             }
             return output;
         }
 
-        virtual public DTO DoDamage(CharacterElement playerDoneDamageTo) => new DTO("Not implemented", false);
-        virtual public DTO UseDoor(CharacterElement player) => new DTO("Not implemented", false);
-        virtual public DTO Pickup(CharacterElement player) => new DTO("Not implemented", false);
+        virtual public DTO DoDamage(CharacterElement playerDoneDamageTo) => new DTO("Not implemented\n", false);
+        virtual public DTO UseDoor(CharacterElement player) => new DTO("Not implemented\n", false);
+        virtual public DTO Pickup(CharacterElement player) => new DTO("Not implemented\n", false);
     }
 }

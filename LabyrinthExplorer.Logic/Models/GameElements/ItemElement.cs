@@ -10,9 +10,9 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
 {
     abstract public class ItemElement : GameElement, IInteract
     {
-        virtual public DTO DoDamage(CharacterElement playerDoneDamageTo) => new DTO("Not implemented", false);
-        virtual public DTO DoDamage(byte amountOfDamage) => new DTO("Not implemented", false);
-        virtual public DTO Pickup(CharacterElement player) => new DTO("Not implemented", false);
-        virtual public DTO UseDoor(CharacterElement player) => new DTO("Not implemented", false);
+        virtual public DTO DoDamage(CharacterElement playerDoneDamageTo) => new DTO("Not implemented\n", false);
+        virtual public DTO DoDamage(byte amountOfDamage) => new DTO("Not implemented\n", false);
+        virtual public DTO Pickup(CharacterElement player) => new DTO("Not implemented\n", false);
+        virtual public DTO UseDoor(CharacterElement player) => new DTO("Not implemented\n", false);
     }
 }

@@ -24,7 +24,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         }
         override public DTO Pickup(CharacterElement player)
         {
-            DTO output = new DTO($"{this.Name} has been stepped on by {player.Name}");
+            DTO output = new DTO($"{this.Name} has been stepped on by {player.Name}\n");
             player.Health -= Settings.TRAP_DAMAGE;//reimplement with interface
             NotVisible = true;
             return output;

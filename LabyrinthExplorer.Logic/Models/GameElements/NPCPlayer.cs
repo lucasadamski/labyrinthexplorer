@@ -29,7 +29,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             DTO output = new DTO();
             if (playerDoneDamageTo is UserPlayer up)
             {
-                output.Message += $"{this.Name} has done {Settings.ENEMY_DAMAGE} to {playerDoneDamageTo}";
+                output.Message += $"{this.Name} has done {Settings.ENEMY_DAMAGE} to {playerDoneDamageTo}\n";
                 DTO temp = up.DoDamage(Settings.ENEMY_DAMAGE);
                 output.Message += temp.Message; 
                 return output;
