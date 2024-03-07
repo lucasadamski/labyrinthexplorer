@@ -15,5 +15,8 @@ namespace LabyrinthExplorer.Logic.Infrastructure
         public InterActionDTO MoveDown(InterActionDTO input);
         public InterActionDTO MoveLeft(InterActionDTO input);
         public InterActionDTO MoveRight(InterActionDTO input);
+        public InterActionDTO UseWeapon(InterActionDTO input); //uses only weapon
+        public InterActionDTO UseAction(InterActionDTO input); //uses usable items in vincinity - eg door 
+
     }
 }

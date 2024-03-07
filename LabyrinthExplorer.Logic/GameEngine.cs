@@ -124,14 +124,14 @@ namespace LabyrinthExplorer.Logic
                         case 'K':
                             output[i][j] = new Key(i, j);
                             break;
-                        case 'D':
+                        case 'D': //closed unlocked doors
                             output[i][j] = new Door(i, j);
                             break;
-                        case 'O':
-                            output[i][j] = new Door(i, j) { Open = true };
+                        case 'O': //open doors
+                            output[i][j] = new Door(i, j, true);
                             break;
-                        case 'L':
-                            output[i][j] = new Door(i, j) { Locked = true };                            
+                        case 'L': //locked doors
+                            output[i][j] = new Door(i, j, false, true);                            
                             break;
                         case 'X':
                             output[i][j] = new Trap(i, j);
@@ -189,13 +189,11 @@ namespace LabyrinthExplorer.Logic
             {
                 for (int j = 0; j < mapOfElements[i].Length; j++)
                 {
-                    if (mapOfElements[i][j] is NPCPlayer)
+                    if (mapOfElements[i][j] is NPCPlayer npc)
                     {
                         logger.Log($"InitializeNPCPlayer: Found NPCPlayer {counter} at ({i},{j})");
-                        npcPlayers.Add(new NPCPlayer()
-                        {
-                            Name = $"NPC Player {counter++}"
-                        });
+                        npc.Name += $" {counter++}";
+                        npcPlayers.Add(npc);
                     }
                 }
             }

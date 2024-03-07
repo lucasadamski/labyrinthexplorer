@@ -520,5 +520,56 @@ namespace LabyrinthExplorer.Test
             Assert.AreEqual(Settings.NPC_PLAYER_FULL_HEALTH - Settings.WEAPON_DAMAGE, GE.NPCPlayer.ElementAt(0).Health);
             
         }
+
+        [TestMethod]
+        public void OpenClosedDoorTest()
+        {
+            //1 up uses weapon
+            //2 npc receives damage 50
+            //3 npc health is 100 - 50 = 50
+            char[][] map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', 'D', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+
+            GameEngine GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            GameEngineInputDTO GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Use };
+
+            GameEngineOutputDTO GEoutput = GE.RunEngine(GEinput);
+
+            Trace.Write(GEoutput.Log);
+            Assert.AreEqual('P', GEoutput.Frame[1][1]);
+            Assert.AreEqual('O', GEoutput.Frame[2][1]);
+        }
+        [TestMethod]
+        public void CloseOpenedDoorTest()
+        {
+            //1 up uses weapon
+            //2 npc receives damage 50
+            //3 npc health is 100 - 50 = 50
+            char[][] map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', 'O', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+
+            GameEngine GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            GameEngineInputDTO GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Use };
+
+            GameEngineOutputDTO GEoutput = GE.RunEngine(GEinput);
+
+            Trace.Write(GEoutput.Log);
+            Assert.AreEqual('P', GEoutput.Frame[1][1]);
+            Assert.AreEqual('D', GEoutput.Frame[2][1]);
+        }
     }
 }

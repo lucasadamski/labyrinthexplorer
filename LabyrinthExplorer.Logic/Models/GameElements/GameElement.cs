@@ -17,6 +17,13 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         public char AlternateModel { get; set; }
         public bool MoveThrough { get; set; }
 
+
+        virtual public void SwitchModels()
+        {
+            char temp = Model;
+            Model = AlternateModel;
+            AlternateModel = temp;
+        }
         virtual public DTO DoDamage(CharacterElement playerDoneDamageTo) => new DTO("Not implemented\n", false);
         virtual public DTO DoDamage(byte amountOfDamage) => new DTO("Not implemented\n", false);      
         virtual public DTO Pickup(CharacterElement player) => new DTO("Not implemented\n", false);     

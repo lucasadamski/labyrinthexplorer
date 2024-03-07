@@ -22,6 +22,7 @@ namespace LabyrinthExplorer.Data.Helpers
         public const string NAME_TRAP           = "Trap";
         public const string NAME_OPEN_DOOR      = "Open Door";
         public const string NAME_CLOSED_DOOR    = "Closed Door";
+        public const string NAME_DOOR           = "Door";
         public const string NAME_CORNER_WALL    = "Corner Wall";
         public const string NAME_HORIZONTAL_WALL ="Horizontal Wall";
         public const string NAME_VERTICAL_WALL  = "Vertical Wall";

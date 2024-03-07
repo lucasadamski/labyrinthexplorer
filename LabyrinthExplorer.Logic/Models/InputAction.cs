@@ -13,7 +13,7 @@ namespace LabyrinthExplorer.Logic.Models
         Down,
         Left,
         UseWeapon,
-        UseDoors,
+        Use,
         ExitToMenu,
         Unknown
     }

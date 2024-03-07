@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static LabyrinthExplorer.Data.Helpers.Settings;
 
 namespace LabyrinthExplorer.Logic.Models.GameElements
 {
@@ -111,11 +112,17 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 case InputAction.Right:
                     output = MoveRight(input);
                     break;
-                case InputAction.Down:              //Only implemented
+                case InputAction.Down:              //Only implemented from Moves method family
                     output = MoveDown(input);
                     break;
                 case InputAction.Left:
                     output = MoveLeft(input);
+                    break;
+                case InputAction.UseWeapon:
+                    output = UseWeapon(input);
+                    break;
+                case InputAction.Use:
+                    output = UseAction(input);
                     break;
                 default:
                     output.DTO.Message += $"ERROR: CharacterElement.ReceiveInterActionDTO: Input: {input.InputAction} not recognized\n";
@@ -137,6 +144,48 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 NotVisible = true; //End of game in case of UserPlayer
                 output.Message += $"{this.Name} is dead.\n";
             }
+            return output;
+        }
+
+        public InterActionDTO UseWeapon(InterActionDTO input)
+        {
+            InterActionDTO output = input;
+            DTO dtoOutput = new DTO();
+            //1. call doDamage on every item around player
+            for (int i = 0; i < output.MapOfElements.Length; i++)
+            { 
+                for (int j = 0; j < output.MapOfElements[i].Length; j++)
+                {
+                    if (i == 1 && j == 1) continue; //skip this CharacterElement
+                    dtoOutput = output.MapOfElements[i][j].DoDamage(WEAPON_DAMAGE);
+                    if (dtoOutput.Success == true)
+                    {
+                        output.DTO.Message += dtoOutput.Message;
+                    }
+                }
+            }
+
+            return output;
+        }
+
+        public InterActionDTO UseAction(InterActionDTO input)
+        {
+            InterActionDTO output = input;
+            DTO dtoOutput = new DTO();
+            //1. call Use on every item around player
+            for (int i = 0; i < output.MapOfElements.Length; i++)
+            {
+                for (int j = 0; j < output.MapOfElements[i].Length; j++)
+                {
+                    if (i == 1 && j == 1) continue; //skip this CharacterElement
+                    dtoOutput = output.MapOfElements[i][j].Use(this);
+                    if (dtoOutput.Success == true)
+                    {
+                        output.DTO.Message += dtoOutput.Message;
+                    }
+                }
+            }
+
             return output;
         }
     }
