@@ -65,6 +65,7 @@ namespace LabyrinthExplorer.Logic
 
             
             GameEngineOutputDTO = PrepareGameEngineOutputDTO(Map, logger);
+            logger.ClearMessage();
 
             return GameEngineOutputDTO; //not implemented
         }

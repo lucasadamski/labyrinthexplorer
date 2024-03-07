@@ -16,6 +16,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Name = Settings.NAME_NPC_PLAYER;
             Model = Settings.MODEL_NPC_PLAYER;
             Health = Settings.NPC_PLAYER_FULL_HEALTH;
+            HiddenElement = new EmptySpace();
         }
         public NPCPlayer(int x, int y)
         {
@@ -23,6 +24,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Model = Settings.MODEL_NPC_PLAYER;
             Health = Settings.NPC_PLAYER_FULL_HEALTH;
             Position = new Coordinates(x, y);
+            HiddenElement = new EmptySpace(x, y);
         }
         public List<Coordinates> PatrolMap { get; set; } = new List<Coordinates>();
 

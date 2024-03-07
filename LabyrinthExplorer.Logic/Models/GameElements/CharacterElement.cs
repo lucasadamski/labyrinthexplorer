@@ -5,6 +5,7 @@ using LabyrinthExplorer.Logic.Models.GameElements.BuildingElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using static LabyrinthExplorer.Data.Helpers.Settings;
@@ -17,24 +18,55 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         public CharacterElement(int x, int y)
         {
             Position = new Coordinates(x, y);
+            HiddenElement = new EmptySpace(x, y);
         }
         public byte Health { get; set; }
         public List<ItemElement> Inventory { get; set; }
+        public GameElement HiddenElement { get; set; }
 
-       
+        virtual protected GameElement HideElement(GameElement element)
+        {
+            return element;
+        }
+
+        virtual protected GameElement UnhideElement()
+        {
+            return HiddenElement;
+        }
+
+        virtual protected void MoveOpration(InterActionDTO interAction, Coordinates primary, Coordinates target, GameElement itemToHide)
+        {
+            if(itemToHide is ItemElement)
+            {
+                GameElement temp = interAction.MapOfElements[primary.X][primary.Y];
+                interAction.MapOfElements[primary.X][primary.Y] = UnhideElement();
+                HiddenElement = new EmptySpace(target.X, target.Y); //TODO not good with position, its relative to local MapOfElements
+                interAction.MapOfElements[target.X][target.Y] = temp;
+                return;
+            }
+            else
+            {
+                GameElement temp = interAction.MapOfElements[primary.X][primary.Y];
+                interAction.MapOfElements[primary.X][primary.Y] = UnhideElement();                
+                HiddenElement = HideElement(interAction.MapOfElements[target.X][target.Y]);
+                interAction.MapOfElements[target.X][target.Y] = temp;                
+                return;
+            }
+        }
+
 
         virtual public InterActionDTO MoveDown(InterActionDTO input)
         {
             InterActionDTO output = input;
             DTO dtoOutput = new DTO();
 
+            Coordinates primaryPosition = new Coordinates(1, 1);
+            Coordinates targetPosition  = new Coordinates(2, 1);
+
             if (input.MapOfElements[2][1] is EmptySpace es)
             {
-                EmptySpace temp = es;
-                output.MapOfElements[2][1] = input.MapOfElements[1][1];
-                output.MapOfElements[1][1] = es;
-                Position.X++;
-                es.Position.X--;
+                MoveOpration(output, primaryPosition, targetPosition, es);
+                Position.X++;                
                 output.DTO.Message += $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an {es.Name}\n";
                 return output;
             }
@@ -48,8 +80,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 dtoOutput = ie.Pickup(this);
                 output.DTO.Message += dtoOutput.Message;
 
-                output.MapOfElements[2][1] = input.MapOfElements[1][1];
-                output.MapOfElements[1][1] = new EmptySpace(input.CenterPosition.X, input.CenterPosition.Y);
+                MoveOpration(output, primaryPosition, targetPosition, ie);
                 Position.X++;
                 output.DTO.Message += $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an {ie.Name}\n";
                 return output;
@@ -63,8 +94,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 }
                 else if (d.Open == true)
                 {
-                    output.MapOfElements[2][1] = input.MapOfElements[1][1];
-                    output.MapOfElements[1][1] = new EmptySpace(input.CenterPosition.X, input.CenterPosition.Y);
+                    MoveOpration(output, primaryPosition, targetPosition, d);
                     Position.X++;
                     output.DTO.Message += $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an Open {d.Name}\n";
                     return output;

@@ -255,7 +255,7 @@ namespace LabyrinthExplorer.Test
 
             GameEngineOutputDTO GEoutput = GE.RunEngine(GEinput);
 
-            bool result = GE.logger.Message.ToString().Contains("TranslateInputActionToInterAction: Converted input Unknown and coordinates X:1 Y:1 to InterActionDTO");
+            bool result = GEoutput.Log.ToString().Contains("TranslateInputActionToInterAction: Converted input Unknown and coordinates X:1 Y:1 to InterActionDTO");
             Assert.AreEqual(true, result);
         }
 
@@ -524,9 +524,9 @@ namespace LabyrinthExplorer.Test
         [TestMethod]
         public void OpenClosedDoorTest()
         {
-            //1 up uses weapon
-            //2 npc receives damage 50
-            //3 npc health is 100 - 50 = 50
+            //1 player uses doors
+            //2 doors change from closed to opened
+            //3 check if doors are opened
             char[][] map = new char[5][]
                {
                           new char[5] { '+', '-', '-', '-', '+'}
@@ -549,9 +549,9 @@ namespace LabyrinthExplorer.Test
         [TestMethod]
         public void CloseOpenedDoorTest()
         {
-            //1 up uses weapon
-            //2 npc receives damage 50
-            //3 npc health is 100 - 50 = 50
+            //1 player uses doors
+            //2 doors change from open to closed
+            //3 check if doors are closed
             char[][] map = new char[5][]
                {
                           new char[5] { '+', '-', '-', '-', '+'}
@@ -570,6 +570,43 @@ namespace LabyrinthExplorer.Test
             Trace.Write(GEoutput.Log);
             Assert.AreEqual('P', GEoutput.Frame[1][1]);
             Assert.AreEqual('D', GEoutput.Frame[2][1]);
+        }
+
+        [TestMethod]
+        public void MoveThruOpenDoors()
+        {
+            //1 player takes two steps down : 1st onto the open doors 2nd onto empty space
+            //2 doors should let thru the player
+            //3 check if above player is opened door
+            //4 check if abouve opened door is empty space
+            char[][] map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', 'O', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+
+            GameEngine GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            //first step
+            GameEngineInputDTO GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GameEngineOutputDTO GEoutput = GE.RunEngine(GEinput);
+            Trace.Write(GEoutput.Log);
+            Assert.AreEqual(' ', GEoutput.Frame[1][1]);
+            Assert.AreEqual('P', GEoutput.Frame[2][1]);
+            Assert.AreEqual(' ', GEoutput.Frame[3][1]);
+            //second step
+            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GEoutput = GE.RunEngine(GEinput);
+            Trace.Write(GEoutput.Log);
+            Assert.AreEqual(' ', GEoutput.Frame[1][1]);
+            Assert.AreEqual('O', GEoutput.Frame[2][1]);
+            Assert.AreEqual('P', GEoutput.Frame[3][1]);
+
+
+
         }
     }
 }

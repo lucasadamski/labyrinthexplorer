@@ -18,6 +18,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Model = Settings.MODEL_USER_PLAYER;
             Health = Settings.PLAYER_FULL_HEALTH;
             Position = new Coordinates(1, 1);
+            HiddenElement = new EmptySpace(1, 1);
         }
         public UserPlayer(int x, int y)
         {
@@ -26,6 +27,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Model = Settings.MODEL_USER_PLAYER;
             Position = new Coordinates(x, y);
             Health = Settings.PLAYER_FULL_HEALTH;
+            HiddenElement = new EmptySpace(x, y);
         }  
 
     }
