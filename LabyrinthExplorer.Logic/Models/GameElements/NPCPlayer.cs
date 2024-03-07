@@ -28,7 +28,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         }
         public List<Coordinates> PatrolMap { get; set; } = new List<Coordinates>();
 
-        override public DTO DoDamage(CharacterElement playerDoneDamageTo)
+        override public DTO DoDamage(CharacterElement playerDoneDamageTo) //delete if below works
         {
             DTO output = new DTO();
             if (playerDoneDamageTo is UserPlayer up)
@@ -40,5 +40,8 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             }
             return new DTO(false);
         }
+
+        override public DTO ReceiveStep(CharacterElement player) => DoDamage(player);
+
     }
 }

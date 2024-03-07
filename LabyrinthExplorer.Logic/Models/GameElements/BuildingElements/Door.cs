@@ -74,5 +74,20 @@ namespace LabyrinthExplorer.Logic.Models.GameElements.BuildingElements
             return true;
         }
 
+        override public DTO ReceiveStep(CharacterElement player)
+        {
+            DTO output = new DTO();
+            if (Open == true)
+            {
+                output.Message += $"{this.Name} is open. {player.Name} allowed to step in";
+                return output;
+            }
+            else
+            {
+                output.Success = false;
+                output.Message += $"{this.Name} is closed. {player.Name} not allowed to step in";
+                return output;
+            }
+        }
     }
 }

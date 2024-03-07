@@ -34,7 +34,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             return HiddenElement;
         }
 
-        virtual protected void MoveOpration(InterActionDTO interAction, Coordinates primary, Coordinates target, GameElement itemToHide)
+        virtual protected void MoveOperation(InterActionDTO interAction, Coordinates primary, Coordinates target, GameElement itemToHide)
         {
             if(itemToHide is ItemElement)
             {
@@ -62,58 +62,41 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
 
             Coordinates primaryPosition = new Coordinates(1, 1);
             Coordinates targetPosition  = new Coordinates(2, 1);
+            GameElement targetElement = input.MapOfElements[targetPosition.X][targetPosition.Y];
 
-            if (input.MapOfElements[2][1] is EmptySpace es)
-            {
-                MoveOpration(output, primaryPosition, targetPosition, es);
-                Position.X++;                
-                output.DTO.Message += $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an {es.Name}\n";
-                return output;
-            }
-            else if (input.MapOfElements[2][1] is Wall w)
-            {
-                output.DTO.Message += $"CharacterElement.MoveDown: Move Down Denied. {Name} can not move to {w.Name}\n";
-                return output;
-            }
-            else if (input.MapOfElements[2][1] is ItemElement ie)
-            {
-                dtoOutput = ie.Pickup(this);
-                output.DTO.Message += dtoOutput.Message;
 
-                MoveOpration(output, primaryPosition, targetPosition, ie);
-                Position.X++;
-                output.DTO.Message += $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an {ie.Name}\n";
-                return output;
-            }
-            else if (input.MapOfElements[2][1] is Door d)
+            dtoOutput = targetElement.ReceiveStep(this);
+            if (dtoOutput.Success == true) //reacts to step
             {
-                if (d.Open == false)
+                if (targetElement is NPCPlayer nps)
                 {
-                    output.DTO.Message += $"CharacterElement.MoveDown: Move Down Denied. {Name} can not move to {d.Name}\n";
-                    return output;
+                    output.DTO.Message += dtoOutput.Message;
+                    return output;     //step denied, return output without MoveOperation
                 }
-                else if (d.Open == true)
+                if (targetElement is Door d) 
                 {
-                    MoveOpration(output, primaryPosition, targetPosition, d);
-                    Position.X++;
-                    output.DTO.Message += $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an Open {d.Name}\n";
-                    return output;
+                    if (d.Open == false)
+                    {
+                        output.DTO.Message += $"CharacterElement.MoveDown: Move Down Denied. {Name} can not move to {d.Name}\n";
+                        return output;    //step denied, return output without MoveOperation
+                    }
+                    else if (d.Open == true) //allows to step on itself
+                    {
+                        output.DTO.Message += $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an Open {d.Name}\n";
+                    }
+                    output.DTO.Message += dtoOutput.Message;
                 }
-                else
-                    return output;
-                
-            }
-            else if (input.MapOfElements[2][1] is NPCPlayer npc)
-            {
-                dtoOutput = npc.DoDamage(this);
-                output.DTO.Message += dtoOutput.Message;
-                output.DTO.Message += $"CharacterElement.MoveDown: Move Down Denied. {Name} can not move to {npc.Name}\n";
+                MoveOperation(output, primaryPosition, targetPosition, targetElement);
+                Position.X = targetPosition.X;
+                Position.Y = targetPosition.Y;
                 return output;
             }
             else
             {
+                output.DTO.Message += dtoOutput.Message;
                 return output;
             }
+
         }
 
         virtual public InterActionDTO MoveLeft(InterActionDTO input)

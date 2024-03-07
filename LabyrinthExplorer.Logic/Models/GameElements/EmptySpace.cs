@@ -1,4 +1,5 @@
 ﻿using LabyrinthExplorer.Data.Helpers;
+using LabyrinthExplorer.Logic.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,12 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Name = Settings.NAME_EMPTY_SPACE;
             Model = Settings.MODEL_EMPTY_SPACE;
             Position = new Coordinates(x, y);
+        }
+
+        override public DTO ReceiveStep(CharacterElement player)
+        {
+            NotVisible = true;
+            return new DTO();
         }
     }
 }

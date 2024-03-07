@@ -29,6 +29,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             NotVisible = true;
             return output;
         }
+        override public DTO ReceiveStep(CharacterElement player) => Pickup(player);
 
     }
 }

@@ -14,5 +14,6 @@ namespace LabyrinthExplorer.Logic.Infrastructure
         public DTO Use(CharacterElement player);
         public DTO DoDamage(CharacterElement playerDoneDamageTo);
         public DTO DoDamage(byte amountOfDamage);
+        public DTO ReceiveStep(CharacterElement player);
     }
 }

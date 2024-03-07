@@ -31,5 +31,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Position.Y = 0;
             return output;
         }
+
+        override public DTO ReceiveStep(CharacterElement player) => Pickup(player);
     }
 }
