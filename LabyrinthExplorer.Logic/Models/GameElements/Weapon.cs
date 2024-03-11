@@ -21,15 +21,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Model = Settings.MODEL_WEAPON;
             Position = new Coordinates(x, y);
         }
-        override public DTO Pickup(CharacterElement player)
-        {
-            DTO output = new DTO($"{this.Name} has been picked up by {player.Name}\n");
-            player.Inventory.Add(this); //TODO use public interface method from Player
-            NotVisible = true;
-            Position.X = 0;
-            Position.Y = 0;
-            return output;
-        }
+     
         override public DTO ReceiveStep(CharacterElement player) => Pickup(player);
     }
 }

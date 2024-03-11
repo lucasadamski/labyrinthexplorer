@@ -29,5 +29,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         virtual public DTO Pickup(CharacterElement player) => new DTO("Not implemented\n", false);     
         virtual public DTO Use(CharacterElement player) => new DTO("Not implemented\n", false);
         virtual public DTO ReceiveStep(CharacterElement player) => new DTO($"{this.Name} cannot be stepped on by {player.Name}\n", false);
+        virtual public DTO Pickup(ItemElement item) => new DTO("Not implemented\n", false);
+        
     }
 }

@@ -9,6 +9,7 @@ using System.Linq;
 using LabyrinthExplorer.Logic.DTOs;
 using NuGet.Frameworks;
 using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
 
 namespace LabyrinthExplorer.Test
 {
@@ -605,6 +606,54 @@ namespace LabyrinthExplorer.Test
             Assert.AreEqual('O', GEoutput.Frame[2][1]);
             Assert.AreEqual('P', GEoutput.Frame[3][1]);
 
+        }
+
+        [TestMethod]
+        public void HUDTest()
+        {
+            /*              HUD
+             * 
+             *  1) UserPlayer Health
+                2) UserPlayer Inventory
+                3) Game Message:
+                * UP interacted successfully with item, door, npc
+                * UP cant open locked door
+                * UP took damage
+                * UP done damage
+             * */
+
+            //1 receive damage
+            //message pops up
+            //you have less health on health bar
+
+            char[][] map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', 'X', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+
+            GameEngine GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            //first step
+            GameEngineInputDTO GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GameEngineOutputDTO GEoutput = GE.RunEngine(GEinput);
+            Trace.Write(GEoutput.Log);
+            Trace.Write(GEoutput.HUD);
+            Assert.AreEqual(true , GEoutput.HUD.Contains("Health: 75"));
+            Assert.AreEqual(true, GEoutput.HUD.Contains("Inventory:"));
+            Assert.AreEqual(true, GEoutput.HUD.Contains("Message: User Player took 25 damage"));
+            
+
+
+
+
+            //2 do damage
+            //3 pick up key
+            //4 use locked doors without key
+            //5 use doors with key
 
 
         }

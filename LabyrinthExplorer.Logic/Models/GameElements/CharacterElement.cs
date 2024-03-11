@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using static LabyrinthExplorer.Data.Helpers.Settings;
@@ -89,6 +90,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 MoveOperation(output, primaryPosition, targetPosition, targetElement);
                 Position.X = targetPosition.X;
                 Position.Y = targetPosition.Y;
+                output.DTO.Message += dtoOutput.Message;
                 return output;
             }
             else
@@ -201,5 +203,14 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
 
             return output;
         }
+
+        override public DTO Pickup(ItemElement item)
+        {
+            DTO output = new DTO();
+            Inventory.Add(item);
+            output.Message += $"{this.Name} picked up {item.Name}";
+            return output;
+        }
+
     }
 }

@@ -7,7 +7,9 @@ using LabyrinthExplorer.Logic.Models;
 using LabyrinthExplorer.Logic.Models.GameElements;
 using LabyrinthExplorer.Logic.Models.GameElements.BuildingElements;
 using System.Diagnostics.Metrics;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 
 
 
@@ -301,10 +303,14 @@ namespace LabyrinthExplorer.Logic
                 }
             }
 
+            logger.Log($"PrepareGameEngineOutputDTO: Success.");
+
             //Set Log
             output.Log = logger.Message.ToString();
 
-            logger.Log($"PrepareGameEngineOutputDTO: Success.");
+            //Set HUD
+            output.HUD = PrepareHUD(output.Log, UserPlayer);
+
             return output;
         }
         public GameElement[][] ApplyInterActionDTOOnGameElementMap(GameElement[][] elementMap, InterActionDTO input)
@@ -331,6 +337,28 @@ namespace LabyrinthExplorer.Logic
                 logger.LogError($"ApplyInterActionDTOOnGameElementMap: Error, Center Position X:{input.CenterPosition.X} Y:{input.CenterPosition.Y}");
                 return elementMap;
             }
+        }
+
+        private string PrepareHUD(string log, CharacterElement player)
+        {
+            StringBuilder output = new StringBuilder();
+            output = output.AppendLine($"Health: {player.Health}");
+            output = output.AppendLine($"Inventory: ");
+            foreach (ItemElement item in player.Inventory)
+            {
+                output = output.Append($"{item.Name}");
+            }
+            output = output.Append($"Message: ");
+            //if line of log contains keyword, it will be copied to hud message
+            foreach (string logLine in log.Split('\n'))
+            {
+                if (logLine.Contains(player.Name))
+                {
+                    if(logLine.Substring(0, player.Name.Length + 6).Contains(player.Name) == true)
+                    output = output.Append(logLine.Substring(logLine.IndexOf(player.Name)));
+                }         
+            }
+            return output.ToString();
         }
     }
 
