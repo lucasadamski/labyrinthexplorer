@@ -658,15 +658,15 @@ namespace LabyrinthExplorer.Test
                };
 
             GE = new GameEngine(Settings.INJECTED_LEVEL, map);
-
+            GE.ApplyCheats("give_all");
 
             GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.UseWeapon };
             GEoutput = GE.RunEngine(GEinput);
             Trace.Write(GEoutput.Log);
             Trace.Write(GEoutput.HUD);
-            Assert.AreEqual(true, GEoutput.HUD.Contains("Health: 75"));
+            Assert.AreEqual(true, GEoutput.HUD.Contains("Health: 100"));
             Assert.AreEqual(true, GEoutput.HUD.Contains("Inventory:"));
-            Assert.AreEqual(true, GEoutput.HUD.Contains("Message: User Player took 25 damage"));
+            Assert.AreEqual(true, GEoutput.HUD.Contains("Message: User Player done 50 damage to NPC Player"));
 
 
             //3 pick up key

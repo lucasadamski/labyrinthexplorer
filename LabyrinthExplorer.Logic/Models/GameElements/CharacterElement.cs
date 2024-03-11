@@ -157,7 +157,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             if (Health < 1)
             {
                 NotVisible = true; //End of game in case of UserPlayer
-                output.Message += $"{this.Name} is dead.\n";
+                output.Message += $"{this.Name} is dead\n";
             }
             return output;
         }
@@ -166,6 +166,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         {
             InterActionDTO output = input;
             DTO dtoOutput = new DTO();
+            output.DTO.Message += $"{this.Name} used Weapon\n";
             //1. call doDamage on every item around player
             for (int i = 0; i < output.MapOfElements.Length; i++)
             { 
@@ -175,6 +176,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                     dtoOutput = output.MapOfElements[i][j].DoDamage(WEAPON_DAMAGE);
                     if (dtoOutput.Success == true)
                     {
+                        output.DTO.Message += $"{this.Name} done {WEAPON_DAMAGE} damage to {output.MapOfElements[i][j].Name}\n";
                         output.DTO.Message += dtoOutput.Message;
                     }
                 }
