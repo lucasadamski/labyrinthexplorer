@@ -360,6 +360,25 @@ namespace LabyrinthExplorer.Logic
             }
             return output.ToString();
         }
+
+        /// <summary>
+        /// give_all
+        /// restore_health 
+        /// 
+        /// </summary>
+        /// <param name="cheats"></param>
+        public void ApplyCheats(string cheats)
+        {            
+            if (cheats.Contains("give_all"))
+            {
+                UserPlayer.Pickup(new Key());
+                UserPlayer.Pickup(new Weapon());
+            }
+            if (cheats.Contains("restore_health"))
+            {
+                UserPlayer.Health = 100;
+            }
+        }
     }
 
 }
