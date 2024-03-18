@@ -4,7 +4,14 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            ConsoleUI UI = new ConsoleUI();
+
+        
+
+            while (UI.RunUI())
+            {
+                
+            }
         }
     }
 }
