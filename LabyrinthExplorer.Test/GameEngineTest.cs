@@ -734,6 +734,60 @@ namespace LabyrinthExplorer.Test
             Assert.AreEqual(true, GEoutput.HUD.Contains("User Player used Door"));
             Assert.AreEqual(true, GEoutput.HUD.Contains("Door cannot be unlocked without key"));
 
+        }
+
+        [TestMethod]
+        public void TestMultipleMoves()
+        {
+            //First scenario
+            char P = Settings.MODEL_USER_PLAYER;
+            char[][] map = new char[10][]
+              {
+                  //                      0    1    2    3   4   5   6   7   8   9
+                          new char[10] { '+', '-', '-', '-','-','-','-','-','-','+' } //0
+                        , new char[10] { '|',  P , ' ', ' ',' ',' ',' ',' ',' ','|' } //1
+                        , new char[10] { '|', ' ', ' ', ' ',' ',' ',' ',' ',' ','|' } //2
+                        , new char[10] { '|', ' ', ' ', ' ',' ',' ',' ',' ',' ','|' } //3
+                        , new char[10] { '|', ' ', ' ', ' ',' ',' ',' ',' ',' ','|' } //4
+                        , new char[10] { '|', ' ', ' ', ' ',' ',' ',' ',' ',' ','|' } //5
+                        , new char[10] { '|', ' ', ' ', ' ',' ',' ',' ',' ',' ','|' } //6
+                        , new char[10] { '|', ' ', ' ', ' ',' ',' ',' ',' ',' ','|' } //7
+                        , new char[10] { '|', ' ', ' ', ' ',' ',' ',' ',' ',' ','|' } //8
+                        , new char[10] { '+', '-', '-', '-','-','-','-','-','-','+' } //9
+              };
+
+            GameEngine GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            //1st move down
+            GameEngineInputDTO GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GameEngineOutputDTO GEoutput = GE.RunEngine(GEinput);
+            Trace.Write(GEoutput.Log);
+            Trace.Write(GEoutput.HUD);
+            Assert.AreEqual(P, GEoutput.Frame[2][1]);
+            //2nd move down
+            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GEoutput = GE.RunEngine(GEinput);
+            Trace.Write(GEoutput.Log);
+            Trace.Write(GEoutput.HUD);
+            Assert.AreEqual(P, GEoutput.Frame[3][1]);
+            //3rd move down
+            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GEoutput = GE.RunEngine(GEinput);
+            Trace.Write(GEoutput.Log);
+            Trace.Write(GEoutput.HUD);
+            Assert.AreEqual(P, GEoutput.Frame[4][1]);
+            //4th move down
+            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GEoutput = GE.RunEngine(GEinput);
+            Trace.Write(GEoutput.Log);
+            Trace.Write(GEoutput.HUD);
+            Assert.AreEqual(P, GEoutput.Frame[5][1]);
+            //5th move down
+            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GEoutput = GE.RunEngine(GEinput);
+            Trace.Write(GEoutput.Log);
+            Trace.Write(GEoutput.HUD);
+            Assert.AreEqual(P, GEoutput.Frame[6][1]);
 
 
         }

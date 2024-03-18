@@ -27,11 +27,13 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
 
         virtual protected GameElement HideElement(GameElement element)
         {
+            element.NotVisible = true;
             return element;
         }
 
         virtual protected GameElement UnhideElement()
         {
+            HiddenElement.NotVisible = false;
             return HiddenElement;
         }
 
@@ -166,6 +168,8 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
 
             Coordinates primaryPosition = new Coordinates(1, 1);
             GameElement targetElement = input.MapOfElements[targetPosition.X][targetPosition.Y];
+            int targetX = targetPosition.X;
+            int targetY = targetPosition.Y;
 
             dtoOutput = targetElement.ReceiveStep(this);
             if (dtoOutput.Success == true) //reacts to step
@@ -189,8 +193,8 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                     output.DTO.AppendEditedMessage(dtoOutput.Message);
                 }
                 MoveOperation(output, primaryPosition, targetPosition, targetElement);
-                Position.X = targetPosition.X;
-                Position.Y = targetPosition.Y;
+                UpdatePrimaryAndTargetElementsPositions(targetElement, targetX, targetY);
+
                 output.DTO.AppendEditedMessage(dtoOutput.Message);
                 return output;
             }
@@ -198,6 +202,30 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             {
                 output.DTO.AppendEditedMessage(dtoOutput.Message);
                 return output;
+            }
+        }
+
+        private void UpdatePrimaryAndTargetElementsPositions(GameElement targetElement, int targetX, int targetY)
+        {
+            if (targetX == 0 && targetY == 1) //move up
+            {
+                Position.X--; //update Player position
+                targetElement.Position.X++; //update target Element position
+            }
+            if (targetX == 1 && targetY == 2) //move right
+            {
+                Position.Y++;
+                targetElement.Position.Y--;
+            }
+            if (targetX == 2 && targetY == 1) //move down
+            {
+                Position.X++;
+                targetElement.Position.X--;
+            }
+            if (targetX == 1 && targetY == 0) //move left
+            {
+                Position.Y--;
+                targetElement.Position.Y++;
             }
         }
     }
