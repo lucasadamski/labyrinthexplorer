@@ -36,6 +36,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements.BuildingElements
             //if closed unlocked
             //if opened
             DTO output = new DTO();
+            output.AppendActionMessage($"{player.Name} used {this.Name}");
             if (Locked == false)
             {
                 Open = OpenCloseDoors(Open, output);
