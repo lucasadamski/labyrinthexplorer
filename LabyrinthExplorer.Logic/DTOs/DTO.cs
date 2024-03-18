@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LabyrinthExplorer.Data.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,25 @@ namespace LabyrinthExplorer.Logic.DTOs
         public DTO(bool success)
         {
             Success = success;
+        }
+
+        public void AppendActionMessage(string message)
+        {
+            this.Message += Settings.LOGGER_ACTION + " " + message + "\n";
+        }
+        public void AppendDebugMessage(string message)
+        {
+            this.Message += Settings.LOGGER_DEBUG + " " + message + "\n";
+        }
+
+        public void AppendEditedMessage(string editedMessage)
+        {
+            this.Message += editedMessage;
+        }
+
+        public void AppendErrorMessage(string message)
+        {
+            this.Message += Settings.LOGGER_ERROR + " " + message + "\n";
         }
     }
 }

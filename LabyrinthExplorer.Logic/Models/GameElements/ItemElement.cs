@@ -15,7 +15,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             DTO output = player.Pickup(this);
             if (output.Success == true)
             {
-                output.Message += $"{this.Name} has been picked up by {player.Name}\n";
+                output.AppendActionMessage($"{this.Name} has been picked up by {player.Name}");
                 NotVisible = true;
                 Position.X = 0;
                 Position.Y = 0;

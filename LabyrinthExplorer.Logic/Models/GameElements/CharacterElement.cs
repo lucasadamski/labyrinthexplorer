@@ -78,12 +78,12 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 {
                     if (d.Open == false)
                     {
-                        output.DTO.Message += $"CharacterElement.MoveDown: Move Down Denied. {Name} can not move to {d.Name}\n";
+                        output.DTO.AppendDebugMessage($"CharacterElement.MoveDown: Move Down Denied. {Name} can not move to {d.Name}");
                         return output;    //step denied, return output without MoveOperation
                     }
                     else if (d.Open == true) //allows to step on itself
                     {
-                        output.DTO.Message += $"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an Open {d.Name}\n";
+                        output.DTO.AppendDebugMessage($"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an Open {d.Name}");
                     }
                     output.DTO.Message += dtoOutput.Message;
                 }
@@ -140,7 +140,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                     output = UseAction(input);
                     break;
                 default:
-                    output.DTO.Message += $"ERROR: CharacterElement.ReceiveInterActionDTO: Input: {input.InputAction} not recognized\n";
+                    output.DTO.AppendErrorMessage($"CharacterElement.ReceiveInterActionDTO: Input: {input.InputAction} not recognized");
                     output.DTO.Success = false;
                     output.DTO.Error = true;
                     break;
@@ -153,11 +153,11 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         {
             DTO output = new DTO();
             Health -= amountOfDamage;
-            output.Message += $"{this.Name} took {amountOfDamage} damage\n";
+            output.AppendActionMessage($"{this.Name} took {amountOfDamage} damage");
             if (Health < 1)
             {
                 NotVisible = true; //End of game in case of UserPlayer
-                output.Message += $"{this.Name} is dead\n";
+                output.AppendActionMessage($"{this.Name} is dead");
             }
             return output;
         }
@@ -166,7 +166,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         {
             InterActionDTO output = input;
             DTO dtoOutput = new DTO();
-            output.DTO.Message += $"{this.Name} used Weapon\n";
+            output.DTO.AppendActionMessage($"{this.Name} used Weapon");
             //1. call doDamage on every item around player
             for (int i = 0; i < output.MapOfElements.Length; i++)
             { 
@@ -176,8 +176,8 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                     dtoOutput = output.MapOfElements[i][j].DoDamage(WEAPON_DAMAGE);
                     if (dtoOutput.Success == true)
                     {
-                        output.DTO.Message += $"{this.Name} done {WEAPON_DAMAGE} damage to {output.MapOfElements[i][j].Name}\n";
-                        output.DTO.Message += dtoOutput.Message;
+                        output.DTO.AppendActionMessage($"{this.Name} done {WEAPON_DAMAGE} damage to {output.MapOfElements[i][j].Name}");
+                        output.DTO.AppendEditedMessage(dtoOutput.Message);
                     }
                 }
             }
@@ -198,7 +198,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                     dtoOutput = output.MapOfElements[i][j].Use(this);
                     if (dtoOutput.Success == true)
                     {
-                        output.DTO.Message += dtoOutput.Message;
+                        output.DTO.AppendEditedMessage(dtoOutput.Message);
                     }
                 }
             }
@@ -210,7 +210,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         {
             DTO output = new DTO();
             Inventory.Add(item);
-            output.Message += $"{this.Name} picked up {item.Name}\n";
+            output.AppendActionMessage($"{this.Name} picked up {item.Name}\n");
             return output;
         }
 

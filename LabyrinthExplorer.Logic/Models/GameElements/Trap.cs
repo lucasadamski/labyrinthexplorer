@@ -27,7 +27,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             DTO output = player.DoDamage(Settings.TRAP_DAMAGE);
             if (output.Success == true)
             {
-                output.Message += $"{player.Name} has stepped on {this.Name}\n";
+                output.AppendActionMessage($"{player.Name} has stepped on {this.Name}");
             }
             NotVisible = true;
             return output;

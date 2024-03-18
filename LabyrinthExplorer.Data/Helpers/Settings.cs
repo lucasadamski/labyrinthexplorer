@@ -8,6 +8,12 @@ namespace LabyrinthExplorer.Data.Helpers
 {
     public static class Settings
     {
+        //logger type message
+        public const string LOGGER_DEBUG = "<debug>";
+        public const string LOGGER_ACTION = "<action>";
+        public const string LOGGER_ERROR = "*<ERROR>*";
+
+
         public const string TEST_LEVEL = "test_level";
         public const string INJECTED_LEVEL = "injected_level";
 

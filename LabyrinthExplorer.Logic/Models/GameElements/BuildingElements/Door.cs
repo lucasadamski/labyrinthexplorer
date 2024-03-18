@@ -2,6 +2,7 @@
 using LabyrinthExplorer.Logic.DTOs;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Channels;
@@ -53,8 +54,8 @@ namespace LabyrinthExplorer.Logic.Models.GameElements.BuildingElements
         {
             SwitchModels();
             //log what happened
-            if (currentState == true) dto.Message += $"{this.Name} has been closed\n";
-            else dto.Message += $"{this.Name} has been opened\n";
+            if (currentState == true) dto.AppendActionMessage($"{this.Name} has been closed");
+            else dto.AppendActionMessage($"{this.Name} has been opened");
             //return oposite state
             return !currentState;
         }
@@ -69,11 +70,11 @@ namespace LabyrinthExplorer.Logic.Models.GameElements.BuildingElements
                 {
                     Key potentialKey = k;
                     charactersInventory.Remove(potentialKey);
-                    dto.Message += $"{this.Name} unlocked with {potentialKey.Name}\n";
+                    dto.AppendActionMessage($"{this.Name} unlocked with {potentialKey.Name}");
                     return false;                   
                 }
             }
-            dto.Message += $"{this.Name} cannot be unlocked without key\n";
+            dto.AppendActionMessage($"{this.Name} cannot be unlocked without key");
             return true;
         }
 
@@ -82,13 +83,13 @@ namespace LabyrinthExplorer.Logic.Models.GameElements.BuildingElements
             DTO output = new DTO();
             if (Open == true)
             {
-                output.Message += $"{this.Name} is open. {player.Name} allowed to step in\n";
+                output.AppendDebugMessage($"{this.Name} is open. {player.Name} allowed to step in");
                 return output;
             }
             else
             {
                 output.Success = false;
-                output.Message += $"{this.Name} is closed. {player.Name} not allowed to step in\n";
+                output.AppendDebugMessage($"{this.Name} is closed. {player.Name} not allowed to step in");
                 return output;
             }
         }
