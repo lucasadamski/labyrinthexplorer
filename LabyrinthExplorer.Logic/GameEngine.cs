@@ -309,7 +309,7 @@ namespace LabyrinthExplorer.Logic
             output.Log = logger.Message.ToString();
 
             //Set HUD
-            output.HUD = PrepareHUD(output.Log, UserPlayer);
+            output.HUD = GenerateHUD(output.Log, UserPlayer);
 
             return output;
         }
@@ -339,7 +339,7 @@ namespace LabyrinthExplorer.Logic
             }
         }
 
-        private string PrepareHUD(string log, CharacterElement player)
+        private string GenerateHUD(string log, CharacterElement player)
         {
             //HUD is 3 sections
             //Health: 100
@@ -349,10 +349,10 @@ namespace LabyrinthExplorer.Logic
             StringBuilder output = new StringBuilder();
             string temp = "";
 
-            //Generate Health section
+            //Generate Health section ***********
             output = output.AppendLine($"Health: {player.Health}");
 
-            //Generate Inventory section
+            //Generate Inventory section ****************
             output = output.Append($"Inventory: ");
             foreach (ItemElement item in player.Inventory)
             {
@@ -360,33 +360,13 @@ namespace LabyrinthExplorer.Logic
             }
             output = output.AppendLine();
 
-            //Generate Message section
+            //Generate Message section *************
             output = output.AppendLine($"Message: ");
-            //if line of log does not contain ':' it will be copied to HUD messages
-            /* Every log line has two types of lines:
-             * 1) Internal method line -> 10: Constructor: Started something. 
-             *      It always has a <line number>: <method name>: message 
-             *      Those are not included in HUD Messages (hence we check later if doesn't contain ':' after <method name>
-             * 2) InterAction line -> 10: User Player picked up Key
-             *      <line number>: message
-             *      Only those are included in HUD message
-             *      
-             * WARNING:
-             * That implementation depends on how messages are logged, if above rules will be broken, then hud will be broken as well.
-             * 
-             */
             foreach (string logLine in log.Split('\n'))
             {
-                //strip of number line
-                int position = (logLine.IndexOf(':'));
-                if (position != -1)
-                    temp = logLine.Substring(position + 1);
-                else
-                    temp = logLine;
-                //check if doesn't contains ':'
-                if (!temp.Contains(':'))
+                if (logLine.Contains(Settings.LOGGER_ACTION))
                 {
-                    output.AppendLine((temp.Trim()));
+                    output.AppendLine((logLine.Substring(logLine.IndexOf(Settings.LOGGER_ACTION) + Settings.LOGGER_ACTION.Length)).Trim());
                 }
             }
             return output.ToString();
