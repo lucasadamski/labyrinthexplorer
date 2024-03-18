@@ -38,6 +38,9 @@ namespace LabyrinthExplorer.Logic.Models.GameElements.BuildingElements
             if (Locked == false)
             {
                 Open = OpenCloseDoors(Open, output);
+                string opened = "opened";
+                string closed = "closed";
+                output.Message += $"{player.Name} {(Open ? opened : closed )} {this.Name}"; //TODO
             }
             else
             {
@@ -48,10 +51,10 @@ namespace LabyrinthExplorer.Logic.Models.GameElements.BuildingElements
         }
         private bool OpenCloseDoors(bool currentState, DTO dto)
         {
-            SwitchModels(); //TODO now don;t work
+            SwitchModels();
             //log what happened
-            if (currentState == true) dto.Message += $"{this.Name} has been closed";
-            else dto.Message += $"{this.Name} has been opened";
+            if (currentState == true) dto.Message += $"{this.Name} has been closed\n";
+            else dto.Message += $"{this.Name} has been opened\n";
             //return oposite state
             return !currentState;
         }
@@ -66,11 +69,11 @@ namespace LabyrinthExplorer.Logic.Models.GameElements.BuildingElements
                 {
                     Key potentialKey = k;
                     charactersInventory.Remove(potentialKey);
-                    dto.Message += $"{this.Name} unlocked with {potentialKey.Name}";
+                    dto.Message += $"{this.Name} unlocked with {potentialKey.Name}\n";
                     return false;                   
                 }
             }
-            dto.Message += $"{this.Name} cannot be unlocked without key";
+            dto.Message += $"{this.Name} cannot be unlocked without key\n";
             return true;
         }
 
@@ -79,13 +82,13 @@ namespace LabyrinthExplorer.Logic.Models.GameElements.BuildingElements
             DTO output = new DTO();
             if (Open == true)
             {
-                output.Message += $"{this.Name} is open. {player.Name} allowed to step in";
+                output.Message += $"{this.Name} is open. {player.Name} allowed to step in\n";
                 return output;
             }
             else
             {
                 output.Success = false;
-                output.Message += $"{this.Name} is closed. {player.Name} not allowed to step in";
+                output.Message += $"{this.Name} is closed. {player.Name} not allowed to step in\n";
                 return output;
             }
         }

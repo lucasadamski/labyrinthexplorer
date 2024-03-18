@@ -644,7 +644,7 @@ namespace LabyrinthExplorer.Test
             Trace.Write(GEoutput.HUD);
             Assert.AreEqual(true , GEoutput.HUD.Contains("Health: 75"));
             Assert.AreEqual(true, GEoutput.HUD.Contains("Inventory:"));
-            Assert.AreEqual(true, GEoutput.HUD.Contains("Message: User Player took 25 damage"));
+            Assert.AreEqual(true, GEoutput.HUD.Contains("User Player took 25 damage"));
 
 
             //2 do damage
@@ -662,16 +662,55 @@ namespace LabyrinthExplorer.Test
 
             GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.UseWeapon };
             GEoutput = GE.RunEngine(GEinput);
+            //Trace.Write(GEoutput.Log);
+            //Trace.Write(GEoutput.HUD);
+            Assert.AreEqual(true, GEoutput.HUD.Contains("Health: 100"));
+            Assert.AreEqual(true, GEoutput.HUD.Contains("Inventory:"));
+            Assert.AreEqual(true, GEoutput.HUD.Contains("User Player done 50 damage to NPC Player"));
+
+
+            //3 pick up key
+            map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', 'K', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+
+            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GEoutput = GE.RunEngine(GEinput);
+            //Trace.Write(GEoutput.Log);
+            //Trace.Write(GEoutput.HUD);
+            Assert.AreEqual(true, GEoutput.HUD.Contains("Health: 100"));
+            Assert.AreEqual(true, GEoutput.HUD.Contains("Inventory: Key"));
+            Assert.AreEqual(true, GEoutput.HUD.Contains("User Player picked up Key"));
+
+            //4 use locked doors with key
+            map = new char[5][]
+              {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', 'L', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+              };
+
+            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+            GE.ApplyCheats("give_all");
+
+            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Use };
+            GEoutput = GE.RunEngine(GEinput);
             Trace.Write(GEoutput.Log);
             Trace.Write(GEoutput.HUD);
             Assert.AreEqual(true, GEoutput.HUD.Contains("Health: 100"));
             Assert.AreEqual(true, GEoutput.HUD.Contains("Inventory:"));
-            Assert.AreEqual(true, GEoutput.HUD.Contains("Message: User Player done 50 damage to NPC Player"));
-
-
-            //3 pick up key
+            Assert.AreEqual(true, GEoutput.HUD.Contains("Door unlocked with Key")); 
+            Assert.AreEqual(true, GEoutput.HUD.Contains("Door has been opened"));
             //4 use locked doors without key
-            //5 use doors with key
 
 
         }

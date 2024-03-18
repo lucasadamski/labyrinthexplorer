@@ -210,7 +210,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         {
             DTO output = new DTO();
             Inventory.Add(item);
-            output.Message += $"{this.Name} picked up {item.Name}";
+            output.Message += $"{this.Name} picked up {item.Name}\n";
             return output;
         }
 
