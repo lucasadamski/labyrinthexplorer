@@ -56,65 +56,10 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         }
 
 
-        virtual public InterActionDTO MoveDown(InterActionDTO input)
-        {
-            InterActionDTO output = input;
-            DTO dtoOutput = new DTO();
-
-            Coordinates primaryPosition = new Coordinates(1, 1);
-            Coordinates targetPosition  = new Coordinates(2, 1);
-            GameElement targetElement = input.MapOfElements[targetPosition.X][targetPosition.Y];
-
-
-            dtoOutput = targetElement.ReceiveStep(this);
-            if (dtoOutput.Success == true) //reacts to step
-            {
-                if (targetElement is NPCPlayer nps)
-                {
-                    output.DTO.Message += dtoOutput.Message;
-                    return output;     //step denied, return output without MoveOperation
-                }
-                if (targetElement is Door d) 
-                {
-                    if (d.Open == false)
-                    {
-                        output.DTO.AppendDebugMessage($"CharacterElement.MoveDown: Move Down Denied. {Name} can not move to {d.Name}");
-                        return output;    //step denied, return output without MoveOperation
-                    }
-                    else if (d.Open == true) //allows to step on itself
-                    {
-                        output.DTO.AppendDebugMessage($"CharacterElement.MoveDown: Sucessfuly moved down {Name} to an Open {d.Name}");
-                    }
-                    output.DTO.Message += dtoOutput.Message;
-                }
-                MoveOperation(output, primaryPosition, targetPosition, targetElement);
-                Position.X = targetPosition.X;
-                Position.Y = targetPosition.Y;
-                output.DTO.Message += dtoOutput.Message;
-                return output;
-            }
-            else
-            {
-                output.DTO.Message += dtoOutput.Message;
-                return output;
-            }
-
-        }
-
-        virtual public InterActionDTO MoveLeft(InterActionDTO input)
-        {
-            return input;
-        }
-
-        virtual public InterActionDTO MoveRight(InterActionDTO input)
-        {
-            return input;
-        }
-
-        virtual public InterActionDTO MoveUp(InterActionDTO input)
-        {
-            return input;
-        }      
+        virtual public InterActionDTO MoveDown(InterActionDTO input)    => Move(input, new Coordinates(2, 1));
+        virtual public InterActionDTO MoveLeft(InterActionDTO input)    => Move(input, new Coordinates(1, 0));
+        virtual public InterActionDTO MoveRight(InterActionDTO input)   => Move(input, new Coordinates(1, 2));
+        virtual public InterActionDTO MoveUp(InterActionDTO input)      => Move(input, new Coordinates(0, 1));
 
         virtual public InterActionDTO ReceiveInterActionDTO(InterActionDTO input)
         {
@@ -214,5 +159,46 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             return output;
         }
 
+        protected InterActionDTO Move(InterActionDTO input, Coordinates targetPosition)
+        {
+            InterActionDTO output = input;
+            DTO dtoOutput = new DTO();
+
+            Coordinates primaryPosition = new Coordinates(1, 1);
+            GameElement targetElement = input.MapOfElements[targetPosition.X][targetPosition.Y];
+
+            dtoOutput = targetElement.ReceiveStep(this);
+            if (dtoOutput.Success == true) //reacts to step
+            {
+                if (targetElement is NPCPlayer)
+                {
+                    output.DTO.AppendEditedMessage(dtoOutput.Message);
+                    return output;     //step denied, return output without MoveOperation
+                }
+                if (targetElement is Door d)
+                {
+                    if (d.Open == false)
+                    {
+                        output.DTO.AppendDebugMessage($"CharacterElement.Move: Move Denied. {Name} can not move to {d.Name}");
+                        return output;    //step denied, return output without MoveOperation
+                    }
+                    else if (d.Open == true) //allows to step on itself
+                    {
+                        output.DTO.AppendDebugMessage($"CharacterElement.Move: Sucessfuly moved {Name} to an Open {d.Name}");
+                    }
+                    output.DTO.AppendEditedMessage(dtoOutput.Message);
+                }
+                MoveOperation(output, primaryPosition, targetPosition, targetElement);
+                Position.X = targetPosition.X;
+                Position.Y = targetPosition.Y;
+                output.DTO.AppendEditedMessage(dtoOutput.Message);
+                return output;
+            }
+            else
+            {
+                output.DTO.AppendEditedMessage(dtoOutput.Message);
+                return output;
+            }
+        }
     }
 }
