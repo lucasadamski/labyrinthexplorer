@@ -829,5 +829,18 @@ namespace LabyrinthExplorer.Test
             GEoutput = GE.RunEngine(GEinput);
         }
 
+        [TestMethod]
+        public void FinishLevelTest()
+        {
+            char[][] map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+        }
+
     }
 }

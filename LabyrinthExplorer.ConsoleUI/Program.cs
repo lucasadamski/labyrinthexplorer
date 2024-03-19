@@ -8,8 +8,9 @@
 
             while (UI.RunGameStep())
             {
-                UI.RunGameStep();
+                
             }
+            Console.ReadKey();
         }
     }
 }

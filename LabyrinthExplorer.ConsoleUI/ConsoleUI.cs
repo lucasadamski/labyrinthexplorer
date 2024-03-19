@@ -25,7 +25,7 @@ namespace LabyrinthExplorer.ConsoleUI
             char[][] map = new char[10][]
               {
                   //                      0    1    2    3   4   5   6   7   8   9
-                          new char[10] { '+', '-', '-', '-','-','-','-','-','-','+' } //0
+                          new char[10] { '+', '-', 'F', '-','-','-','-','-','-','+' } //0
                         , new char[10] { '|',  P , ' ', '|',' ',' ',' ',' ','K','|' } //1
                         , new char[10] { '|', ' ', ' ', 'D',' ',' ',' ','X',' ','|' } //2
                         , new char[10] { '|', ' ', ' ', '|',' ',' ',' ',' ',' ','|' } //3
@@ -49,12 +49,36 @@ namespace LabyrinthExplorer.ConsoleUI
             Input = PrepareGameEngineInputDTO(userKeyPressed);
             Clear();
             Output = GE.RunEngine(Input);
+            if (!Output.DTO.Success)
+            {
+                if (Output.DTO.Message.Contains(Settings.MESSAGE_LEVEL_FINISHED))
+                {
+                    DrawFrame(Output.Frame);
+                    DrawHUD(Output.HUD);
+                    DrawLog(Output.Log);
+                    DrawFinishedLevelSummary(Output.LevelSummary);
+                    return Output.DTO.Success;
+                }
+            }
             DrawFrame(Output.Frame);
             DrawHUD(Output.HUD);
             DrawLog(Output.Log);
             return Output.DTO.Success;
         }
 
+        private void DrawFinishedLevelSummary(string summary)
+        {
+            //Clear();
+            WriteLine("*****************************************");
+            WriteLine("*****      LEVEL FINISHED       *********");
+            WriteLine("*****************************************");
+            WriteLine(summary);
+        }
+
+        private void DrawGameOverSummary(string summary)
+        {
+
+        }
 
         private void DrawFrame(char[][] frame)
         {

@@ -33,6 +33,7 @@ namespace LabyrinthExplorer.Data.Helpers
         public const string NAME_HORIZONTAL_WALL ="Horizontal Wall";
         public const string NAME_VERTICAL_WALL  = "Vertical Wall";
         public const string NAME_EMPTY_SPACE    = "Empty Space";
+        public const string NAME_FINISH_LEVEL_PORTAL = "Portal To Next Level";
 
 
         public const int PLAYER_FULL_HEALTH = 100;
@@ -54,5 +55,11 @@ namespace LabyrinthExplorer.Data.Helpers
         public const char MODEL_HORIZONTAL_WALL = '-';
         public const char MODEL_VERTICAL_WALL   = '|';
         public const char MODEL_EMPTY_SPACE     = ' ';
+        public const char MODEL_FINISH_LEVEL_PORTAL  = 'F';
+
+
+        //Key messages that mechanics depend on
+        public const string MESSAGE_LEVEL_FINISHED = "Level finished";
+        public const string MESSAGE_GAME_OVER = "Game over!";
     }
 }

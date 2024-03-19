@@ -12,6 +12,7 @@ namespace LabyrinthExplorer.Logic.DTOs
         public DTO DTO { get; set; } = new DTO();
         public string Log { get; set; } = "";
         public string HUD { get; set; } = ""; //not implemented
+        public string LevelSummary { get; set; } = "";
 
     }
 }

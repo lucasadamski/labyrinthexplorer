@@ -31,7 +31,7 @@ namespace LabyrinthExplorer.Logic
         public InterActionDTO UserPlayerInterActionDTO { get; set; } = new InterActionDTO();
         public InterActionDTO UserPlayerReturnedInterActionDTO { get; set; } = new InterActionDTO();
         public GameEngineOutputDTO GameEngineOutputDTO { get; set; } = new GameEngineOutputDTO();
-
+        private bool _isLevelFinished = false;
 
         public GameEngine(string levelName, char[][]? injectedLevelCanvas = null)
         {
@@ -58,6 +58,10 @@ namespace LabyrinthExplorer.Logic
         }
         public GameEngineOutputDTO RunEngine(GameEngineInputDTO input)
         {
+            if (_isLevelFinished)
+            {
+                LoadNextLevel();
+            }
             InputAction = ReceiveInputDTO(input);
             UserPlayerInterActionDTO = TranslateInputActionToInterAction(InputAction, UserPlayer.Position);
             UserPlayerReturnedInterActionDTO = UserPlayer.ReceiveInterActionDTO(UserPlayerInterActionDTO);
@@ -145,6 +149,9 @@ namespace LabyrinthExplorer.Logic
                             break;
                         case 'W':
                             output[i][j] = new Weapon(i, j);
+                            break;
+                        case Settings.MODEL_FINISH_LEVEL_PORTAL:
+                            output[i][j] = new FinishLevelPortal(i, j);
                             break;
                         default:
                             break;
@@ -309,7 +316,8 @@ namespace LabyrinthExplorer.Logic
             if (UserPlayer.NotVisible)
             {
                 output.DTO.Success = false;
-                logger.Log($"Game over!");
+                output.DTO.Message = Settings.MESSAGE_GAME_OVER;
+                logger.Log(Settings.MESSAGE_GAME_OVER);
             }
 
             //Set Log
@@ -317,6 +325,19 @@ namespace LabyrinthExplorer.Logic
 
             //Set HUD
             output.HUD = GenerateHUD(output.Log, UserPlayer);
+
+            //listenForActions
+            
+            foreach (string logLine in logger.Message.ToString().Split('\n'))
+            {
+                if (logLine.Contains(Settings.MESSAGE_LEVEL_FINISHED))
+                {
+                    output.DTO.Success = false;
+                    output.DTO.Message = Settings.MESSAGE_LEVEL_FINISHED;
+                    _isLevelFinished = true;
+                    output.LevelSummary = $"Level finished!\nLevel name:{Level.Name}\nPlayer name:{UserPlayer.Name}";
+                }
+            }
 
 
             return output;
@@ -398,6 +419,30 @@ namespace LabyrinthExplorer.Logic
                 UserPlayer.Health = 100;
             }
         }
+
+        private GameEngineOutputDTO ListenForActions(GameEngineOutputDTO input, string log)
+        {
+            GameEngineOutputDTO output = input;
+            foreach (string logLine in log.Split('\n'))
+            {
+                if (logLine.Contains(Settings.MESSAGE_LEVEL_FINISHED))
+                {
+                    output.DTO.Success = false;
+                    output.DTO.Message += " " + Settings.MESSAGE_LEVEL_FINISHED;
+                    _isLevelFinished = true;
+                    output.LevelSummary = $"Level finished!\nLevel name:{Level.Name}\nPlayer name:{UserPlayer.Name}";
+                }
+            }
+            return output;
+        }
+
+        public void LoadNextLevel()
+        {
+            _isLevelFinished = false;
+            logger.Log($"LoadNextLevel: Invoked");
+            return;
+        }
+       
     }
 
 }
