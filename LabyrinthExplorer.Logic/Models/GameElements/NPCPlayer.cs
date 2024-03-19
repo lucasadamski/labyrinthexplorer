@@ -15,6 +15,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         {
             Name = Settings.NAME_NPC_PLAYER;
             Model = Settings.MODEL_NPC_PLAYER;
+            AlternateModel = Settings.MODEL_EMPTY_SPACE;
             Health = Settings.NPC_PLAYER_FULL_HEALTH;
             HiddenElement = new EmptySpace();
         }
@@ -22,6 +23,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         {
             Name = Settings.NAME_NPC_PLAYER;
             Model = Settings.MODEL_NPC_PLAYER;
+            AlternateModel = Settings.MODEL_EMPTY_SPACE;
             Health = Settings.NPC_PLAYER_FULL_HEALTH;
             Position = new Coordinates(x, y);
             HiddenElement = new EmptySpace(x, y);

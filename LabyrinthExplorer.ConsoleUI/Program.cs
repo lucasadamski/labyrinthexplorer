@@ -6,11 +6,9 @@
         {
             ConsoleUI UI = new ConsoleUI();
 
-        
-
-            while (UI.RunUI())
+            while (UI.RunGameStep())
             {
-                
+                UI.RunGameStep();
             }
         }
     }

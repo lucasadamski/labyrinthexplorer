@@ -16,6 +16,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Inventory = new List<ItemElement>();
             Name = Settings.NAME_USER_PLAYER;
             Model = Settings.MODEL_USER_PLAYER;
+            AlternateModel = Settings.MODEL_EMPTY_SPACE;
             Health = Settings.PLAYER_FULL_HEALTH;
             Position = new Coordinates(1, 1);
             HiddenElement = new EmptySpace(1, 1);
@@ -25,6 +26,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Inventory = new List<ItemElement>();
             Name = Settings.NAME_USER_PLAYER;
             Model = Settings.MODEL_USER_PLAYER;
+            AlternateModel = Settings.MODEL_EMPTY_SPACE;
             Position = new Coordinates(x, y);
             Health = Settings.PLAYER_FULL_HEALTH;
             HiddenElement = new EmptySpace(x, y);

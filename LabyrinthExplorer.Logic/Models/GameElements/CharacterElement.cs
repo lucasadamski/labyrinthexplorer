@@ -21,7 +21,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Position = new Coordinates(x, y);
             HiddenElement = new EmptySpace(x, y);
         }
-        public byte Health { get; set; }
+        public sbyte Health { get; set; }
         public List<ItemElement> Inventory { get; set; }
         public GameElement HiddenElement { get; set; }
 
@@ -99,7 +99,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         override public DTO DoDamage(byte amountOfDamage)
         {
             DTO output = new DTO();
-            Health -= amountOfDamage;
+            Health -= (sbyte)amountOfDamage;
             output.AppendActionMessage($"{this.Name} took {amountOfDamage} damage");
             if (Health < 1)
             {
@@ -125,6 +125,10 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                     {
                         output.DTO.AppendActionMessage($"{this.Name} done {WEAPON_DAMAGE} damage to {output.MapOfElements[i][j].Name}");
                         output.DTO.AppendEditedMessage(dtoOutput.Message);
+                        if (output.MapOfElements[i][j].NotVisible == true)
+                        {
+                            output.MapOfElements[i][j] = new EmptySpace(output.MapOfElements[i][j].Position.X, output.MapOfElements[i][j].Position.Y); //turn corpse into an empty space
+                        }
                     }
                 }
             }

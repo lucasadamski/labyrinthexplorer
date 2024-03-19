@@ -21,13 +21,20 @@ namespace LabyrinthExplorer.ConsoleUI
 
         public ConsoleUI()
         {
-            char[][] map = new char[5][]
+            char P = Settings.MODEL_USER_PLAYER;
+            char[][] map = new char[10][]
               {
-                          new char[5] { '+', '-', '-', '-', '+'}
-                        , new char[5] { '|', 'P', ' ', ' ', '|' }
-                        , new char[5] { '|', 'X', ' ', ' ', '|' }
-                        , new char[5] { '|', ' ', ' ', ' ', '|' }
-                        , new char[5] { '+', '-', '-', '-', '+' }
+                  //                      0    1    2    3   4   5   6   7   8   9
+                          new char[10] { '+', '-', '-', '-','-','-','-','-','-','+' } //0
+                        , new char[10] { '|',  P , ' ', '|',' ',' ',' ',' ','K','|' } //1
+                        , new char[10] { '|', ' ', ' ', 'D',' ',' ',' ','X',' ','|' } //2
+                        , new char[10] { '|', ' ', ' ', '|',' ',' ',' ',' ',' ','|' } //3
+                        , new char[10] { '|', '-', '-', '+','-','-','-','L','-','|' } //4
+                        , new char[10] { '|', ' ', ' ', ' ',' ',' ',' ',' ',' ','|' } //5
+                        , new char[10] { '|', ' ', ' ', ' ',' ',' ',' ',' ',' ','|' } //6
+                        , new char[10] { '|', ' ', ' ', ' ',' ',' ','E',' ',' ','|' } //7
+                        , new char[10] { '|', ' ', ' ', ' ',' ',' ',' ',' ',' ','|' } //8
+                        , new char[10] { '+', '-', '-', '-','-','-','-','-','-','+' } //9
               };
 
             GE = new GameEngine(Settings.INJECTED_LEVEL, map);
@@ -36,7 +43,7 @@ namespace LabyrinthExplorer.ConsoleUI
         }
 
 
-        public bool RunUI()
+        public bool RunGameStep()
         {
             userKeyPressed = ReadKey().Key;
             Input = PrepareGameEngineInputDTO(userKeyPressed);

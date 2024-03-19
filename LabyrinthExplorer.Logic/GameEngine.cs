@@ -8,11 +8,12 @@ using LabyrinthExplorer.Logic.Models.GameElements;
 using LabyrinthExplorer.Logic.Models.GameElements.BuildingElements;
 using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 
-
+[assembly: InternalsVisibleTo("LabyrinthExplorer.Test")]
 namespace LabyrinthExplorer.Logic
 {
     public class GameEngine
@@ -25,7 +26,7 @@ namespace LabyrinthExplorer.Logic
         public Level Level { get; set; } = new Level();
         public List<ItemElement> Inventory { get; set; } = new List<ItemElement>();
         public GameElement[][] Map { get; set; }
-        public char[][] Canvas { get; set; }
+        internal char[][] Canvas { get; set; }
         public InputAction InputAction{ get; set; }
         public InterActionDTO UserPlayerInterActionDTO { get; set; } = new InterActionDTO();
         public InterActionDTO UserPlayerReturnedInterActionDTO { get; set; } = new InterActionDTO();
@@ -305,11 +306,18 @@ namespace LabyrinthExplorer.Logic
 
             logger.Log($"PrepareGameEngineOutputDTO: Success.");
 
+            if (UserPlayer.NotVisible)
+            {
+                output.DTO.Success = false;
+                logger.Log($"Game over!");
+            }
+
             //Set Log
             output.Log = logger.Message.ToString();
 
             //Set HUD
             output.HUD = GenerateHUD(output.Log, UserPlayer);
+
 
             return output;
         }

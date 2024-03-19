@@ -791,5 +791,43 @@ namespace LabyrinthExplorer.Test
 
 
         }
+
+        [TestMethod]
+        public void TestKillingPlayer()
+        {
+
+            //Use wepon 2 times, kill npc, check if field is empty
+
+            char[][] map = new char[5][]
+               {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', 'E', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+               };
+
+            GameEngine GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+
+            GE.ApplyCheats("give_all");
+            GameEngineInputDTO GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.UseWeapon };
+            GameEngineOutputDTO GEoutput = GE.RunEngine(GEinput);
+
+            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.UseWeapon };
+            GEoutput = GE.RunEngine(GEinput);
+           
+            Trace.Write(GEoutput.Log);
+            Trace.Write(GEoutput.HUD);
+            Assert.AreEqual(true, GEoutput.HUD.Contains("Health: 100"));
+            Assert.AreEqual(true, GEoutput.HUD.Contains("Inventory:"));
+            Assert.AreEqual(true, GEoutput.HUD.Contains("NPC Player 1 is dead"));
+            Assert.AreEqual(Settings.MODEL_EMPTY_SPACE, GEoutput.Frame[2][1]);
+
+            //Move 2 times down
+            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GEoutput = GE.RunEngine(GEinput);
+            GEoutput = GE.RunEngine(GEinput);
+        }
+
     }
 }
