@@ -10,5 +10,6 @@ namespace LabyrinthExplorer.Data.Repositories.Infrastructure
     public interface IGlobalRepository
     {
         public Level GetLevel(string name);
+        public IEnumerable<Level> GetAllLevels();
     }
 }

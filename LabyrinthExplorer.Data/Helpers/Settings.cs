@@ -13,12 +13,7 @@ namespace LabyrinthExplorer.Data.Helpers
         public const string LOGGER_ACTION = "<action>";
         public const string LOGGER_ERROR = "*<ERROR>*";
 
-
-        public const string TEST_LEVEL = "test_level";
-        public const string INJECTED_LEVEL = "injected_level";
-
         public const string PLAYER_NAME = "User Player";
-
 
         //UI will use those to translate to sprites
         public const string NAME_USER_PLAYER    = "User Player";
@@ -34,7 +29,6 @@ namespace LabyrinthExplorer.Data.Helpers
         public const string NAME_VERTICAL_WALL  = "Vertical Wall";
         public const string NAME_EMPTY_SPACE    = "Empty Space";
         public const string NAME_FINISH_LEVEL_PORTAL = "Portal To Next Level";
-
 
         public const int PLAYER_FULL_HEALTH = 100;
         public const int NPC_PLAYER_FULL_HEALTH = 100;
@@ -57,9 +51,21 @@ namespace LabyrinthExplorer.Data.Helpers
         public const char MODEL_EMPTY_SPACE     = ' ';
         public const char MODEL_FINISH_LEVEL_PORTAL  = 'F';
 
-
         //Key messages that mechanics depend on
         public const string MESSAGE_LEVEL_FINISHED = "Level finished";
         public const string MESSAGE_GAME_OVER = "Game over!";
+
+        //Levels names
+        public const string ALL_LEVELS = "all_levels";
+        public const string TEST_LEVEL = "test_level";
+        public const string INJECTED_LEVEL = "injected_level";
+        public const string FIRST_LEVEL = "level_1";
+        public const string SECOND_LEVEL = "level_2";
+        public const string THIRD_LEVEL = "level_3";
+        public const string FOURTH_LEVEL = "level_4";
+        public const string FIFTH_LEVEL = "level_5";
+        public const string SIXTH_LEVEL = "level_6";
+        public const string SEVENTH_LEVEL = "level_7";
+        public const string EIGHT_LEVEL = "level_8";
     }
 }

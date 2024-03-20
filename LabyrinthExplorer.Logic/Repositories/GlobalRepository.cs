@@ -14,6 +14,8 @@ namespace LabyrinthExplorer.Data.Repositories
     {
         private Level injectedLevel = new Level();
         private Level testLevel;
+        private Level firstLevel;
+        private Level secondLevel;
 
         public GlobalRepository()
         {
@@ -29,7 +31,36 @@ namespace LabyrinthExplorer.Data.Repositories
                   },
                 Name = Settings.TEST_LEVEL,
                 Size = new Logic.Models.Coordinates(5, 5)
-        };
+            };
+
+            firstLevel = new Level()
+            {
+                Map = new char[5][]
+                  {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', '|' }
+                        , new char[5] { '|', ' ', ' ', ' ', 'F' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+                  },
+                Name = Settings.FIRST_LEVEL,
+                Size = new Logic.Models.Coordinates(5, 5)
+            };
+
+            secondLevel = new Level()
+            {
+                Map = new char[5][]
+                  {
+                          new char[5] { '+', '-', '-', '-', '+'}
+                        , new char[5] { '|', 'P', '|', ' ', '|' }
+                        , new char[5] { '|', ' ', '|', ' ', '|' }
+                        , new char[5] { '|', ' ', 'D', ' ', 'F' }
+                        , new char[5] { '+', '-', '-', '-', '+' }
+                  },
+                Name = Settings.SECOND_LEVEL,
+                Size = new Logic.Models.Coordinates(5, 5)
+            };
+
         }
 
         public GlobalRepository(char[][] injectedCanvas)
@@ -62,5 +93,8 @@ namespace LabyrinthExplorer.Data.Repositories
            
             return testLevel;
         }
+
+        public IEnumerable<Level> GetAllLevels() => new List<Level>() { firstLevel, secondLevel };
+        
     }
 }

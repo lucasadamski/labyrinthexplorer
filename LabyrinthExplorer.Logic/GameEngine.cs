@@ -24,6 +24,7 @@ namespace LabyrinthExplorer.Logic
         public UserPlayer? UserPlayer { get; set; } = new UserPlayer();
         public List<NPCPlayer> NPCPlayer { get; set; } = new List<NPCPlayer>();
         public Level Level { get; set; } = new Level();
+        private List<Level> Levels { get; set; } = new List<Level>();
         public List<ItemElement> Inventory { get; set; } = new List<ItemElement>();
         public GameElement[][] Map { get; set; }
         internal char[][] Canvas { get; set; }
@@ -32,17 +33,19 @@ namespace LabyrinthExplorer.Logic
         public InterActionDTO UserPlayerReturnedInterActionDTO { get; set; } = new InterActionDTO();
         public GameEngineOutputDTO GameEngineOutputDTO { get; set; } = new GameEngineOutputDTO();
         private bool _isLevelFinished = false;
+        private bool _isGameFinished = true;
+        private int _currentLevelIndex = 0;
 
         public GameEngine(string levelName, char[][]? injectedLevelCanvas = null)
         {
             logger.Log("START: GameEngine Contructor");
 
-            if (injectedLevelCanvas == null)
-                repository = new GlobalRepository();
-            else
-                repository = new GlobalRepository(injectedLevelCanvas);
+            repository = InitializeRepository(injectedLevelCanvas);
 
-            Level = LoadLevel(levelName);
+            Levels = InitializeLevelsFromRepository(repository, levelName);
+            
+            Level = LoadLevelFromLevelsList(_currentLevelIndex++, Levels); //loading first level, indexer point to the next level after loading
+
             Canvas = DeepCopyCanvas(Level.Map);
             Map = ParseCanvasToMap(Canvas);
             if ((UserPlayer = InitializeUserPlayer(Map)) == null)
@@ -60,7 +63,7 @@ namespace LabyrinthExplorer.Logic
         {
             if (_isLevelFinished)
             {
-                LoadNextLevel();
+                //LoadNextLevel();
             }
             InputAction = ReceiveInputDTO(input);
             UserPlayerInterActionDTO = TranslateInputActionToInterAction(InputAction, UserPlayer.Position);
@@ -77,8 +80,60 @@ namespace LabyrinthExplorer.Logic
             return GameEngineOutputDTO; //not implemented
         }
 
+        private List<Level> InitializeLevelsFromRepository(IGlobalRepository repository, string levelName = null)
+        {
+            List<Level> output = new List<Level>();
+
+            if (levelName != null)
+            {
+                try
+                {
+                    output.Add(repository.GetLevel(levelName));
+                }
+                catch (Exception e)
+                {
+                    logger.LogError($"LoadAllLevels: Can not load levels from repository. Exception: {e.Message}");
+                    return new List<Level>();
+                }
+                logger.Log($"LoadAllLevels: Loaded {output.Count()} levels");
+                return output;
+            }
+            else
+            {
+                try
+                {
+                    output = repository.GetAllLevels().ToList();
+                }
+                catch (Exception e)
+                {
+                    logger.LogError($"LoadAllLevels: Can not load levels from repository. Exception: {e.Message}");
+                    return new List<Level>();
+                }
+                logger.Log($"LoadAllLevels: Loaded {output.Count()} levels");
+                return output;
+            }
+        }
+
+        private GlobalRepository InitializeRepository(char[][]? injectedLevelCanvas)
+        {
+            //allows optional injecting custom level for testing purposes
+            GlobalRepository output;
+            if (injectedLevelCanvas == null)
+            {
+                output =  new GlobalRepository();  //normal mode
+                logger.Log($"InitializeRepository: Initialized repository in normal mode");
+            }
+            else
+            { 
+                output = new GlobalRepository(injectedLevelCanvas); //custom level for testing
+                logger.Log($"InitializeRepository: Initialized repository from injected level canvas");
+            }
+            return output;
+        }
+
         public Level LoadLevel(string levelName)
         {
+            _isLevelFinished = false; //start of new level
             Level output = repository.GetLevel(levelName);
             if (output.DTO.Success == true)
             {
@@ -90,6 +145,24 @@ namespace LabyrinthExplorer.Logic
                 logger.LogError($"LoadLevel: Can't load level {levelName} from Repository");
                 return new Level();
             }
+        }
+
+        public Level LoadLevelFromLevelsList(int levelIndex, List<Level> levels)
+        {
+            Level output = new Level();
+            try
+            {
+                output = levels.ElementAt(levelIndex);
+            }
+            catch (Exception e)
+            {
+                //GAME IS FINISHED, no more levels
+                _isGameFinished = true;
+                logger.Log($"LoadLevel: Can not load level from Levels. Game finished.");
+                return new Level();
+            }
+            logger.Log($"LoadLevel: Loaded level {output.Name}");
+            return output;
         }
 
         public GameElement[][] ParseCanvasToMap(char[][] canvas)
