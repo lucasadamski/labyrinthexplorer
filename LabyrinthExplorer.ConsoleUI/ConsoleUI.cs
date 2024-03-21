@@ -37,7 +37,8 @@ namespace LabyrinthExplorer.ConsoleUI
                         , new char[10] { '+', '-', '-', '-','-','-','-','-','-','+' } //9
               };
 
-            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+            //GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+            GE = new GameEngine(Settings.ALL_LEVELS);
             Input = new GameEngineInputDTO();
             Output = new GameEngineOutputDTO();
         }
@@ -47,7 +48,7 @@ namespace LabyrinthExplorer.ConsoleUI
         {
             userKeyPressed = ReadKey().Key;
             Input = PrepareGameEngineInputDTO(userKeyPressed);
-            Clear();
+            //Clear();
             Output = GE.RunEngine(Input);
             if (!Output.DTO.Success)
             {
@@ -57,7 +58,12 @@ namespace LabyrinthExplorer.ConsoleUI
                     DrawHUD(Output.HUD);
                     DrawLog(Output.Log);
                     DrawFinishedLevelSummary(Output.LevelSummary);
-                    return Output.DTO.Success;
+                    return true;
+                }
+                if (Output.DTO.Message.Contains(Settings.MESSAGE_GAME_FINISHED))
+                {
+                    DrawGameFinished();
+                    return false;
                 }
             }
             DrawFrame(Output.Frame);
@@ -73,6 +79,16 @@ namespace LabyrinthExplorer.ConsoleUI
             WriteLine("*****      LEVEL FINISHED       *********");
             WriteLine("*****************************************");
             WriteLine(summary);
+        }
+
+        private void DrawGameFinished()
+        {
+            //Clear();
+            WriteLine("*****************************************");
+            WriteLine("*****************************************");
+            WriteLine("*****      GAME FINISHED       *********");
+            WriteLine("*****************************************");
+            WriteLine("*****************************************");
         }
 
         private void DrawGameOverSummary(string summary)

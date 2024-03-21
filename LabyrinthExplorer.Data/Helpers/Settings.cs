@@ -54,6 +54,7 @@ namespace LabyrinthExplorer.Data.Helpers
         //Key messages that mechanics depend on
         public const string MESSAGE_LEVEL_FINISHED = "Level finished";
         public const string MESSAGE_GAME_OVER = "Game over!";
+        public const string MESSAGE_GAME_FINISHED = "Game finished!";
 
         //Levels names
         public const string ALL_LEVELS = "all_levels";

@@ -38,7 +38,7 @@ namespace LabyrinthExplorer.Data.Repositories
                 Map = new char[5][]
                   {
                           new char[5] { '+', '-', '-', '-', '+'}
-                        , new char[5] { '|', 'P', ' ', ' ', '|' }
+                        , new char[5] { '|', 'P', ' ', 'X', '|' }
                         , new char[5] { '|', ' ', ' ', ' ', '|' }
                         , new char[5] { '|', ' ', ' ', ' ', 'F' }
                         , new char[5] { '+', '-', '-', '-', '+' }

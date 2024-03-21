@@ -13,6 +13,7 @@ namespace LabyrinthExplorer.Logic.Loggers
         public void ClearMessage()
         {
             Message = Message.Clear();
+            lineNumber = 0;
         }
         public void Log(string message)
         {

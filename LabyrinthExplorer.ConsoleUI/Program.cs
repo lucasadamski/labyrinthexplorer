@@ -6,10 +6,8 @@
         {
             ConsoleUI UI = new ConsoleUI();
 
-            while (UI.RunGameStep())
-            {
-                
-            }
+            while (UI.RunGameStep()) { } //running game until false returned
+            
             Console.ReadKey();
         }
     }
