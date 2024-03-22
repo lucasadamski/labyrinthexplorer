@@ -19,24 +19,57 @@ namespace LabyrinthExplorer.Logic
 {
     public class GameEngine
     {
+        /****************************************************************************************
+         *                                     PROPERTIES & FIELDS
+         * **************************************************************************************/
+        /*****************************
+         * Data
+         * **************************/
         private IGlobalRepository repository = new GlobalRepository(); //przenieś do konstruktora
-        public Logger logger = new Logger();
 
-        public UserPlayer? UserPlayer { get; set; } = new UserPlayer();
-        public List<NPCPlayer> NPCPlayer { get; set; } = new List<NPCPlayer>();
-        public Level Level { get; set; } = new Level();
-        private List<Level> Levels { get; set; } = new List<Level>();
-        public List<ItemElement> Inventory { get; set; } = new List<ItemElement>();
-        public GameElement[][] Map { get; set; }
-        internal char[][] Canvas { get; set; }
-        public InputAction InputAction{ get; set; }
+        /****************************
+         * GameEngine
+         * **************************/
+        public Logger logger = new Logger();
         public InterActionDTO UserPlayerInterActionDTO { get; set; } = new InterActionDTO();
         public InterActionDTO UserPlayerReturnedInterActionDTO { get; set; } = new InterActionDTO();
-        public GameEngineOutputDTO GameEngineOutputDTO { get; set; } = new GameEngineOutputDTO();
-        private bool _isLevelFinished = false;
-        private bool _isGameFinished = false;
+
+        /*****************************
+        * GameManager
+        * **************************/
+        public UserPlayer? UserPlayer { get; set; } = new UserPlayer();
+        public List<NPCPlayer> NPCPlayer { get; set; } = new List<NPCPlayer>();
+        public List<ItemElement> Inventory { get; set; } = new List<ItemElement>();
+
+        /*****************************
+         * LevelManager
+         * **************************/
+        public Level Level { get; set; } = new Level();
+        private List<Level> Levels { get; set; } = new List<Level>();
+        public GameElement[][] Map { get; set; }
+        internal char[][] Canvas { get; set; }
         private int _currentLevelIndex = 0;
 
+        /*****************************
+         * UIManager
+         * **************************/
+        public GameEngineOutputDTO GameEngineOutputDTO { get; set; } = new GameEngineOutputDTO();
+        public InputAction InputAction { get; set; }
+
+        /*****************************
+         * MenuManager
+         * **************************/
+        private bool _isLevelFinished = false;
+        private bool _isGameFinished = false;
+
+
+        /****************************************************************************************
+         *                                          METHODS
+         * **************************************************************************************/
+
+        /*****************************
+         * GameEngine
+         * **************************/
         public GameEngine(string levelName, char[][]? injectedLevelCanvas = null)
         {
             logger.Log("START: GameEngine Contructor");
@@ -49,39 +82,13 @@ namespace LabyrinthExplorer.Logic
 
             logger.Log("END: GameEngine Contructor");
         }
-
-        private void InitializeNewGame()
-        {
-            logger.Log($"InitializeNewGame: Started. Level index {_currentLevelIndex}");
-
-            Level = LoadLevelFromLevelsList(_currentLevelIndex++, Levels);
-
-            Canvas = DeepCopyCanvas(Level.Map);
-            Map = ParseCanvasToMap(Canvas);
-            if ((UserPlayer = InitializeUserPlayer(Map)) == null)
-            {
-                logger.LogError("NewGame: Can't initialize UserPlayer. Exiting the New Game Initialization.");
-                return;
-            }
-            NPCPlayer.Clear();
-            NPCPlayer.AddRange(InitializeNPCPlayers(Map));
-            Inventory.Clear();
-            Inventory.AddRange(InitializeInventory(Map));
-
-            logger.Log($"InitializeNewGame: Finished. Level index {_currentLevelIndex - 1}");
-        }
         public GameEngineOutputDTO RunEngine(GameEngineInputDTO input)
         {
             InputAction = ReceiveInputDTO(input);
 
 
-            if (_isLevelFinished) 
+            if (_isLevelFinished)
             {
-                //check if there is a next level
-                //if no then GAME FINISHED
-                //END GAME
-                //if not then LoadGame()
-
                 if (_currentLevelIndex >= Levels.Count())
                 {
                     return new GameEngineOutputDTO()
@@ -113,71 +120,30 @@ namespace LabyrinthExplorer.Logic
 
             return GameEngineOutputDTO;
         }
-        private List<Level> InitializeLevelsFromRepository(IGlobalRepository repository, string levelName = null)
-        {
-            List<Level> output = new List<Level>();
 
-            if (levelName == Settings.ALL_LEVELS) //Setting dependency
-            {
-                try
-                {
-                    output = repository.GetAllLevels().ToList();
-                }
-                catch (Exception e)
-                {
-                    logger.LogError($"LoadAllLevels: Can not load levels from repository. Exception: {e.Message}");
-                    return new List<Level>();
-                }
-                logger.Log($"LoadAllLevels: Loaded {output.Count()} levels");
-                return output;
-            }
-            else 
-            {
-                try
-                {
-                    output.Add(repository.GetLevel(levelName));
-                }
-                catch (Exception e)
-                {
-                    logger.LogError($"LoadAllLevels: Can not load level \"${levelName}\" from repository. Exception: {e.Message}");
-                    return new List<Level>();
-                }
-                logger.Log($"LoadAllLevels: Loaded level \"${levelName}\" from repository");
-                return output;
-            }
-        }
-        private GlobalRepository InitializeRepository(char[][]? injectedLevelCanvas)
+
+        /*****************************
+         * GameManager
+         * **************************/
+        private void InitializeNewGame()
         {
-            //allows optional injecting custom level for testing purposes
-            GlobalRepository output;
-            if (injectedLevelCanvas == null)
+            logger.Log($"InitializeNewGame: Started. Level index {_currentLevelIndex}");
+
+            Level = LoadLevelFromLevelsList(_currentLevelIndex++, Levels);
+
+            Canvas = DeepCopyCanvas(Level.Map); //create deep copy of char[][] array
+            Map = ParseCanvasToMap(Canvas); //translate char array into GameElement Objects array
+            if ((UserPlayer = InitializeUserPlayer(Map)) == null) //if there is no UserPlayer in provided Array, game exits now
             {
-                output =  new GlobalRepository();  //normal mode
-                logger.Log($"InitializeRepository: Initialized repository in normal mode");
+                logger.LogError("NewGame: Can't initialize UserPlayer. Exiting the New Game Initialization.");
+                return;
             }
-            else
-            { 
-                output = new GlobalRepository(injectedLevelCanvas); //custom level for testing
-                logger.Log($"InitializeRepository: Initialized repository from injected level canvas");
-            }
-            return output;
-        }
-        public Level LoadLevelFromLevelsList(int levelIndex, List<Level> levels)
-        {
-            Level output = new Level();
-            try
-            {
-                output = levels.ElementAt(levelIndex);
-            }
-            catch (Exception e)
-            {
-                //GAME IS FINISHED, no more levels
-                _isGameFinished = true;
-                logger.Log($"LoadLevel: Can not load level from Levels. Game finished.");
-                return new Level();
-            }
-            logger.Log($"LoadLevel: Loaded level {output.Name}");
-            return output;
+            NPCPlayer.Clear();
+            NPCPlayer.AddRange(InitializeNPCPlayers(Map));
+            Inventory.Clear();
+            Inventory.AddRange(InitializeInventory(Map));
+
+            logger.Log($"InitializeNewGame: Finished. Level index {_currentLevelIndex - 1}");
         }
         public GameElement[][] ParseCanvasToMap(char[][] canvas)
         {
@@ -186,7 +152,7 @@ namespace LabyrinthExplorer.Logic
             uint counter = 0;
             bool foundUserPlayer = false; //only one UserPlayer allowed
 
-             for (int i = 0; i < canvas.Length; i++)
+            for (int i = 0; i < canvas.Length; i++)
             {
                 output[i] = new GameElement[canvas[i].Length];
                 for (int j = 0; j < canvas[i].Length; j++)
@@ -207,7 +173,7 @@ namespace LabyrinthExplorer.Logic
                             output[i][j] = new CornerWall(i, j);
                             break;
                         case 'P':
-                            if(foundUserPlayer == true) //if there is a second User Player
+                            if (foundUserPlayer == true) //if there is a second User Player
                             {
                                 logger.LogError("ParseCanvasToMap: Found more than 1 User Player. User Player changed to EmptySpace.");
                                 output[i][j] = new EmptySpace(i, j);
@@ -226,7 +192,7 @@ namespace LabyrinthExplorer.Logic
                             output[i][j] = new Door(i, j, true);
                             break;
                         case 'L': //locked doors
-                            output[i][j] = new Door(i, j, false, true);                            
+                            output[i][j] = new Door(i, j, false, true);
                             break;
                         case 'X':
                             output[i][j] = new Trap(i, j);
@@ -249,6 +215,32 @@ namespace LabyrinthExplorer.Logic
             logger.Log($"ParseCanvasToMap: Parsed Canvas to Map of {counter} elements.");
             return output;
         }
+        public GameElement[][] ApplyInterActionDTOOnGameElementMap(GameElement[][] elementMap, InterActionDTO input)
+        {
+            try
+            {
+                elementMap[input.CenterPosition.X - 1][input.CenterPosition.Y - 1] = input.MapOfElements[0][0];
+                elementMap[input.CenterPosition.X - 1][input.CenterPosition.Y] = input.MapOfElements[0][1];
+                elementMap[input.CenterPosition.X - 1][input.CenterPosition.Y + 1] = input.MapOfElements[0][2];
+
+                elementMap[input.CenterPosition.X][input.CenterPosition.Y - 1] = input.MapOfElements[1][0];
+                elementMap[input.CenterPosition.X][input.CenterPosition.Y] = input.MapOfElements[1][1];
+                elementMap[input.CenterPosition.X][input.CenterPosition.Y + 1] = input.MapOfElements[1][2];
+
+                elementMap[input.CenterPosition.X + 1][input.CenterPosition.Y - 1] = input.MapOfElements[2][0];
+                elementMap[input.CenterPosition.X + 1][input.CenterPosition.Y] = input.MapOfElements[2][1];
+                elementMap[input.CenterPosition.X + 1][input.CenterPosition.Y + 1] = input.MapOfElements[2][2];
+
+                logger.Log($"ApplyInterActionDTOOnGameElementMap: Success, Center Position X:{input.CenterPosition.X} Y:{input.CenterPosition.Y}");
+                return elementMap;
+            }
+            catch (Exception e)
+            {
+                logger.LogError($"ApplyInterActionDTOOnGameElementMap: Error, Center Position X:{input.CenterPosition.X} Y:{input.CenterPosition.Y}");
+                return elementMap;
+            }
+        }
+
         public UserPlayer? InitializeUserPlayer(GameElement[][] mapOfElements)
         {
             for (int i = 0; i < mapOfElements.Length; i++)
@@ -257,8 +249,8 @@ namespace LabyrinthExplorer.Logic
                 {
                     if (mapOfElements[i][j] is UserPlayer)
                     {
-                       logger.Log($"InitializeUserPlayer: Found User Player at ({i},{j})");
-                       return (UserPlayer)mapOfElements[i][j];
+                        logger.Log($"InitializeUserPlayer: Found User Player at ({i},{j})");
+                        return (UserPlayer)mapOfElements[i][j];
                     }
                 }
             }
@@ -333,19 +325,6 @@ namespace LabyrinthExplorer.Logic
             logger.Log($"DeepCopyCanvas: Success, Canvas size: {sizeA}x{sizeB}");
             return output;
         }
-        public InputAction ReceiveInputDTO(GameEngineInputDTO input) 
-        {
-            if (input.DTO.Success == true)
-            {
-                logger.Log($"ReceiveInputDTO: Received InputAction: {input.InputAction.ToString()}");
-                return input.InputAction;
-            }
-            else
-            {
-                logger.LogError($"ReceiveInputDTO: Error from UI: InputAction: {InputAction.ToString()}");
-                return InputAction.Unknown;
-            }
-        }
         public InterActionDTO TranslateInputActionToInterAction(InputAction inputAction, Coordinates coordinates)
         {
             InterActionDTO interActionDTO = new InterActionDTO();
@@ -375,11 +354,131 @@ namespace LabyrinthExplorer.Logic
                 logger.LogError($"TranslateInputActionToInterAction: Can't convert input {inputAction} and coordinates X:{coordinates.X} Y:{coordinates.Y} " +
                 $"to InterActionDTO. Exception: {e.Message}");
                 return new InterActionDTO();
-            }            
+            }
 
             logger.Log($"TranslateInputActionToInterAction: Converted input {inputAction} and coordinates X:{coordinates.X} Y:{coordinates.Y} " +
                 $"to InterActionDTO");
             return interActionDTO;
+        }
+        public void ApplyCheats(string cheats)
+        {
+            if (cheats.Contains("give_all"))
+            {
+                UserPlayer.Pickup(new Key());
+                UserPlayer.Pickup(new Weapon());
+            }
+            if (cheats.Contains("restore_health"))
+            {
+                UserPlayer.Health = 100;
+            }
+        }
+
+
+        /*****************************
+        * LevelsManager
+        * **************************/
+        public Level LoadLevelFromLevelsList(int levelIndex, List<Level> levels)
+        {
+            Level output = new Level();
+            try
+            {
+                output = levels.ElementAt(levelIndex);
+            }
+            catch (Exception e)
+            {
+                //GAME IS FINISHED, no more levels
+                _isGameFinished = true;
+                logger.Log($"LoadLevel: Can not load level from Levels. Game finished.");
+                return new Level();
+            }
+            logger.Log($"LoadLevel: Loaded level {output.Name}");
+            return output;
+        }
+
+
+        /*****************************
+         * Data
+         * **************************/
+        private GlobalRepository InitializeRepository(char[][]? injectedLevelCanvas)
+        {
+            //allows optional injecting custom level for testing purposes
+            GlobalRepository output;
+            if (injectedLevelCanvas == null)
+            {
+                output = new GlobalRepository();  //normal mode
+                logger.Log($"InitializeRepository: Initialized repository in normal mode");
+            }
+            else
+            {
+                output = new GlobalRepository(injectedLevelCanvas); //custom level for testing
+                logger.Log($"InitializeRepository: Initialized repository from injected level canvas");
+            }
+            return output;
+        }
+        private List<Level> InitializeLevelsFromRepository(IGlobalRepository repository, string levelName = null)
+        {
+            List<Level> output = new List<Level>();
+
+            if (levelName == Settings.ALL_LEVELS) //Setting dependency
+            {
+                try
+                {
+                    output = repository.GetAllLevels().ToList();
+                }
+                catch (Exception e)
+                {
+                    logger.LogError($"LoadAllLevels: Can not load levels from repository. Exception: {e.Message}");
+                    return new List<Level>();
+                }
+                logger.Log($"LoadAllLevels: Loaded {output.Count()} levels");
+                return output;
+            }
+            else
+            {
+                try
+                {
+                    output.Add(repository.GetLevel(levelName));
+                }
+                catch (Exception e)
+                {
+                    logger.LogError($"LoadAllLevels: Can not load level \"${levelName}\" from repository. Exception: {e.Message}");
+                    return new List<Level>();
+                }
+                logger.Log($"LoadAllLevels: Loaded level \"${levelName}\" from repository");
+                return output;
+            }
+        }
+
+        /*****************************
+         * MenuManager
+         * **************************/
+        private bool ListenForLevelFinishedMessage(string log)
+        {
+            foreach (string logLine in log.Split('\n'))
+            {
+                if (logLine.Contains(Settings.MESSAGE_LEVEL_FINISHED)) //Settings dependency
+                {
+                    logger.Log($"ListenForLevelFinishedMessage: Level {Level.Name} is finished");
+                    return true;
+                }
+            }
+            return false;
+        }
+        /*****************************
+         * UIManager
+         * **************************/
+        public InputAction ReceiveInputDTO(GameEngineInputDTO input)
+        {
+            if (input.DTO.Success == true)
+            {
+                logger.Log($"ReceiveInputDTO: Received InputAction: {input.InputAction.ToString()}");
+                return input.InputAction;
+            }
+            else
+            {
+                logger.LogError($"ReceiveInputDTO: Error from UI: InputAction: {InputAction.ToString()}");
+                return InputAction.Unknown;
+            }
         }
         public GameEngineOutputDTO PrepareGameEngineOutputDTO(GameElement[][] mapOfElements, Logger logger)
         {
@@ -416,19 +515,6 @@ namespace LabyrinthExplorer.Logic
 
             return output;
         }
-
-        private bool ListenForLevelFinishedMessage(string log)
-        {
-            foreach (string logLine in log.Split('\n'))
-            {
-                if (logLine.Contains(Settings.MESSAGE_LEVEL_FINISHED)) //Settings dependency
-                {
-                    logger.Log($"ListenForLevelFinishedMessage: Level {Level.Name} is finished");
-                    return true;
-                }
-            }
-            return false;
-        }
         private GameEngineOutputDTO SetGEOutputDTOForFinishedLevel(bool isLevelFinished, GameEngineOutputDTO input)
         {
             if (isLevelFinished)
@@ -442,39 +528,13 @@ namespace LabyrinthExplorer.Logic
             }
             return input;
         }
-
-        public GameElement[][] ApplyInterActionDTOOnGameElementMap(GameElement[][] elementMap, InterActionDTO input)
-        {
-            try
-            {
-                elementMap[input.CenterPosition.X - 1][input.CenterPosition.Y - 1] = input.MapOfElements[0][0];
-                elementMap[input.CenterPosition.X - 1][input.CenterPosition.Y] = input.MapOfElements[0][1];
-                elementMap[input.CenterPosition.X - 1][input.CenterPosition.Y + 1] = input.MapOfElements[0][2];
-
-                elementMap[input.CenterPosition.X][input.CenterPosition.Y - 1] = input.MapOfElements[1][0];
-                elementMap[input.CenterPosition.X][input.CenterPosition.Y] = input.MapOfElements[1][1];
-                elementMap[input.CenterPosition.X][input.CenterPosition.Y + 1] = input.MapOfElements[1][2];
-
-                elementMap[input.CenterPosition.X + 1][input.CenterPosition.Y - 1] = input.MapOfElements[2][0];
-                elementMap[input.CenterPosition.X + 1][input.CenterPosition.Y] = input.MapOfElements[2][1];
-                elementMap[input.CenterPosition.X + 1][input.CenterPosition.Y + 1] = input.MapOfElements[2][2];
-
-                logger.Log($"ApplyInterActionDTOOnGameElementMap: Success, Center Position X:{input.CenterPosition.X} Y:{input.CenterPosition.Y}");
-                return elementMap;
-            }
-            catch (Exception e)
-            {
-                logger.LogError($"ApplyInterActionDTOOnGameElementMap: Error, Center Position X:{input.CenterPosition.X} Y:{input.CenterPosition.Y}");
-                return elementMap;
-            }
-        }
         private string GenerateHUD(string log, CharacterElement player)
         {
             //HUD is 3 sections
             //Health: 100
             //Inventory: Key Weapon
             //Messages: Actions that happened in game
-        
+
             StringBuilder output = new StringBuilder();
             string temp = "";
 
@@ -500,23 +560,6 @@ namespace LabyrinthExplorer.Logic
             }
             return output.ToString();
         }
-        /// <summary>
-        /// give_all
-        /// restore_health 
-        /// 
-        /// </summary>
-        /// <param name="cheats"></param>
-        public void ApplyCheats(string cheats)
-        {            
-            if (cheats.Contains("give_all"))
-            {
-                UserPlayer.Pickup(new Key());
-                UserPlayer.Pickup(new Weapon());
-            }
-            if (cheats.Contains("restore_health"))
-            {
-                UserPlayer.Health = 100;
-            }
-        }
+
     }
 }
