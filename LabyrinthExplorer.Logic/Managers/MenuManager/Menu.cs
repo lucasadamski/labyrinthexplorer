@@ -3,17 +3,20 @@ using LabyrinthExplorer.Logic.InternalCommunication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+[assembly: InternalsVisibleTo("LabyrinthExplorer.Test")]
 namespace LabyrinthExplorer.Logic.Managers.MenuManager
 {
     public class Menu
     {
-        public string Title { get; set; }
-        public List<Event> Options { get; set; } = new List<Event>();
-        public int ActiveOptionIndex { get; set; } = 0;
-        public bool IsActive { get; set; } = false;
+        internal string Title { get; set; }
+        internal string Message { get; set; } = "";
+        internal List<Event> Options { get; set; } = new List<Event>();
+        internal int ActiveOptionIndex { get; set; } = 0;
+        private bool isActive { get; set; } = false;
 
         private int _MaxOptionIndex = 0;
 
@@ -36,14 +39,16 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
 
         internal InternalDTO ReceiveDTO(InternalDTO inputDTO)
         {
-            inputDTO.Logger.Log($"Menu: Title ${Title}. Active index {ActiveOptionIndex} Is Active {IsActive} Received input {inputDTO.InputAction} ");
-            if (!IsActive)
+            inputDTO.Logger.Log($"Menu: Title ${Title}. Active index {ActiveOptionIndex} Is Active {isActive} Received input {inputDTO.InputAction} ");
+            if (!isActive)
             {
-                IsActive = true;
+                isActive = true;
+                ActiveOptionIndex = 0;
                 return inputDTO;
             }
             else
             {
+                inputDTO.RequestUIInput = true;
                 if (inputDTO.InputAction == Models.InputAction.Up)
                 {
                     if (_MaxOptionIndex == 0) return inputDTO;
@@ -64,7 +69,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                 }
                 else if (inputDTO.InputAction == Models.InputAction.Use)
                 {
-                    IsActive = false;
+                    isActive = false;
                     if (_MaxOptionIndex == 0)
                     {
                         inputDTO.Event = Event.MenuMainNewGame;
@@ -79,8 +84,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                     }                    
                 }
                 else
-                {
-                    inputDTO.RequestUIInput = true;
+                {                    
                     return inputDTO;
                 }
             }

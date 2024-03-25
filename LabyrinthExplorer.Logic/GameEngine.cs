@@ -2,7 +2,11 @@
 using LabyrinthExplorer.Data.Repositories;
 using LabyrinthExplorer.Data.Repositories.Infrastructure;
 using LabyrinthExplorer.Logic.DTOs;
+using LabyrinthExplorer.Logic.DTOs.InternalGameEngineDTOs;
+using LabyrinthExplorer.Logic.InternalCommunication;
 using LabyrinthExplorer.Logic.Loggers;
+using LabyrinthExplorer.Logic.Managers;
+using LabyrinthExplorer.Logic.Managers.MenuManager;
 using LabyrinthExplorer.Logic.Models;
 using LabyrinthExplorer.Logic.Models.GameElements;
 using LabyrinthExplorer.Logic.Models.GameElements.BuildingElements;
@@ -33,6 +37,10 @@ namespace LabyrinthExplorer.Logic
         public Logger logger = new Logger();
         public InterActionDTO UserPlayerInterActionDTO { get; set; } = new InterActionDTO();
         public InterActionDTO UserPlayerReturnedInterActionDTO { get; set; } = new InterActionDTO();
+
+        private Manager menuManager;
+        private Manager activeManager;
+        private InternalDTO internalDTO;
 
         /*****************************
         * GameManager
@@ -80,14 +88,49 @@ namespace LabyrinthExplorer.Logic
             Levels = InitializeLevelsFromRepository(repository, levelName);
 
             InitializeNewGame();
+            InitializeManagers();
 
             logger.Log("END: GameEngine Contructor");
         }
+
+        private void InitializeManagers()
+        {
+            internalDTO = new InternalDTO()
+            {
+                InputAction = InputAction.Unknown,
+                Event = Event.MenuMainNewGame,
+                DTO = new DTO(),
+                Logger = logger,
+
+            };
+
+            menuManager = new MenuManager(internalDTO);
+            return;
+        }
+
+        private Manager SwitchActiveManager(Event @event) 
+        {
+            if (@event == Event.MenuGameSummary) return menuManager;
+            else if (@event == Event.MenuMainPaused) return menuManager;
+            else if (@event == Event.MenuMainNewGame) return menuManager;
+            else if (@event == Event.MenuGameOver) return menuManager;
+            else if (@event == Event.MenuLevelSummary) return menuManager;
+            else
+                return activeManager;
+        }
+
         public GameEngineOutputDTO RunEngine(GameEngineInputDTO input)
         {
             InputAction = ReceiveInputDTO(input);
+            internalDTO.InputAction = InputAction;
+            while (internalDTO.RequestUIInput == false)
+            {
+                activeManager = SwitchActiveManager(internalDTO.Event);
+                internalDTO = activeManager.ReceiveInternalDTO(internalDTO);
+            }
 
 
+           /* //This should go to UIManager
             if (_isLevelFinished)
             {
                 if (_currentLevelIndex >= Levels.Count())
@@ -115,8 +158,8 @@ namespace LabyrinthExplorer.Logic
             Map = ApplyInterActionDTOOnGameElementMap(Map, UserPlayerReturnedInterActionDTO);
 
 
-            _isLevelFinished = ListenForLevelFinishedMessage(logger.Message.ToString());
-            GameEngineOutputDTO = PrepareGameEngineOutputDTO(Map, logger);
+            _isLevelFinished = ListenForLevelFinishedMessage(logger.Message.ToString());*/
+            GameEngineOutputDTO = PrepareGameEngineOutputDTO(Map, logger, internalDTO);
             logger.ClearMessage();
 
             return GameEngineOutputDTO;
@@ -481,8 +524,10 @@ namespace LabyrinthExplorer.Logic
                 return InputAction.Unknown;
             }
         }
-        public GameEngineOutputDTO PrepareGameEngineOutputDTO(GameElement[][] mapOfElements, Logger logger)
+        internal GameEngineOutputDTO PrepareGameEngineOutputDTO(GameElement[][] mapOfElements, Logger logger, InternalDTO internalDTO)
         {
+            internalDTO.RequestUIInput = false;
+
             GameEngineOutputDTO output = new GameEngineOutputDTO();
 
             //Translate GameElements array to Char array
@@ -513,6 +558,22 @@ namespace LabyrinthExplorer.Logic
 
             //Set Level Finished
             output = SetGEOutputDTOForFinishedLevel(_isLevelFinished, output);
+
+            //Prepare Menu
+            if (internalDTO.Menu != null)
+            {
+                StringBuilder menu = new StringBuilder();
+                menu = menu.AppendLine($"Title: {internalDTO.Menu.Title}");
+                menu = menu.AppendLine($"Message: {internalDTO.Menu.Message}");
+                menu = menu.AppendLine($"ActiveOption: {internalDTO.Menu.ActiveOptionIndex}");
+                menu = menu.AppendLine($"Options:");
+                foreach (var option in internalDTO.Menu.Options)
+                {
+                    menu = menu.AppendLine(option.ToString());
+                }
+
+                output.Menu = menu.ToString();
+            }
 
             return output;
         }

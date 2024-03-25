@@ -49,9 +49,9 @@ namespace LabyrinthExplorer.ConsoleUI
             userKeyPressed = ReadKey().Key;
             Input = PrepareGameEngineInputDTO(userKeyPressed);
             //Clear();
-            Output = GE.RunEngine(Input);
-            if (!Output.DTO.Success)
-            {
+            Output = GE.RunEngine(Input); //makes the Engine do the magic
+            if (!Output.DTO.Success)       //ifGameFinished, TODO ifGameisactive
+            {               
                 if (Output.DTO.Message.Contains(Settings.MESSAGE_LEVEL_FINISHED))
                 {
                     DrawFrame(Output.Frame);
@@ -65,6 +65,12 @@ namespace LabyrinthExplorer.ConsoleUI
                     DrawGameFinished();
                     return false;
                 }
+            }
+            if (Output.Menu != null)
+            {
+                DrawMenu(Output.Menu);
+                DrawLog(Output.Log);
+                return true;
             }
             DrawFrame(Output.Frame);
             DrawHUD(Output.HUD);
@@ -91,9 +97,9 @@ namespace LabyrinthExplorer.ConsoleUI
             WriteLine("*****************************************");
         }
 
-        private void DrawGameOverSummary(string summary)
+        private void DrawMenu(string menu)
         {
-
+            WriteLine(menu);
         }
 
         private void DrawFrame(char[][] frame)

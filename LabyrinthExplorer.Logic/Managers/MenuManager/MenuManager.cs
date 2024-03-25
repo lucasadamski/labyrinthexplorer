@@ -30,43 +30,49 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
 
         public override InternalDTO ReceiveInternalDTO(InternalDTO inputDTO)
         {
-            
-                if (_currentMenu == null) //Switch to correct Menu based on Event type
+
+            inputDTO.RequestUIInput = false;
+            if (_currentMenu == null) //Switch to correct Menu based on Event type
+            {
+                if (inputDTO.Event == InternalCommunication.Event.MenuMainNewGame)
                 {
-                    if (inputDTO.Event == InternalCommunication.Event.MenuMainNewGame)
-                    {
-                        _currentMenu = _mainNewGame;                   
-                        return _currentMenu.ReceiveDTO(inputDTO);
-                    }
-                    if (inputDTO.Event == InternalCommunication.Event.MenuMainPaused)
-                    {
-                        _currentMenu = _mainGamePause;                        
-                        return _currentMenu.ReceiveDTO(inputDTO);
-                    }
-                    else if (inputDTO.Event == InternalCommunication.Event.MenuGameOver)
-                    {
-                        _currentMenu = _gameOver;                       
-                        return _currentMenu.ReceiveDTO(inputDTO);
-                    }
-                    else if (inputDTO.Event == InternalCommunication.Event.MenuLevelFinished)
-                    {
-                        _currentMenu = _levelFinished;                      
-                        return _currentMenu.ReceiveDTO(inputDTO);
-                    }
-                    else if (inputDTO.Event == InternalCommunication.Event.MenuGameSummary)
-                    {
-                        _currentMenu = _gameFinished;                        
-                        return _currentMenu.ReceiveDTO(inputDTO);
-                    }
-                    else
-                    {
-                        return inputDTO;
-                    }
+                    _currentMenu = _mainNewGame;
+                    inputDTO.Menu = _currentMenu;
+                    return _currentMenu.ReceiveDTO(inputDTO);
+                }
+                if (inputDTO.Event == InternalCommunication.Event.MenuMainPaused)
+                {
+                    _currentMenu = _mainGamePause;
+                    inputDTO.Menu = _currentMenu;
+                    return _currentMenu.ReceiveDTO(inputDTO);
+                }
+                else if (inputDTO.Event == InternalCommunication.Event.MenuGameOver)
+                {
+                    _currentMenu = _gameOver;
+                    inputDTO.Menu = _currentMenu;
+                    return _currentMenu.ReceiveDTO(inputDTO);
+                }
+                else if (inputDTO.Event == InternalCommunication.Event.MenuLevelFinished)
+                {
+                    _currentMenu = _levelFinished;
+                    inputDTO.Menu = _currentMenu;
+                    return _currentMenu.ReceiveDTO(inputDTO);
+                }
+                else if (inputDTO.Event == InternalCommunication.Event.MenuGameSummary)
+                {
+                    _currentMenu = _gameFinished;
+                    inputDTO.Menu = _currentMenu;
+                    return _currentMenu.ReceiveDTO(inputDTO);
                 }
                 else
                 {
-                    return _currentMenu.ReceiveDTO(inputDTO);
+                    return inputDTO;
                 }
+            }
+            else
+            {
+                return _currentMenu.ReceiveDTO(inputDTO);
+            }
         }
     }
 }

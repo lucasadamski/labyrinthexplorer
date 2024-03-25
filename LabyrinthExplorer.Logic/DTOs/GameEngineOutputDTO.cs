@@ -15,5 +15,8 @@ namespace LabyrinthExplorer.Logic.DTOs
         public string LevelSummary { get; set; } = "";
         public string? Menu { get; set; }
 
+        public bool IsGameActive { get; set; } = false;
+        public bool IsApplicationActive { get; set; } = true;
+
     }
 }
