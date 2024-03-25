@@ -61,6 +61,7 @@ namespace LabyrinthExplorer.Logic
          * **************************/
         private bool _isLevelFinished = false;
         private bool _isGameFinished = false;
+        private string? _menu;
 
 
         /****************************************************************************************

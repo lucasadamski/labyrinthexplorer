@@ -68,5 +68,16 @@ namespace LabyrinthExplorer.Data.Helpers
         public const string SIXTH_LEVEL = "level_6";
         public const string SEVENTH_LEVEL = "level_7";
         public const string EIGHT_LEVEL = "level_8";
-    }
+
+        //Menu messages
+        public const string MENU_TITLE_MAIN = "Main Menu";
+        public const string MENU_TITLE_LEVEL_FINISHED = "Level finished";
+        public const string MENU_TITLE_GAME_OVER = "Game over!";
+        public const string MENU_TITLE_GAME_FINISHED = "Game finished!";
+        public const string MENU_OPTION_NEW_GAME = "New Game";
+        public const string MENU_OPTION_RESUME_GAME = "Resume Game";
+        public const string MENU_OPTION_EXIT = "Exit Game";
+        public const string MENU_OPTION_RESTART_LEVEL = "Restart Level";
+        public const string MENU_OPTION_CONTINUE = "Continue";
+    }                       
 }
