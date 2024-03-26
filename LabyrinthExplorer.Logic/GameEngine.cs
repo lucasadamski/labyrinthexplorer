@@ -39,6 +39,8 @@ namespace LabyrinthExplorer.Logic
         public InterActionDTO UserPlayerReturnedInterActionDTO { get; set; } = new InterActionDTO();
 
         private Manager menuManager;
+        private Manager gameManager;
+        private Manager levelManager;
         private Manager activeManager;
         private InternalDTO internalDTO;
 
@@ -68,8 +70,6 @@ namespace LabyrinthExplorer.Logic
          * MenuManager
          * **************************/
         private bool _isLevelFinished = false;
-        private bool _isGameFinished = false;
-        private string? _menu;
 
 
         /****************************************************************************************
@@ -97,14 +97,18 @@ namespace LabyrinthExplorer.Logic
         {
             internalDTO = new InternalDTO()
             {
-                InputAction = InputAction.Unknown,
-                Event = Event.MenuMainNewGame,
+                InputAction = InputAction.Use,
+                Event = Event.MenuMainNewGame,                             //TODO should be MainMenu 
                 DTO = new DTO(),
                 Logger = logger,
-
+                UserPlayer = UserPlayer,
+                NPCPlayer = NPCPlayer,
+                Map = Map
             };
 
             menuManager = new MenuManager(internalDTO);
+            gameManager = new GameManager();
+            levelManager = new LevelManager();
             return;
         }
 
@@ -115,6 +119,11 @@ namespace LabyrinthExplorer.Logic
             else if (@event == Event.MenuMainNewGame) return menuManager;
             else if (@event == Event.MenuGameOver) return menuManager;
             else if (@event == Event.MenuLevelSummary) return menuManager;
+            else if (@event == Event.LevelCheckNextLevel) return levelManager;
+            else if (@event == Event.LevelLoadNext) return levelManager;
+            else if (@event == Event.LevelNewGame) return levelManager;
+            else if (@event == Event.LevelRestartCurrentLevel) return levelManager;
+            else if (@event == Event.GameStep) return gameManager;            
             else
                 return activeManager;
         }
@@ -127,38 +136,19 @@ namespace LabyrinthExplorer.Logic
             {
                 activeManager = SwitchActiveManager(internalDTO.Event);
                 internalDTO = activeManager.ReceiveInternalDTO(internalDTO);
+                //update Game Engine fields from internalDTO
             }
 
 
-           /* //This should go to UIManager
-            if (_isLevelFinished)
-            {
-                if (_currentLevelIndex >= Levels.Count())
-                {
-                    return new GameEngineOutputDTO()
-                    {
-                        DTO = new DTO()
-                        {
-                            Success = false,
-                            Message = Settings.MESSAGE_GAME_FINISHED
-                        }
-                    };
-                }
-                else
-                {
-                    InitializeNewGame();
-                }
-                _isLevelFinished = false;
-            }
 
-            UserPlayerInterActionDTO = TranslateInputActionToInterAction(InputAction, UserPlayer.Position);
+            /*UserPlayerInterActionDTO = TranslateInputActionToInterAction(InputAction, UserPlayer.Position);
             UserPlayerReturnedInterActionDTO = UserPlayer.ReceiveInterActionDTO(UserPlayerInterActionDTO);
             logger.AppendDTOMessage(UserPlayerReturnedInterActionDTO.DTO.Message);
 
-            Map = ApplyInterActionDTOOnGameElementMap(Map, UserPlayerReturnedInterActionDTO);
+            Map = ApplyInterActionDTOOnGameElementMap(Map, UserPlayerReturnedInterActionDTO);*/
 
 
-            _isLevelFinished = ListenForLevelFinishedMessage(logger.Message.ToString());*/
+            
             GameEngineOutputDTO = PrepareGameEngineOutputDTO(Map, logger, internalDTO);
             logger.ClearMessage();
 
@@ -188,6 +178,103 @@ namespace LabyrinthExplorer.Logic
             Inventory.AddRange(InitializeInventory(Map));
 
             logger.Log($"InitializeNewGame: Finished. Level index {_currentLevelIndex - 1}");
+        }
+        
+        public GameElement[][] ApplyInterActionDTOOnGameElementMap(GameElement[][] elementMap, InterActionDTO input)
+        {
+            try
+            {
+                elementMap[input.CenterPosition.X - 1][input.CenterPosition.Y - 1] = input.MapOfElements[0][0];
+                elementMap[input.CenterPosition.X - 1][input.CenterPosition.Y] = input.MapOfElements[0][1];
+                elementMap[input.CenterPosition.X - 1][input.CenterPosition.Y + 1] = input.MapOfElements[0][2];
+
+                elementMap[input.CenterPosition.X][input.CenterPosition.Y - 1] = input.MapOfElements[1][0];
+                elementMap[input.CenterPosition.X][input.CenterPosition.Y] = input.MapOfElements[1][1];
+                elementMap[input.CenterPosition.X][input.CenterPosition.Y + 1] = input.MapOfElements[1][2];
+
+                elementMap[input.CenterPosition.X + 1][input.CenterPosition.Y - 1] = input.MapOfElements[2][0];
+                elementMap[input.CenterPosition.X + 1][input.CenterPosition.Y] = input.MapOfElements[2][1];
+                elementMap[input.CenterPosition.X + 1][input.CenterPosition.Y + 1] = input.MapOfElements[2][2];
+
+                logger.Log($"ApplyInterActionDTOOnGameElementMap: Success, Center Position X:{input.CenterPosition.X} Y:{input.CenterPosition.Y}");
+                return elementMap;
+            }
+            catch (Exception e)
+            {
+                logger.LogError($"ApplyInterActionDTOOnGameElementMap: Error, Center Position X:{input.CenterPosition.X} Y:{input.CenterPosition.Y}");
+                return elementMap;
+            }
+        }
+
+        
+        public InterActionDTO TranslateInputActionToInterAction(InputAction inputAction, Coordinates coordinates)
+        {
+            InterActionDTO interActionDTO = new InterActionDTO();
+            interActionDTO.InputAction = inputAction;
+            interActionDTO.CenterPosition = new Coordinates(coordinates.X, coordinates.Y);
+
+            //Generate LocalMapOfElements
+            try
+            {
+                interActionDTO.MapOfElements[0] = new GameElement[3];
+                interActionDTO.MapOfElements[0][0] = Map[coordinates.X - 1][coordinates.Y - 1];
+                interActionDTO.MapOfElements[0][1] = Map[coordinates.X - 1][coordinates.Y];
+                interActionDTO.MapOfElements[0][2] = Map[coordinates.X - 1][coordinates.Y + 1];
+
+                interActionDTO.MapOfElements[1] = new GameElement[3];
+                interActionDTO.MapOfElements[1][0] = Map[coordinates.X][coordinates.Y - 1];
+                interActionDTO.MapOfElements[1][1] = Map[coordinates.X][coordinates.Y];
+                interActionDTO.MapOfElements[1][2] = Map[coordinates.X][coordinates.Y + 1];
+
+                interActionDTO.MapOfElements[2] = new GameElement[3];
+                interActionDTO.MapOfElements[2][0] = Map[coordinates.X + 1][coordinates.Y - 1];
+                interActionDTO.MapOfElements[2][1] = Map[coordinates.X + 1][coordinates.Y];
+                interActionDTO.MapOfElements[2][2] = Map[coordinates.X + 1][coordinates.Y + 1];
+            }
+            catch (Exception e)
+            {
+                logger.LogError($"TranslateInputActionToInterAction: Can't convert input {inputAction} and coordinates X:{coordinates.X} Y:{coordinates.Y} " +
+                $"to InterActionDTO. Exception: {e.Message}");
+                return new InterActionDTO();
+            }
+
+            logger.Log($"TranslateInputActionToInterAction: Converted input {inputAction} and coordinates X:{coordinates.X} Y:{coordinates.Y} " +
+                $"to InterActionDTO");
+            return interActionDTO;
+        }
+        public void ApplyCheats(string cheats)
+        {
+            if (cheats.Contains("give_all"))
+            {
+                UserPlayer.Pickup(new Key());
+                UserPlayer.Pickup(new Weapon());
+            }
+            if (cheats.Contains("restore_health"))
+            {
+                UserPlayer.Health = 100;
+            }
+        }
+
+
+        /*****************************
+        * LevelsManager
+        * **************************/
+        public Level LoadLevelFromLevelsList(int levelIndex, List<Level> levels)
+        {
+            Level output = new Level();
+            try
+            {
+                output = levels.ElementAt(levelIndex);
+            }
+            catch (Exception e)
+            {
+                //GAME IS FINISHED, no more levels
+                
+                logger.Log($"LoadLevel: Can not load level from Levels. Game finished.");
+                return new Level();
+            }
+            logger.Log($"LoadLevel: Loaded level {output.Name}");
+            return output;
         }
         public GameElement[][] ParseCanvasToMap(char[][] canvas)
         {
@@ -259,32 +346,6 @@ namespace LabyrinthExplorer.Logic
             logger.Log($"ParseCanvasToMap: Parsed Canvas to Map of {counter} elements.");
             return output;
         }
-        public GameElement[][] ApplyInterActionDTOOnGameElementMap(GameElement[][] elementMap, InterActionDTO input)
-        {
-            try
-            {
-                elementMap[input.CenterPosition.X - 1][input.CenterPosition.Y - 1] = input.MapOfElements[0][0];
-                elementMap[input.CenterPosition.X - 1][input.CenterPosition.Y] = input.MapOfElements[0][1];
-                elementMap[input.CenterPosition.X - 1][input.CenterPosition.Y + 1] = input.MapOfElements[0][2];
-
-                elementMap[input.CenterPosition.X][input.CenterPosition.Y - 1] = input.MapOfElements[1][0];
-                elementMap[input.CenterPosition.X][input.CenterPosition.Y] = input.MapOfElements[1][1];
-                elementMap[input.CenterPosition.X][input.CenterPosition.Y + 1] = input.MapOfElements[1][2];
-
-                elementMap[input.CenterPosition.X + 1][input.CenterPosition.Y - 1] = input.MapOfElements[2][0];
-                elementMap[input.CenterPosition.X + 1][input.CenterPosition.Y] = input.MapOfElements[2][1];
-                elementMap[input.CenterPosition.X + 1][input.CenterPosition.Y + 1] = input.MapOfElements[2][2];
-
-                logger.Log($"ApplyInterActionDTOOnGameElementMap: Success, Center Position X:{input.CenterPosition.X} Y:{input.CenterPosition.Y}");
-                return elementMap;
-            }
-            catch (Exception e)
-            {
-                logger.LogError($"ApplyInterActionDTOOnGameElementMap: Error, Center Position X:{input.CenterPosition.X} Y:{input.CenterPosition.Y}");
-                return elementMap;
-            }
-        }
-
         public UserPlayer? InitializeUserPlayer(GameElement[][] mapOfElements)
         {
             for (int i = 0; i < mapOfElements.Length; i++)
@@ -369,77 +430,6 @@ namespace LabyrinthExplorer.Logic
             logger.Log($"DeepCopyCanvas: Success, Canvas size: {sizeA}x{sizeB}");
             return output;
         }
-        public InterActionDTO TranslateInputActionToInterAction(InputAction inputAction, Coordinates coordinates)
-        {
-            InterActionDTO interActionDTO = new InterActionDTO();
-            interActionDTO.InputAction = inputAction;
-            interActionDTO.CenterPosition = new Coordinates(coordinates.X, coordinates.Y);
-
-            //Generate LocalMapOfElements
-            try
-            {
-                interActionDTO.MapOfElements[0] = new GameElement[3];
-                interActionDTO.MapOfElements[0][0] = Map[coordinates.X - 1][coordinates.Y - 1];
-                interActionDTO.MapOfElements[0][1] = Map[coordinates.X - 1][coordinates.Y];
-                interActionDTO.MapOfElements[0][2] = Map[coordinates.X - 1][coordinates.Y + 1];
-
-                interActionDTO.MapOfElements[1] = new GameElement[3];
-                interActionDTO.MapOfElements[1][0] = Map[coordinates.X][coordinates.Y - 1];
-                interActionDTO.MapOfElements[1][1] = Map[coordinates.X][coordinates.Y];
-                interActionDTO.MapOfElements[1][2] = Map[coordinates.X][coordinates.Y + 1];
-
-                interActionDTO.MapOfElements[2] = new GameElement[3];
-                interActionDTO.MapOfElements[2][0] = Map[coordinates.X + 1][coordinates.Y - 1];
-                interActionDTO.MapOfElements[2][1] = Map[coordinates.X + 1][coordinates.Y];
-                interActionDTO.MapOfElements[2][2] = Map[coordinates.X + 1][coordinates.Y + 1];
-            }
-            catch (Exception e)
-            {
-                logger.LogError($"TranslateInputActionToInterAction: Can't convert input {inputAction} and coordinates X:{coordinates.X} Y:{coordinates.Y} " +
-                $"to InterActionDTO. Exception: {e.Message}");
-                return new InterActionDTO();
-            }
-
-            logger.Log($"TranslateInputActionToInterAction: Converted input {inputAction} and coordinates X:{coordinates.X} Y:{coordinates.Y} " +
-                $"to InterActionDTO");
-            return interActionDTO;
-        }
-        public void ApplyCheats(string cheats)
-        {
-            if (cheats.Contains("give_all"))
-            {
-                UserPlayer.Pickup(new Key());
-                UserPlayer.Pickup(new Weapon());
-            }
-            if (cheats.Contains("restore_health"))
-            {
-                UserPlayer.Health = 100;
-            }
-        }
-
-
-        /*****************************
-        * LevelsManager
-        * **************************/
-        public Level LoadLevelFromLevelsList(int levelIndex, List<Level> levels)
-        {
-            Level output = new Level();
-            try
-            {
-                output = levels.ElementAt(levelIndex);
-            }
-            catch (Exception e)
-            {
-                //GAME IS FINISHED, no more levels
-                _isGameFinished = true;
-                logger.Log($"LoadLevel: Can not load level from Levels. Game finished.");
-                return new Level();
-            }
-            logger.Log($"LoadLevel: Loaded level {output.Name}");
-            return output;
-        }
-
-
         /*****************************
          * Data
          * **************************/
@@ -496,18 +486,7 @@ namespace LabyrinthExplorer.Logic
         /*****************************
          * MenuManager
          * **************************/
-        private bool ListenForLevelFinishedMessage(string log)
-        {
-            foreach (string logLine in log.Split('\n'))
-            {
-                if (logLine.Contains(Settings.MESSAGE_LEVEL_FINISHED)) //Settings dependency
-                {
-                    logger.Log($"ListenForLevelFinishedMessage: Level {Level.Name} is finished");
-                    return true;
-                }
-            }
-            return false;
-        }
+        
         /*****************************
          * UIManager
          * **************************/
@@ -559,6 +538,9 @@ namespace LabyrinthExplorer.Logic
             //Set Level Finished
             output = SetGEOutputDTOForFinishedLevel(_isLevelFinished, output);
 
+            //Is Menu active?
+            output.IsGameActive = !internalDTO.IsMenuActive;
+
             //Prepare Menu
             if (internalDTO.Menu != null)
             {
@@ -573,6 +555,10 @@ namespace LabyrinthExplorer.Logic
                 }
 
                 output.Menu = menu.ToString();
+            }
+            else
+            {
+                output.Menu = null;
             }
 
             return output;

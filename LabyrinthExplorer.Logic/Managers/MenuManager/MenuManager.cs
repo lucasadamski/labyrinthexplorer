@@ -20,7 +20,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
             ManagerDTO.Menu = _currentMenu;
         }
 
-        private Menu _mainNewGame = new Menu(MENU_TITLE_MAIN, Event.LevelNewGame, Event.UIQuitGame);
+        private Menu _mainNewGame = new Menu(MENU_TITLE_MAIN, Event.GameStep, Event.UIQuitGame); //TODO Test gamestep
         private Menu _mainGamePause = new Menu(MENU_TITLE_MAIN, Event.GameStep, Event.LevelRestartCurrentLevel,Event.LevelNewGame, Event.UIQuitGame);
         private Menu _gameFinished = new Menu(MENU_TITLE_GAME_FINISHED, Event.MenuMainNewGame);
         private Menu _levelFinished = new Menu(MENU_TITLE_LEVEL_FINISHED, Event.LevelCheckNextLevel); 
@@ -38,31 +38,41 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                 {
                     _currentMenu = _mainNewGame;
                     inputDTO.Menu = _currentMenu;
-                    return _currentMenu.ReceiveDTO(inputDTO);
+                    inputDTO = _currentMenu.ReceiveDTO(inputDTO); //???? nie chce wyjść z menu
+                    inputDTO.IsMenuActive = _currentMenu.isActive;
+                    return inputDTO;
                 }
                 if (inputDTO.Event == InternalCommunication.Event.MenuMainPaused)
                 {
                     _currentMenu = _mainGamePause;
                     inputDTO.Menu = _currentMenu;
-                    return _currentMenu.ReceiveDTO(inputDTO);
+                    inputDTO = _currentMenu.ReceiveDTO(inputDTO);
+                    inputDTO.IsMenuActive = _currentMenu.isActive;
+                    return inputDTO;
                 }
                 else if (inputDTO.Event == InternalCommunication.Event.MenuGameOver)
                 {
                     _currentMenu = _gameOver;
                     inputDTO.Menu = _currentMenu;
-                    return _currentMenu.ReceiveDTO(inputDTO);
+                    inputDTO = _currentMenu.ReceiveDTO(inputDTO);
+                    inputDTO.IsMenuActive = _currentMenu.isActive;
+                    return inputDTO;
                 }
                 else if (inputDTO.Event == InternalCommunication.Event.MenuLevelFinished)
                 {
                     _currentMenu = _levelFinished;
                     inputDTO.Menu = _currentMenu;
-                    return _currentMenu.ReceiveDTO(inputDTO);
+                    inputDTO = _currentMenu.ReceiveDTO(inputDTO);
+                    inputDTO.IsMenuActive = _currentMenu.isActive;
+                    return inputDTO;
                 }
                 else if (inputDTO.Event == InternalCommunication.Event.MenuGameSummary)
                 {
                     _currentMenu = _gameFinished;
                     inputDTO.Menu = _currentMenu;
-                    return _currentMenu.ReceiveDTO(inputDTO);
+                    inputDTO = _currentMenu.ReceiveDTO(inputDTO);
+                    inputDTO.IsMenuActive = _currentMenu.isActive;
+                    return inputDTO;
                 }
                 else
                 {
@@ -71,7 +81,9 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
             }
             else
             {
-                return _currentMenu.ReceiveDTO(inputDTO);
+                inputDTO = _currentMenu.ReceiveDTO(inputDTO);
+                inputDTO.IsMenuActive = _currentMenu.isActive;
+                return inputDTO;
             }
         }
     }

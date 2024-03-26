@@ -66,16 +66,19 @@ namespace LabyrinthExplorer.ConsoleUI
                     return false;
                 }
             }
-            if (Output.Menu != null)
+            if (Output.IsGameActive) //draws game
+            {
+                DrawFrame(Output.Frame);
+                DrawHUD(Output.HUD);
+                DrawLog(Output.Log);
+                return Output.DTO.Success;
+            }
+            else   //draws menu only
             {
                 DrawMenu(Output.Menu);
                 DrawLog(Output.Log);
-                return true;
+                return Output.DTO.Success;
             }
-            DrawFrame(Output.Frame);
-            DrawHUD(Output.HUD);
-            DrawLog(Output.Log);
-            return Output.DTO.Success;
         }
 
         private void DrawFinishedLevelSummary(string summary)

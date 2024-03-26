@@ -16,7 +16,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
         internal string Message { get; set; } = "";
         internal List<Event> Options { get; set; } = new List<Event>();
         internal int ActiveOptionIndex { get; set; } = 0;
-        private bool isActive { get; set; } = false;
+        internal bool isActive { get; set; } = false;
 
         private int _MaxOptionIndex = 0;
 
@@ -43,14 +43,16 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
             if (!isActive)
             {
                 isActive = true;
+                inputDTO.RequestUIInput = true;
                 ActiveOptionIndex = 0;
                 return inputDTO;
             }
             else
             {
-                inputDTO.RequestUIInput = true;
+                //todo false
                 if (inputDTO.InputAction == Models.InputAction.Up)
                 {
+                    inputDTO.RequestUIInput = true;
                     if (_MaxOptionIndex == 0) return inputDTO;
                     if (ActiveOptionIndex == 0) 
                         ActiveOptionIndex = _MaxOptionIndex;
@@ -60,6 +62,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                 }
                 else if (inputDTO.InputAction == Models.InputAction.Down)
                 {
+                    inputDTO.RequestUIInput = true;
                     if (_MaxOptionIndex == 0) return inputDTO;
                     if (ActiveOptionIndex == _MaxOptionIndex) 
                         ActiveOptionIndex = 0;
@@ -70,6 +73,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                 else if (inputDTO.InputAction == Models.InputAction.Use)
                 {
                     isActive = false;
+                    inputDTO.RequestUIInput = false;
                     if (_MaxOptionIndex == 0)
                     {
                         inputDTO.Event = Event.MenuMainNewGame;
