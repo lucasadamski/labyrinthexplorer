@@ -40,6 +40,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                     inputDTO.Menu = _currentMenu;
                     inputDTO = _currentMenu.ReceiveDTO(inputDTO); //???? nie chce wyjść z menu
                     inputDTO.IsMenuActive = _currentMenu.isActive;
+                    if (!inputDTO.IsApplicationActive) inputDTO.Logger.Log($"MenuManager: Menu exited with event {inputDTO.Event}");
                     return inputDTO;
                 }
                 if (inputDTO.Event == InternalCommunication.Event.MenuMainPaused)
@@ -48,6 +49,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                     inputDTO.Menu = _currentMenu;
                     inputDTO = _currentMenu.ReceiveDTO(inputDTO);
                     inputDTO.IsMenuActive = _currentMenu.isActive;
+                    if (!inputDTO.IsApplicationActive) inputDTO.Logger.Log($"MenuManager: Menu exited with event {inputDTO.Event}");
                     return inputDTO;
                 }
                 else if (inputDTO.Event == InternalCommunication.Event.MenuGameOver)
@@ -56,6 +58,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                     inputDTO.Menu = _currentMenu;
                     inputDTO = _currentMenu.ReceiveDTO(inputDTO);
                     inputDTO.IsMenuActive = _currentMenu.isActive;
+                    if (!inputDTO.IsApplicationActive) inputDTO.Logger.Log($"MenuManager: Menu exited with event {inputDTO.Event}");
                     return inputDTO;
                 }
                 else if (inputDTO.Event == InternalCommunication.Event.MenuLevelFinished)
@@ -64,6 +67,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                     inputDTO.Menu = _currentMenu;
                     inputDTO = _currentMenu.ReceiveDTO(inputDTO);
                     inputDTO.IsMenuActive = _currentMenu.isActive;
+                    if (!inputDTO.IsApplicationActive) inputDTO.Logger.Log($"MenuManager: Menu exited with event {inputDTO.Event}");
                     return inputDTO;
                 }
                 else if (inputDTO.Event == InternalCommunication.Event.MenuGameSummary)
@@ -72,6 +76,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                     inputDTO.Menu = _currentMenu;
                     inputDTO = _currentMenu.ReceiveDTO(inputDTO);
                     inputDTO.IsMenuActive = _currentMenu.isActive;
+                    if (!inputDTO.IsApplicationActive) inputDTO.Logger.Log($"MenuManager: Menu exited with event {inputDTO.Event}");
                     return inputDTO;
                 }
                 else
@@ -83,6 +88,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
             {
                 inputDTO = _currentMenu.ReceiveDTO(inputDTO);
                 inputDTO.IsMenuActive = _currentMenu.isActive;
+                if (!inputDTO.IsApplicationActive) inputDTO.Logger.Log($"MenuManager: Menu exited with event {inputDTO.Event}");
                 return inputDTO;
             }
         }

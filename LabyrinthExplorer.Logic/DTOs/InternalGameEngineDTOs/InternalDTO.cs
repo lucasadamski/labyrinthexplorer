@@ -14,6 +14,7 @@ namespace LabyrinthExplorer.Logic.DTOs.InternalGameEngineDTOs
     internal class InternalDTO
     {
         public bool IsMenuActive { get; set; } = false;
+        public bool IsApplicationActive { get; set; } = true;
         public InputAction InputAction { get; set; }
         internal Event Event { get; set; }
         internal DTO DTO { get; set; } = new DTO();

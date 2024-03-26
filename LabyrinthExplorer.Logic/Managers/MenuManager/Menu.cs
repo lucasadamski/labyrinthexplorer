@@ -39,12 +39,13 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
 
         internal InternalDTO ReceiveDTO(InternalDTO inputDTO)
         {
-            inputDTO.Logger.Log($"Menu: Title ${Title}. Active index {ActiveOptionIndex} Is Active {isActive} Received input {inputDTO.InputAction} ");
+            
             if (!isActive)
             {
                 isActive = true;
                 inputDTO.RequestUIInput = true;
                 ActiveOptionIndex = 0;
+                inputDTO.Logger.Log($"Menu: Title ${Title}. Active index {ActiveOptionIndex} Is Active {isActive} Received input {inputDTO.InputAction} ");
                 return inputDTO;
             }
             else
@@ -58,6 +59,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                         ActiveOptionIndex = _MaxOptionIndex;
                     else 
                         ActiveOptionIndex--;
+                    inputDTO.Logger.Log($"Menu: Title ${Title}. Active index {ActiveOptionIndex} Is Active {isActive} Received input {inputDTO.InputAction} ");
                     return inputDTO;
                 }
                 else if (inputDTO.InputAction == Models.InputAction.Down)
@@ -68,6 +70,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                         ActiveOptionIndex = 0;
                     else 
                         ActiveOptionIndex++;
+                    inputDTO.Logger.Log($"Menu: Title ${Title}. Active index {ActiveOptionIndex} Is Active {isActive} Received input {inputDTO.InputAction} ");
                     return inputDTO;
                 }
                 else if (inputDTO.InputAction == Models.InputAction.Use)
@@ -88,12 +91,11 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                     }                    
                 }
                 else
-                {                    
+                {
+                    inputDTO.Logger.Log($"Menu: Title ${Title}. Active index {ActiveOptionIndex} Is Active {isActive} Received input {inputDTO.InputAction} ");
                     return inputDTO;
                 }
             }
-            return inputDTO;
-
         }
     }
 }

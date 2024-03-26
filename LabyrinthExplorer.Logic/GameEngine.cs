@@ -41,6 +41,7 @@ namespace LabyrinthExplorer.Logic
         private Manager menuManager;
         private Manager gameManager;
         private Manager levelManager;
+        private Manager uiManager;
         private Manager activeManager;
         private InternalDTO internalDTO;
 
@@ -108,6 +109,7 @@ namespace LabyrinthExplorer.Logic
 
             menuManager = new MenuManager(internalDTO);
             gameManager = new GameManager();
+            uiManager = new UIManager();
             levelManager = new LevelManager();
             return;
         }
@@ -123,7 +125,8 @@ namespace LabyrinthExplorer.Logic
             else if (@event == Event.LevelLoadNext) return levelManager;
             else if (@event == Event.LevelNewGame) return levelManager;
             else if (@event == Event.LevelRestartCurrentLevel) return levelManager;
-            else if (@event == Event.GameStep) return gameManager;            
+            else if (@event == Event.GameStep) return gameManager;
+            else if (@event == Event.UIQuitGame) return uiManager;
             else
                 return activeManager;
         }
@@ -540,6 +543,9 @@ namespace LabyrinthExplorer.Logic
 
             //Is Menu active?
             output.IsGameActive = !internalDTO.IsMenuActive;
+
+            //Is Application active?
+            output.IsApplicationActive = internalDTO.IsApplicationActive;
 
             //Prepare Menu
             if (internalDTO.Menu != null)

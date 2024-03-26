@@ -50,21 +50,10 @@ namespace LabyrinthExplorer.ConsoleUI
             Input = PrepareGameEngineInputDTO(userKeyPressed);
             //Clear();
             Output = GE.RunEngine(Input); //makes the Engine do the magic
-            if (!Output.DTO.Success)       //ifGameFinished, TODO ifGameisactive
-            {               
-                if (Output.DTO.Message.Contains(Settings.MESSAGE_LEVEL_FINISHED))
-                {
-                    DrawFrame(Output.Frame);
-                    DrawHUD(Output.HUD);
-                    DrawLog(Output.Log);
-                    DrawFinishedLevelSummary(Output.LevelSummary);
-                    return true;
-                }
-                if (Output.DTO.Message.Contains(Settings.MESSAGE_GAME_FINISHED))
-                {
-                    DrawGameFinished();
-                    return false;
-                }
+            if (!Output.IsApplicationActive) //quits game
+            {
+                DrawLog(Output.Log);
+                return Output.IsApplicationActive; //return false, so Program.cs exits the while loop
             }
             if (Output.IsGameActive) //draws game
             {
