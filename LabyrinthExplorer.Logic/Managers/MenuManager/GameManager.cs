@@ -1,5 +1,6 @@
 ﻿using LabyrinthExplorer.Logic.DTOs;
 using LabyrinthExplorer.Logic.DTOs.InternalGameEngineDTOs;
+using LabyrinthExplorer.Logic.InternalCommunication;
 using LabyrinthExplorer.Logic.Loggers;
 using LabyrinthExplorer.Logic.Models;
 using LabyrinthExplorer.Logic.Models.GameElements;
@@ -42,6 +43,12 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
             logger.AppendDTOMessage(UserPlayerReturnedInterActionDTO.DTO.Message);
 
             Map = ApplyInterActionDTOOnGameElementMap(Map, UserPlayerReturnedInterActionDTO);
+
+            if (UserPlayer.IsLevelFinished)
+            {
+                inputDTO.Event = Event.MenuLevelSummary;
+                inputDTO.RequestUIInput = false;
+            }
 
             return inputDTO;
         }

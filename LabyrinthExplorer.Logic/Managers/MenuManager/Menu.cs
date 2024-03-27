@@ -77,7 +77,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                 {
                     isActive = false;
                     inputDTO.RequestUIInput = false;
-                    if (_MaxOptionIndex == 0)
+                    if (Options.Count() == 0)
                     {
                         inputDTO.Event = Event.MenuMainNewGame;
                         inputDTO.Logger.Log($"ERROR: Menu: Event changed to ${inputDTO.Event} because there are no options list in Menu");

@@ -31,6 +31,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements.BuildingElements
             {
                 output.AppendDebugMessage($"{this.Name} is open. {player.Name} allowed to step in");
                 output.AppendActionMessage(Settings.MESSAGE_LEVEL_FINISHED);
+                player.IsLevelFinished = true;
                 return output;
             }
             else

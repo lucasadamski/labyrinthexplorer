@@ -20,7 +20,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
             ManagerDTO.Menu = _currentMenu;
         }
 
-        private Menu _mainNewGame = new Menu(MENU_TITLE_MAIN, Event.GameStep, Event.UIQuitGame); //TODO Test gamestep
+        private Menu _mainNewGame = new Menu(MENU_TITLE_MAIN, Event.LevelNewGame, Event.UIQuitGame); //TODO Test gamestep
         private Menu _mainGamePause = new Menu(MENU_TITLE_MAIN, Event.GameStep, Event.LevelRestartCurrentLevel,Event.LevelNewGame, Event.UIQuitGame);
         private Menu _gameFinished = new Menu(MENU_TITLE_GAME_FINISHED, Event.MenuMainNewGame);
         private Menu _levelFinished = new Menu(MENU_TITLE_LEVEL_FINISHED, Event.LevelCheckNextLevel); 
@@ -32,7 +32,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
         {
 
             inputDTO.RequestUIInput = false;
-            if (_currentMenu == null) //Switch to correct Menu based on Event type
+            if (_currentMenu == null) //Switch to correct Menu based on Event type, this is a problem
             {
                 if (inputDTO.Event == InternalCommunication.Event.MenuMainNewGame)
                 {
@@ -61,7 +61,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                     if (!inputDTO.IsApplicationActive) inputDTO.Logger.Log($"MenuManager: Menu exited with event {inputDTO.Event}");
                     return inputDTO;
                 }
-                else if (inputDTO.Event == InternalCommunication.Event.MenuLevelFinished)
+                else if (inputDTO.Event == InternalCommunication.Event.MenuLevelSummary)
                 {
                     _currentMenu = _levelFinished;
                     inputDTO.Menu = _currentMenu;
@@ -87,7 +87,8 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
             else
             {
                 inputDTO = _currentMenu.ReceiveDTO(inputDTO);
-                inputDTO.IsMenuActive = _currentMenu.isActive;
+                inputDTO.IsMenuActive = _currentMenu.isActive; //does menu exited?
+                if (!inputDTO.IsMenuActive) _currentMenu = null; //menu exits
                 if (!inputDTO.IsApplicationActive) inputDTO.Logger.Log($"MenuManager: Menu exited with event {inputDTO.Event}");
                 return inputDTO;
             }

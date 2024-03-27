@@ -10,29 +10,91 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LabyrinthExplorer.Logic.InternalCommunication;
+using LabyrinthExplorer.Logic.DTOs;
+using System.Data.Common;
 
 namespace LabyrinthExplorer.Logic.Managers.MenuManager
 {
     internal class LevelManager : Manager
     {
-
-
-
+        
         public Logger logger = new Logger();
-
+        
 
         public LevelManager()
         {
-
+           
         }
 
-      
+
+        public override InternalDTO ReceiveInternalDTO(InternalDTO inputDTO)
+        {
+            if (inputDTO.Event == Event.LevelCheckNextLevel)
+            {
+                if (IsItLastLevel(inputDTO.CurrentLevelIndex, inputDTO.Levels))
+                {
+                    inputDTO.Event = Event.MenuGameSummary;
+                    inputDTO.Logger.Log($"LevelManager: {Event.LevelLoadNext}, this was the last level, issued {inputDTO.Event}");
+                    return inputDTO;
+                }
+                else
+                {
+                    inputDTO.Event = Event.LevelLoadNext;
+                    inputDTO.Logger.Log($"LevelManager: {Event.LevelLoadNext}, able to load next level, issued {inputDTO.Event}");
+                    return inputDTO;
+                }
+            }
+            if (inputDTO.Event == Event.LevelLoadNext)
+            {
+                inputDTO = InitializeNewGame(inputDTO);
+                inputDTO.Event = Event.GameStep;
+                inputDTO.Logger.Log($"LevelManager: {Event.LevelLoadNext}, InitializedNewGame, issued {inputDTO.Event}");
+                return inputDTO;
+            }
+            if (inputDTO.Event == Event.LevelNewGame)
+            {
+                inputDTO.Repository = InitializeRepository(inputDTO.injectedLevelCanvas);
+                inputDTO.Levels = InitializeLevelsFromRepository(inputDTO.Repository, inputDTO.LevelName);
+                inputDTO.CurrentLevelIndex = 0;
+                inputDTO.Event = Event.LevelLoadNext; //TODO change to check next
+                inputDTO.Logger.Log($"LevelManager: Received {Event.LevelNewGame} Initialized Repository, Initialized Levels List, issued {inputDTO.Event}");
+                return inputDTO;
+            }
+            return inputDTO;
+        }
 
 
 
         /*****************************
        * LevelsManager
        * **************************/
+        private bool IsItLastLevel(int nextLevelIndex, IEnumerable<object> collection)
+        {
+            if ((nextLevelIndex) <= (collection.Count() - 1)) return false;
+            else return true;
+        }
+        private InternalDTO InitializeNewGame(InternalDTO input)
+        {
+            input.Logger.Log($"InitializeNewGame: Started. Level index {input.CurrentLevelIndex}");
+
+            input.Level = LoadLevelFromLevelsList(input.CurrentLevelIndex++, input.Levels);
+
+            input.Canvas = DeepCopyCanvas(input.Level.Map); //create deep copy of char[][] array
+            input.Map = ParseCanvasToMap(input.Canvas); //translate char array into GameElement Objects array
+            if ((input.UserPlayer = InitializeUserPlayer(input.Map)) == null) //if there is no UserPlayer in provided Array, game exits now
+            {
+                input.Logger.LogError("NewGame: Can't initialize UserPlayer. Exiting the New Game Initialization.");
+                return input;
+            }
+            input.NPCPlayer.Clear();
+            input.NPCPlayer.AddRange(InitializeNPCPlayers(input.Map));
+            input.Inventory.Clear();
+            input.Inventory.AddRange(InitializeInventory(input.Map));
+
+            input.Logger.Log($"InitializeNewGame: Finished. Level index {input.CurrentLevelIndex - 1}");
+            return input;
+        }
         public Level LoadLevelFromLevelsList(int levelIndex, List<Level> levels)
         {
             Level output = new Level();

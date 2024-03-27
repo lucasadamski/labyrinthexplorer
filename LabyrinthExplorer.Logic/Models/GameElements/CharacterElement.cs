@@ -24,6 +24,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         public sbyte Health { get; set; }
         public List<ItemElement> Inventory { get; set; }
         public GameElement HiddenElement { get; set; }
+        public bool IsLevelFinished { get; set; } = false;
 
         virtual protected GameElement HideElement(GameElement element)
         {

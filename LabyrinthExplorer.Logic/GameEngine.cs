@@ -84,18 +84,11 @@ namespace LabyrinthExplorer.Logic
         {
             logger.Log("START: GameEngine Contructor");
 
-            repository = InitializeRepository(injectedLevelCanvas);
+            /*repository = InitializeRepository(injectedLevelCanvas);
 
             Levels = InitializeLevelsFromRepository(repository, levelName);
 
-            InitializeNewGame();
-            InitializeManagers();
-
-            logger.Log("END: GameEngine Contructor");
-        }
-
-        private void InitializeManagers()
-        {
+            InitializeNewGame();*/
             internalDTO = new InternalDTO()
             {
                 InputAction = InputAction.Use,
@@ -104,13 +97,35 @@ namespace LabyrinthExplorer.Logic
                 Logger = logger,
                 UserPlayer = UserPlayer,
                 NPCPlayer = NPCPlayer,
-                Map = Map
+                Map = Map,
+                Repository = repository,
+                Levels = Levels,
+                injectedLevelCanvas = injectedLevelCanvas,
+                LevelName = levelName,
+                Level = Level,
+                Canvas = Canvas
+
             };
+
+
+            InitializeManagers();
+
+
+            logger.Log("END: GameEngine Contructor");
+        }
+
+        private void InitializeManagers()
+        {
+            
+
+            levelManager = new LevelManager();
+
+            internalDTO.Event = Event.LevelNewGame;
+            internalDTO = levelManager.ReceiveInternalDTO(internalDTO);
 
             menuManager = new MenuManager(internalDTO);
             gameManager = new GameManager();
             uiManager = new UIManager();
-            levelManager = new LevelManager();
             return;
         }
 
@@ -132,7 +147,7 @@ namespace LabyrinthExplorer.Logic
         }
 
         public GameEngineOutputDTO RunEngine(GameEngineInputDTO input)
-        {
+         {
             InputAction = ReceiveInputDTO(input);
             internalDTO.InputAction = InputAction;
             while (internalDTO.RequestUIInput == false)
@@ -152,8 +167,8 @@ namespace LabyrinthExplorer.Logic
 
 
             
-            GameEngineOutputDTO = PrepareGameEngineOutputDTO(Map, logger, internalDTO);
-            logger.ClearMessage();
+            GameEngineOutputDTO = PrepareGameEngineOutputDTO(internalDTO.Map, internalDTO.Logger, internalDTO);
+            internalDTO.Logger.ClearMessage();
 
             return GameEngineOutputDTO;
         }
@@ -508,7 +523,7 @@ namespace LabyrinthExplorer.Logic
         }
         internal GameEngineOutputDTO PrepareGameEngineOutputDTO(GameElement[][] mapOfElements, Logger logger, InternalDTO internalDTO)
         {
-            internalDTO.RequestUIInput = false;
+            internalDTO.RequestUIInput = false; //przerób na internal dto map 
 
             GameEngineOutputDTO output = new GameEngineOutputDTO();
 

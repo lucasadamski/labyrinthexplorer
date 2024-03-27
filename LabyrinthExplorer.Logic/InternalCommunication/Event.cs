@@ -12,7 +12,6 @@ namespace LabyrinthExplorer.Logic.InternalCommunication
         MenuGameSummary,
         MenuMainPaused,
         MenuMainNewGame,
-        MenuLevelFinished,
         MenuLevelSummary,
         MenuGameOver,
         LevelCheckNextLevel,

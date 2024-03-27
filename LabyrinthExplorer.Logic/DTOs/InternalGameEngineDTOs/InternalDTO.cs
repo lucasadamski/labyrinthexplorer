@@ -1,4 +1,6 @@
-﻿using LabyrinthExplorer.Logic.InternalCommunication;
+﻿using LabyrinthExplorer.Data.Repositories.Infrastructure;
+using LabyrinthExplorer.Data.Repositories;
+using LabyrinthExplorer.Logic.InternalCommunication;
 using LabyrinthExplorer.Logic.Loggers;
 using LabyrinthExplorer.Logic.Managers.MenuManager;
 using LabyrinthExplorer.Logic.Models;
@@ -13,6 +15,9 @@ namespace LabyrinthExplorer.Logic.DTOs.InternalGameEngineDTOs
 {
     internal class InternalDTO
     {
+        public string LevelName = "";
+        public char[][]? injectedLevelCanvas = null;
+        public IGlobalRepository Repository = new GlobalRepository();
         public bool IsMenuActive { get; set; } = false;
         public bool IsApplicationActive { get; set; } = true;
         public InputAction InputAction { get; set; }
@@ -33,10 +38,10 @@ namespace LabyrinthExplorer.Logic.DTOs.InternalGameEngineDTOs
         * LevelManager
         * **************************/
         public Level Level { get; set; } = new Level();
-        private List<Level> Levels { get; set; } = new List<Level>();
+        public List<Level> Levels { get; set; } = new List<Level>();
         public GameElement[][] Map { get; set; } = new GameElement[0][];
         internal char[][] Canvas { get; set; } = new char[0][];
-        private int _currentLevelIndex = 0;
+        public int CurrentLevelIndex = 0;
         /*****************************
          * UIManager
          * **************************/

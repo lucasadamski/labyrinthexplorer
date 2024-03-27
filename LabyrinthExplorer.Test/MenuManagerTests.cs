@@ -61,6 +61,21 @@ namespace LabyrinthExplorer.Test
             menu.ReceiveDTO(internalDTO);
             Assert.AreEqual(2, menu.ActiveOptionIndex);
             Assert.AreEqual(Event.LevelRestartCurrentLevel, internalDTO.Event);
+
+            //1 item test
+            internalDTO = new InternalDTO()
+            {
+                InputAction = Logic.Models.InputAction.Use,
+                Event = Event.MenuMainNewGame,
+                DTO = new Logic.DTOs.DTO(),
+                Logger = new Logic.Loggers.Logger()
+            };
+            menu = new Menu("Test Menu", Event.LevelNewGame);
+
+            var output = menu.ReceiveDTO(internalDTO);
+            output = menu.ReceiveDTO(internalDTO);
+            Assert.AreEqual(Event.LevelNewGame, output.Event);
+
         }
     }
 }
