@@ -148,8 +148,8 @@ namespace LabyrinthExplorer.Logic
 
         public GameEngineOutputDTO RunEngine(GameEngineInputDTO input)
          {
-            InputAction = ReceiveInputDTO(input);
-            internalDTO.InputAction = InputAction;
+            internalDTO = ReceiveInputDTO(input, internalDTO);
+            //internalDTO.InputAction = InputAction;
             while (internalDTO.RequestUIInput == false)
             {
                 activeManager = SwitchActiveManager(internalDTO.Event);
@@ -508,17 +508,22 @@ namespace LabyrinthExplorer.Logic
         /*****************************
          * UIManager
          * **************************/
-        public InputAction ReceiveInputDTO(GameEngineInputDTO input)
+        internal InternalDTO ReceiveInputDTO(GameEngineInputDTO input, InternalDTO internalDTO)
         {
+            //overrides Event if OverridenEvent not null
+            internalDTO.Event = input.OverridenEvent ?? internalDTO.Event; 
+
             if (input.DTO.Success == true)
             {
                 logger.Log($"ReceiveInputDTO: Received InputAction: {input.InputAction.ToString()}");
-                return input.InputAction;
+                internalDTO.InputAction = input.InputAction;
+                return internalDTO;
             }
             else
             {
                 logger.LogError($"ReceiveInputDTO: Error from UI: InputAction: {InputAction.ToString()}");
-                return InputAction.Unknown;
+                internalDTO.InputAction = InputAction.Unknown;
+                return internalDTO;
             }
         }
         internal GameEngineOutputDTO PrepareGameEngineOutputDTO(GameElement[][] mapOfElements, Logger logger, InternalDTO internalDTO)

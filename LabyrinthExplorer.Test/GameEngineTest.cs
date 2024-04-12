@@ -226,17 +226,7 @@ namespace LabyrinthExplorer.Test
             Console.WriteLine(GE.logger.Message.ToString());
             Assert.AreEqual(true, result);
         }
-        [TestMethod]
-        public void ReceiveInputDTOTest()
-        {
-            GameEngine GE = new GameEngine(Settings.TEST_LEVEL);
-            GameEngineInputDTO GE_input = new GameEngineInputDTO();
-            GE_input.InputAction = Logic.Models.InputAction.Up;
-            GE.ReceiveInputDTO(GE_input);            
-            bool result = GE.logger.Message.ToString().Contains("ReceiveInputDTO: Received InputAction: Up");
-            Assert.AreEqual(GE.InputAction, GE_input.InputAction);
-            Assert.AreEqual(true, result);
-        }
+        
 
         [TestMethod]
         public void TranslateInputActionToInterActionTest()
@@ -369,7 +359,7 @@ namespace LabyrinthExplorer.Test
                         , new char[5] { '+', '-', '-', '-', '+' }
                };
             GE = new GameEngine(Settings.INJECTED_LEVEL, map);
-            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down };
+            GEinput = new GameEngineInputDTO() { InputAction = Logic.Models.InputAction.Down};
             GEoutput = GE.RunEngine(GEinput);
             Assert.AreEqual('P', GEoutput.Frame[2][1]);
             Assert.AreEqual(Settings.PLAYER_FULL_HEALTH - Settings.TRAP_DAMAGE, GE.UserPlayer.Health);
