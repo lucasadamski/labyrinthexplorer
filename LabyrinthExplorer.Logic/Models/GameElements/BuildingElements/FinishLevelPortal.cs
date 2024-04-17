@@ -37,7 +37,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements.BuildingElements
             else
             {
                 output.Success = false;
-                output.AppendDebugMessage($"{this.Name} is closed. {player.Name} not allowed to step in");
+                output.AppendActionMessage($"{this.Name} is closed. {player.Name} not allowed to step in");
                 return output;
             }
         }

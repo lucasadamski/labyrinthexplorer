@@ -81,7 +81,13 @@ namespace LabyrinthExplorer.Data.Helpers
         public const string MENU_OPTION_CONTINUE = "Continue";
 
         //Console display
-        public const bool CONSOLE_UI_DISPLAY_DEBUG_LOG = false;        
-        public const bool CONSOLE_UI_DISPLAY_CLEAR_SCREEN_PER_FRAME = true;        
+        public const bool CONSOLE_UI_DISPLAY_DEBUG_LOG = true;        
+        public const bool CONSOLE_UI_DISPLAY_CLEAR_SCREEN_PER_FRAME = true;
+
+
+        //HUD UserPlayer direct word
+        public const string USER_PLAYER_YOU = "You";
+        public const string USER_PLAYER_YOU_HAVE = "You've";
+        public const string USER_PLAYER_YOU_ARE = "You are";
     }                       
 }

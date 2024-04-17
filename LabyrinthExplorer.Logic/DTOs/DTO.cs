@@ -26,7 +26,7 @@ namespace LabyrinthExplorer.Logic.DTOs
 
         public void AppendActionMessage(string message)
         {
-            this.Message += Settings.LOGGER_ACTION + " " + message + "\n";
+            this.Message += Settings.LOGGER_DEBUG + " " + Settings.LOGGER_ACTION + " " + message + "\n";
         }
         public void AppendDebugMessage(string message)
         {
