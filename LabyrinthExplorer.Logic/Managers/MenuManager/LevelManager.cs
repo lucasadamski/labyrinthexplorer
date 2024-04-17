@@ -61,6 +61,14 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                 inputDTO.Logger.Log($"LevelManager: Received {Event.LevelNewGame} Initialized Repository, Initialized Levels List, issued {inputDTO.Event}");
                 return inputDTO;
             }
+            if (inputDTO.Event == Event.LevelRestartCurrentLevel)
+            {
+                if(inputDTO.CurrentLevelIndex != 0) inputDTO.CurrentLevelIndex--;
+                inputDTO = InitializeNewGame(inputDTO);
+                inputDTO.Event = Event.GameStep;
+                inputDTO.Logger.Log($"LevelManager: {Event.LevelLoadNext}, InitializedNewGame, issued {inputDTO.Event}");
+                return inputDTO;
+            }
             return inputDTO;
         }
 

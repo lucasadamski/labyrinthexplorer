@@ -1,15 +1,9 @@
 ﻿using LabyrinthExplorer.Logic.DTOs;
 using LabyrinthExplorer.Logic.DTOs.InternalGameEngineDTOs;
-using LabyrinthExplorer.Logic.InternalCommunication;
 using LabyrinthExplorer.Logic.Loggers;
 using LabyrinthExplorer.Logic.Models;
 using LabyrinthExplorer.Logic.Models.GameElements;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using Event = LabyrinthExplorer.Logic.InternalCommunication.Event;
 namespace LabyrinthExplorer.Logic.Managers.MenuManager
 {
     internal class GameManager : Manager
@@ -27,6 +21,10 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
 
         public override InternalDTO ReceiveInternalDTO(InternalDTO inputDTO)
         {
+            if (inputDTO.InputAction == InputAction.ExitToMenu)
+            {
+                return QuitToGameEngineAndRequestEvent(Event.MenuMainPaused, inputDTO);
+            }
             inputDTO.RequestUIInput = true;
 
             UserPlayer = inputDTO.UserPlayer;
@@ -46,10 +44,17 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
 
             if (UserPlayer.IsLevelFinished)
             {
-                inputDTO.Event = Event.MenuLevelSummary;
-                inputDTO.RequestUIInput = false;
+                return QuitToGameEngineAndRequestEvent(Event.MenuLevelSummary, inputDTO);
             }
 
+            return inputDTO;
+        }
+
+        private InternalDTO QuitToGameEngineAndRequestEvent(Event @event, InternalDTO inputDTO)
+        {
+            inputDTO.Event = @event;
+            inputDTO.RequestUIInput = false;
+            inputDTO.InputAction = InputAction.Unknown;
             return inputDTO;
         }
 

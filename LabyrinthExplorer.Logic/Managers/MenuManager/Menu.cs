@@ -1,5 +1,6 @@
 ﻿using LabyrinthExplorer.Logic.DTOs.InternalGameEngineDTOs;
 using LabyrinthExplorer.Logic.InternalCommunication;
+using LabyrinthExplorer.Logic.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
             
             if (!isActive) //first initialization of menu, only showing options and waiting for input in 2nd cycle
             {
-                TellMenuManagerINeedAnotherCycleAndInput(ref isActive, ref inputDTO.RequestUIInput);
+                TellMenuManagerINeedAnotherCycleAndInput(ref isActive, inputDTO);
                 ActiveOptionIndex = 0;
                 inputDTO.Logger.Log($"Menu: Title ${Title}. Active index {ActiveOptionIndex} Is Active {isActive} Received input {inputDTO.InputAction} ");
                 return inputDTO;
@@ -52,7 +53,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
 
                 if (inputDTO.InputAction == Models.InputAction.Up)
                 {
-                    TellMenuManagerINeedAnotherCycleAndInput(ref isActive, ref inputDTO.RequestUIInput);
+                    TellMenuManagerINeedAnotherCycleAndInput(ref isActive, inputDTO);
                     if (_MaxOptionIndex == 0) return inputDTO;
                     if (ActiveOptionIndex == 0)
                         ActiveOptionIndex = _MaxOptionIndex;
@@ -63,7 +64,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                 }
                 else if (inputDTO.InputAction == Models.InputAction.Down)
                 {
-                    TellMenuManagerINeedAnotherCycleAndInput(ref isActive, ref inputDTO.RequestUIInput);
+                    TellMenuManagerINeedAnotherCycleAndInput(ref isActive, inputDTO);
                     if (_MaxOptionIndex == 0) return inputDTO;
                     if (ActiveOptionIndex == _MaxOptionIndex)
                         ActiveOptionIndex = 0;
@@ -74,7 +75,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                 }
                 else if (inputDTO.InputAction == Models.InputAction.Use)
                 {
-                    TellMenuManagerImQuitting(ref isActive, ref inputDTO.RequestUIInput);
+                    TellMenuManagerImQuitting(ref isActive, inputDTO);
                     if (Options.Count() == 0)
                     {
                         inputDTO.Event = Event.MenuMainNewGame;
@@ -90,7 +91,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                 }
                 else if (inputDTO.InputAction == Models.InputAction.Use)
                 {
-                    TellMenuManagerImQuitting(ref isActive, ref inputDTO.RequestUIInput);
+                    TellMenuManagerImQuitting(ref isActive, inputDTO);
                     if (Options.Count() == 0)
                     {
                         inputDTO.Event = Event.MenuMainNewGame;
@@ -106,7 +107,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                 }
                 else if (_MaxOptionIndex == 0 && inputDTO.InputAction == Models.InputAction.ExitToMenu) //if menu has only 1 option, you can exit it by ExitToMain menu action as well
                 {
-                    TellMenuManagerImQuitting(ref isActive, ref inputDTO.RequestUIInput);
+                    TellMenuManagerImQuitting(ref isActive, inputDTO);
                     
                     inputDTO.Event = Options.ElementAt(ActiveOptionIndex);
                     inputDTO.Logger.Log($"Menu: Event changed to ${inputDTO.Event}");
@@ -123,15 +124,17 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
 
 
         //Those methods are relevant for Menu Manager, it will command execution according to those values
-        private void TellMenuManagerImQuitting(ref bool isActive,ref bool requestUIInput)
+        private void TellMenuManagerImQuitting(ref bool isActive, InternalDTO internalDTO)
         {
             isActive = false;
-            requestUIInput = false;
+            internalDTO.RequestUIInput = false;
+            internalDTO.InputAction = InputAction.Unknown;
         }
-        private void TellMenuManagerINeedAnotherCycleAndInput(ref bool isActive, ref bool requestUIInput)
+        private void TellMenuManagerINeedAnotherCycleAndInput(ref bool isActive, InternalDTO internalDTO)
         {
             isActive = true;
-            requestUIInput = true;
+            internalDTO.RequestUIInput = true;
+            internalDTO.InputAction = InputAction.Unknown;
         }
     }
 }
