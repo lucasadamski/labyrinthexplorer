@@ -8,7 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Console;
-using static LabyrinthExplorer.Data.Helpers.Settings; //configuration file mock
+using static LabyrinthExplorer.Data.Helpers.Settings;
+using System.Runtime.CompilerServices; //configuration file mock
 
 namespace LabyrinthExplorer.ConsoleUI
 {
@@ -58,6 +59,7 @@ namespace LabyrinthExplorer.ConsoleUI
             }
             if (Output.IsGameActive) //draws game
             {
+                DrawLogo();
                 DrawFrame(Output.Frame);
                 DrawHUD(Output.HUD);
                 DrawLog(Output.Log);
@@ -65,6 +67,7 @@ namespace LabyrinthExplorer.ConsoleUI
             }
             else   //draws menu only
             {
+                DrawLogo();
                 DrawMenu(Output.Menu);
                 DrawLog(Output.Log);
                 return Output.DTO.Success;
@@ -108,8 +111,6 @@ namespace LabyrinthExplorer.ConsoleUI
                 }
                 output = output.Append("\n");
             }
-            //ConsoleUI display
-            WriteLine("L A B Y R I N T H      E X P L O R E R");
             //WriteLine(output.ToString());
             foreach (char character in output.ToString())
             {
@@ -160,6 +161,33 @@ namespace LabyrinthExplorer.ConsoleUI
         private void DrawHUD(string hud)
         {
             WriteLine(hud);
+        }
+        private void DrawLogo()
+        {
+            ClearScreen();
+            foreach (char character in MAIN_LOGO)
+            {
+                if (character == '|')
+                {
+                    Write(character);
+                    SwitchLogoColor();
+                }
+                else
+                {
+                    Write(character);
+                }
+            }
+        }
+        private void SwitchLogoColor()
+        {
+            if (BackgroundColor == (ConsoleColor)COLOR_LOGO_INNER)
+            {
+                BackgroundColor = (ConsoleColor)COLOR_LOGO_OUTER;
+            }
+            else
+            {
+                BackgroundColor = (ConsoleColor)COLOR_LOGO_INNER;
+            }
         }
         private GameEngineInputDTO PrepareGameEngineInputDTO(ConsoleKey input)
         {
