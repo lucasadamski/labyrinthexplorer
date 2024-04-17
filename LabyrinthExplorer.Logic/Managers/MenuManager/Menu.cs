@@ -16,7 +16,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
         internal string Message { get; set; } = "";
         internal List<Event> Options { get; set; } = new List<Event>();
         internal int ActiveOptionIndex { get; set; } = 0;
-        internal bool isActive { get; set; } = false;
+        internal bool isActive;
 
         private int _MaxOptionIndex = 0;
 
@@ -40,43 +40,41 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
         internal InternalDTO ReceiveDTO(InternalDTO inputDTO)
         {
             
-            if (!isActive)
+            if (!isActive) //first initialization of menu, only showing options and waiting for input in 2nd cycle
             {
-                isActive = true;
-                inputDTO.RequestUIInput = true;
+                TellMenuManagerINeedAnotherCycleAndInput(ref isActive, ref inputDTO.RequestUIInput);
                 ActiveOptionIndex = 0;
                 inputDTO.Logger.Log($"Menu: Title ${Title}. Active index {ActiveOptionIndex} Is Active {isActive} Received input {inputDTO.InputAction} ");
                 return inputDTO;
             }
-            else
+            else //2nd cycle
             {
-                //todo false
+
                 if (inputDTO.InputAction == Models.InputAction.Up)
                 {
-                    inputDTO.RequestUIInput = true;
+                    TellMenuManagerINeedAnotherCycleAndInput(ref isActive, ref inputDTO.RequestUIInput);
                     if (_MaxOptionIndex == 0) return inputDTO;
-                    if (ActiveOptionIndex == 0) 
+                    if (ActiveOptionIndex == 0)
                         ActiveOptionIndex = _MaxOptionIndex;
-                    else 
+                    else
                         ActiveOptionIndex--;
                     inputDTO.Logger.Log($"Menu: Title ${Title}. Active index {ActiveOptionIndex} Is Active {isActive} Received input {inputDTO.InputAction} ");
                     return inputDTO;
                 }
                 else if (inputDTO.InputAction == Models.InputAction.Down)
                 {
-                    inputDTO.RequestUIInput = true;
+                    TellMenuManagerINeedAnotherCycleAndInput(ref isActive, ref inputDTO.RequestUIInput);
                     if (_MaxOptionIndex == 0) return inputDTO;
-                    if (ActiveOptionIndex == _MaxOptionIndex) 
+                    if (ActiveOptionIndex == _MaxOptionIndex)
                         ActiveOptionIndex = 0;
-                    else 
+                    else
                         ActiveOptionIndex++;
                     inputDTO.Logger.Log($"Menu: Title ${Title}. Active index {ActiveOptionIndex} Is Active {isActive} Received input {inputDTO.InputAction} ");
                     return inputDTO;
                 }
                 else if (inputDTO.InputAction == Models.InputAction.Use)
                 {
-                    isActive = false;
-                    inputDTO.RequestUIInput = false;
+                    TellMenuManagerImQuitting(ref isActive, ref inputDTO.RequestUIInput);
                     if (Options.Count() == 0)
                     {
                         inputDTO.Event = Event.MenuMainNewGame;
@@ -88,14 +86,53 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                         inputDTO.Event = Options.ElementAt(ActiveOptionIndex);
                         inputDTO.Logger.Log($"Menu: Event changed to ${inputDTO.Event}");
                         return inputDTO;
-                    }                    
+                    }
+                }
+                else if (inputDTO.InputAction == Models.InputAction.Use)
+                {
+                    TellMenuManagerImQuitting(ref isActive, ref inputDTO.RequestUIInput);
+                    if (Options.Count() == 0)
+                    {
+                        inputDTO.Event = Event.MenuMainNewGame;
+                        inputDTO.Logger.Log($"ERROR: Menu: Event changed to ${inputDTO.Event} because there are no options list in Menu");
+                        return inputDTO;
+                    }
+                    else
+                    {
+                        inputDTO.Event = Options.ElementAt(ActiveOptionIndex);
+                        inputDTO.Logger.Log($"Menu: Event changed to ${inputDTO.Event}");
+                        return inputDTO;
+                    }
+                }
+                else if (_MaxOptionIndex == 0 && inputDTO.InputAction == Models.InputAction.ExitToMenu) //if menu has only 1 option, you can exit it by ExitToMain menu action as well
+                {
+                    TellMenuManagerImQuitting(ref isActive, ref inputDTO.RequestUIInput);
+                    
+                    inputDTO.Event = Options.ElementAt(ActiveOptionIndex);
+                    inputDTO.Logger.Log($"Menu: Event changed to ${inputDTO.Event}");
+                    return inputDTO;
                 }
                 else
                 {
+                    inputDTO.RequestUIInput = true;
                     inputDTO.Logger.Log($"Menu: Title ${Title}. Active index {ActiveOptionIndex} Is Active {isActive} Received input {inputDTO.InputAction} ");
                     return inputDTO;
                 }
             }
         }
+
+
+        //Those methods are relevant for Menu Manager, it will command execution according to those values
+        private void TellMenuManagerImQuitting(ref bool isActive,ref bool requestUIInput)
+        {
+            isActive = false;
+            requestUIInput = false;
+        }
+        private void TellMenuManagerINeedAnotherCycleAndInput(ref bool isActive, ref bool requestUIInput)
+        {
+            isActive = true;
+            requestUIInput = true;
+        }
     }
 }
+
