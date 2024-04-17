@@ -60,14 +60,14 @@ namespace LabyrinthExplorer.Data.Helpers
         public const string ALL_LEVELS = "all_levels";
         public const string TEST_LEVEL = "test_level";
         public const string INJECTED_LEVEL = "injected_level";
-        public const string FIRST_LEVEL = "level_1";
-        public const string SECOND_LEVEL = "level_2";
-        public const string THIRD_LEVEL = "level_3";
-        public const string FOURTH_LEVEL = "level_4";
-        public const string FIFTH_LEVEL = "level_5";
-        public const string SIXTH_LEVEL = "level_6";
-        public const string SEVENTH_LEVEL = "level_7";
-        public const string EIGHT_LEVEL = "level_8";
+        public const string LEVEL_01 = "level_1";
+        public const string LEVEL_02 = "level_2";
+        public const string LEVEL_03 = "level_3";
+        public const string LEVEL_04 = "level_4";
+        public const string LEVEL_05 = "level_5";
+        public const string LEVEL_06 = "level_6";
+        public const string LEVEL_07 = "level_7";
+        public const string LEVEL_08 = "level_8";
 
         //Menu messages
         public const string MENU_TITLE_MAIN = "Main Menu";
