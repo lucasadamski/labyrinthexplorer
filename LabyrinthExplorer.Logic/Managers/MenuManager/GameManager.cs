@@ -34,17 +34,19 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
             Map = inputDTO.Map;
 
 
-
-            //----
             UserPlayerInterActionDTO = TranslateInputActionToInterAction(InputAction, UserPlayer.Position);
             UserPlayerReturnedInterActionDTO = UserPlayer.ReceiveInterActionDTO(UserPlayerInterActionDTO);
+    
             logger.AppendDTOMessage(UserPlayerReturnedInterActionDTO.DTO.Message);
-
             Map = ApplyInterActionDTOOnGameElementMap(Map, UserPlayerReturnedInterActionDTO);
 
             if (UserPlayer.IsLevelFinished)
             {
                 return QuitToGameEngineAndRequestEvent(Event.MenuLevelSummary, inputDTO);
+            }
+            if (UserPlayer.NotVisible) //if UserPlayer is dead request MenuGameOver
+            {
+                return QuitToGameEngineAndRequestEvent(Event.MenuGameOver, inputDTO);
             }
 
             return inputDTO;

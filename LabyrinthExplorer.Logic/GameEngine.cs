@@ -556,7 +556,7 @@ namespace LabyrinthExplorer.Logic
             output.Log = logger.Message.ToString();
 
             //Set HUD
-            output.HUD = GenerateHUD(output.Log, UserPlayer);
+            output.HUD = GenerateHUD(output.Log, internalDTO.UserPlayer);
 
             //Set Level Finished
             output = SetGEOutputDTOForFinishedLevel(_isLevelFinished, output);
