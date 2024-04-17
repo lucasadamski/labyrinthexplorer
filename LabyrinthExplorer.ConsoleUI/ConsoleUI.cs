@@ -110,7 +110,43 @@ namespace LabyrinthExplorer.ConsoleUI
             }
             //ConsoleUI display
             WriteLine("L A B Y R I N T H      E X P L O R E R");
-            WriteLine(output.ToString());
+            //WriteLine(output.ToString());
+            foreach (char character in output.ToString())
+            {
+                switch(character)
+                {
+                    case ' ':
+                        break;
+                    case '-':
+                    case '|':
+                    case '+':
+                        ForegroundColor = (ConsoleColor)COLOR_WALLS;
+                        break;
+                    case 'D':
+                    case 'O':
+                        ForegroundColor = (ConsoleColor)COLOR_DOOR;
+                        break;
+                    case 'X':
+                        BackgroundColor = (ConsoleColor)COLOR_TRAP_OUTER;
+                        ForegroundColor = (ConsoleColor)COLOR_TRAP_INNER;
+                        break;
+                    case 'P':
+                        BackgroundColor = (ConsoleColor)COLOR_USER_PLAYER;
+                        ForegroundColor = (ConsoleColor)COLOR_USER_PLAYER;
+                        break;
+                    case 'K':
+                        ForegroundColor = (ConsoleColor)COLOR_KEY_INNER;
+                        BackgroundColor = (ConsoleColor)COLOR_KEY_OUTER;
+                        break;
+                    case 'N':
+                        BackgroundColor = (ConsoleColor)COLOR_NPC_PLAYER;
+                        ForegroundColor = (ConsoleColor)COLOR_NPC_PLAYER;
+                        break;
+                };
+                Write(character);
+                ForegroundColor = ConsoleColor.Gray;
+                BackgroundColor = ConsoleColor.Black;
+            }
             WriteLine($"SPACEBAR - Use    C - UseWeapon   ESCAPE - Exit");
         }
         private void DrawLog(string log)
