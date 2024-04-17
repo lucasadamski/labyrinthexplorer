@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Console;
+using static LabyrinthExplorer.Data.Helpers.Settings; //configuration file mock
 
 namespace LabyrinthExplorer.ConsoleUI
 {
@@ -48,7 +49,7 @@ namespace LabyrinthExplorer.ConsoleUI
         {
             userKeyPressed = ReadKey().Key;
             Input = PrepareGameEngineInputDTO(userKeyPressed);
-            //Clear();
+            ClearScreen();
             Output = GE.RunEngine(Input); //makes the Engine do the magic
             if (!Output.IsApplicationActive) //quits game
             {
@@ -72,7 +73,6 @@ namespace LabyrinthExplorer.ConsoleUI
 
         private void DrawFinishedLevelSummary(string summary)
         {
-            //Clear();
             WriteLine("*****************************************");
             WriteLine("*****      LEVEL FINISHED       *********");
             WriteLine("*****************************************");
@@ -81,7 +81,6 @@ namespace LabyrinthExplorer.ConsoleUI
 
         private void DrawGameFinished()
         {
-            //Clear();
             WriteLine("*****************************************");
             WriteLine("*****************************************");
             WriteLine("*****      GAME FINISHED       *********");
@@ -116,8 +115,11 @@ namespace LabyrinthExplorer.ConsoleUI
         }
         private void DrawLog(string log)
         {
-            WriteLine("********\nDebug Log:");
-            WriteLine(log);
+            if (CONSOLE_UI_DISPLAY_DEBUG_LOG)
+            {
+                WriteLine("********\nDebug Log:");
+                WriteLine(log);
+            }
         }
         private void DrawHUD(string hud)
         {
@@ -151,6 +153,13 @@ namespace LabyrinthExplorer.ConsoleUI
                     return InputAction.UseWeapon;
                 default:
                     return InputAction.Unknown;
+            }
+        }
+        private void ClearScreen()
+        {
+            if (CONSOLE_UI_DISPLAY_CLEAR_SCREEN_PER_FRAME)
+            {
+                Clear();
             }
         }
     }

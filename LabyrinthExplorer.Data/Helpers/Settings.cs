@@ -79,5 +79,9 @@ namespace LabyrinthExplorer.Data.Helpers
         public const string MENU_OPTION_EXIT = "Exit Game";
         public const string MENU_OPTION_RESTART_LEVEL = "Restart Level";
         public const string MENU_OPTION_CONTINUE = "Continue";
+
+        //Console display
+        public const bool CONSOLE_UI_DISPLAY_DEBUG_LOG = false;        
+        public const bool CONSOLE_UI_DISPLAY_CLEAR_SCREEN_PER_FRAME = true;        
     }                       
 }
