@@ -15,7 +15,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             HiddenElement = new EmptySpace(x, y);
         }
         public sbyte Health { get; set; }
-        public List<ItemElement> Inventory { get; set; }
+        public List<ItemElement> Inventory { get; set; } = new List<ItemElement>();
         public GameElement HiddenElement { get; set; }
         public bool IsLevelFinished { get; set; } = false;
 
@@ -128,6 +128,23 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             }
 
             return output;
+        }
+
+        public bool PingFor(object pingFor, InterActionDTO input)
+        {
+            InterActionDTO output = input;
+            for (int i = 0; i < output.MapOfElements.Length; i++)
+            {
+                for (int j = 0; j < output.MapOfElements[i].Length; j++)
+                {
+                    if (i == 1 && j == 1) continue; //skip this CharacterElement
+                    if (output.MapOfElements[i][j].GetType() == pingFor.GetType())
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         public InterActionDTO UseAction(InterActionDTO input)

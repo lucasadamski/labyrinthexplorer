@@ -15,6 +15,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             AlternateModel = Settings.MODEL_EMPTY_SPACE;
             Health = Settings.NPC_PLAYER_FULL_HEALTH;
             HiddenElement = new EmptySpace();
+            Inventory.Add(new Weapon());
         }
         public NPCPlayer(int x, int y)
         {
@@ -24,6 +25,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             Health = Settings.NPC_PLAYER_FULL_HEALTH;
             Position = new Coordinates(x, y);
             HiddenElement = new EmptySpace(x, y);
+            Inventory = new List<ItemElement>() { new Weapon() };
         }
         public List<Coordinates> PatrolMap { get; set; } = new List<Coordinates>();
 
@@ -43,15 +45,21 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         override public InterActionDTO ReceiveInterActionDTO(InterActionDTO input)
         {
             InterActionDTO output = input;
-            if (goingUp)
+            if (PingFor(new UserPlayer(), input))
+            {
+                UseWeapon(input);
+
+            }
+            else if (goingUp)
             {
                 Coordinates tempPosition = new Coordinates(Position.X, Position.Y);
                 output = MoveUp(input);
                 if (tempPosition.X == Position.X && tempPosition.Y == Position.Y)
                 {
                     goingUp = false;
-                    output = MoveDown(input);
+                    //output = MoveDown(input);
                 }
+                
             }
             else
             {
@@ -60,7 +68,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 if (tempPosition.X == Position.X && tempPosition.Y == Position.Y)
                 {
                     goingUp = true;
-                    output = MoveUp(input);
+                    //output = MoveUp(input);
                 }
             }
 
