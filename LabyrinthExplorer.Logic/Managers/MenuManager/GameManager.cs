@@ -13,8 +13,7 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
         public UserPlayer? UserPlayer { get; set; } = new UserPlayer();
         public List<NPCPlayer> NPCPlayer { get; set; } = new List<NPCPlayer>();
         public Logger logger = new Logger();
-        public InterActionDTO UserPlayerInterActionDTO { get; set; } = new InterActionDTO();
-        public InterActionDTO UserPlayerReturnedInterActionDTO { get; set; } = new InterActionDTO();
+        public InterActionDTO InterAction { get; set; } = new InterActionDTO();
         public GameElement[][] Map { get; set; }
 
 
@@ -34,11 +33,11 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
             Map = inputDTO.Map;
 
 
-            UserPlayerInterActionDTO = TranslateInputActionToInterAction(InputAction, UserPlayer.Position);
-            UserPlayerReturnedInterActionDTO = UserPlayer.ReceiveInterActionDTO(UserPlayerInterActionDTO);
-    
-            logger.AppendDTOMessage(UserPlayerReturnedInterActionDTO.DTO.Message);
-            Map = ApplyInterActionDTOOnGameElementMap(Map, UserPlayerReturnedInterActionDTO);
+            InterAction = TranslateInputActionToInterAction(InputAction, UserPlayer.Position);
+            InterAction = UserPlayer.ReceiveInterActionDTO(InterAction);
+
+            logger.AppendDTOMessage(InterAction.DTO.Message);
+            Map = ApplyInterActionDTOOnGameElementMap(Map, InterAction);
 
             if (NPCPlayer.Count() > 0)
             {
@@ -46,10 +45,10 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
                 bool npcAlive = !NPCPlayer.ElementAt(0).NotVisible;
                 if (npcAlive)
                 {
-                    UserPlayerInterActionDTO = TranslateInputActionToInterAction(InputAction, npc.Position);
-                    UserPlayerReturnedInterActionDTO = npc.ReceiveInterActionDTO(UserPlayerInterActionDTO);
-                    logger.AppendDTOMessage(UserPlayerReturnedInterActionDTO.DTO.Message);
-                    Map = ApplyInterActionDTOOnGameElementMap(Map, UserPlayerReturnedInterActionDTO);
+                    InterAction = TranslateInputActionToInterAction(InputAction, npc.Position);
+                    InterAction = npc.ReceiveInterActionDTO(InterAction);
+                    logger.AppendDTOMessage(InterAction.DTO.Message);
+                    Map = ApplyInterActionDTOOnGameElementMap(Map, InterAction);
                 }
             }
 
