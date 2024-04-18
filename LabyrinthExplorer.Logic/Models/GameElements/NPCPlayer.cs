@@ -1,10 +1,13 @@
 ﻿using LabyrinthExplorer.Data.Helpers;
 using LabyrinthExplorer.Data.DTOs;
+using LabyrinthExplorer.Logic.DTOs;
 
 namespace LabyrinthExplorer.Logic.Models.GameElements
 {
     public class NPCPlayer : CharacterElement
     {
+        private bool goingUp = true;
+
         public NPCPlayer() 
         {
             Name = Settings.NAME_NPC_PLAYER;
@@ -35,6 +38,34 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 return output;
             }
             return new DTO(false);
+        }
+
+        override public InterActionDTO ReceiveInterActionDTO(InterActionDTO input)
+        {
+            InterActionDTO output = input;
+            if (goingUp)
+            {
+                Coordinates tempPosition = new Coordinates(Position.X, Position.Y);
+                output = MoveUp(input);
+                if (tempPosition.X == Position.X && tempPosition.Y == Position.Y)
+                {
+                    goingUp = false;
+                    output = MoveDown(input);
+                }
+            }
+            else
+            {
+                Coordinates tempPosition = new Coordinates(Position.X, Position.Y);
+                output = MoveDown(input);
+                if (tempPosition.X == Position.X && tempPosition.Y == Position.Y)
+                {
+                    goingUp = true;
+                    output = MoveUp(input);
+                }
+            }
+
+                 
+            return output;
         }
 
         override public DTO ReceiveStep(CharacterElement player) => DoDamage(player);

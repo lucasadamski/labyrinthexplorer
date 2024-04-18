@@ -40,6 +40,19 @@ namespace LabyrinthExplorer.Logic.Managers.MenuManager
             logger.AppendDTOMessage(UserPlayerReturnedInterActionDTO.DTO.Message);
             Map = ApplyInterActionDTOOnGameElementMap(Map, UserPlayerReturnedInterActionDTO);
 
+            if (NPCPlayer.Count() > 0)
+            {
+                NPCPlayer npc = NPCPlayer.ElementAt(0);
+                bool npcAlive = !NPCPlayer.ElementAt(0).NotVisible;
+                if (npcAlive)
+                {
+                    UserPlayerInterActionDTO = TranslateInputActionToInterAction(InputAction, npc.Position);
+                    UserPlayerReturnedInterActionDTO = npc.ReceiveInterActionDTO(UserPlayerInterActionDTO);
+                    logger.AppendDTOMessage(UserPlayerReturnedInterActionDTO.DTO.Message);
+                    Map = ApplyInterActionDTOOnGameElementMap(Map, UserPlayerReturnedInterActionDTO);
+                }
+            }
+
             if (UserPlayer.IsLevelFinished)
             {
                 return QuitToGameEngineAndRequestEvent(Event.MenuLevelSummary, inputDTO);

@@ -29,14 +29,14 @@ namespace LabyrinthExplorer.ConsoleUI
                         , new char[10] { '|', ' ', ' ', '|',' ',' ',' ',' ',' ','|' } //3
                         , new char[10] { '|', '-', '-', '+','-','-','-','L','-','|' } //4
                         , new char[10] { '|', ' ', ' ', ' ',' ',' ',' ',' ',' ','|' } //5
-                        , new char[10] { '|', ' ', ' ', ' ',' ',' ',' ',' ',' ','|' } //6
+                        , new char[10] { '|', ' ', ' ', 'W',' ',' ',' ',' ',' ','|' } //6
                         , new char[10] { '|', ' ', ' ', ' ',' ',' ','E',' ',' ','|' } //7
                         , new char[10] { '|', ' ', ' ', ' ',' ',' ',' ',' ',' ','|' } //8
                         , new char[10] { '+', '-', '-', '-','-','-','-','-','-','+' } //9
               };
 
-            //GE = new GameEngine(Settings.INJECTED_LEVEL, map);
-            GE = new GameEngine(Settings.ALL_LEVELS);
+            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+            //GE = new GameEngine(Settings.ALL_LEVELS);
             Input = new GameEngineInputDTO();
             Output = new GameEngineOutputDTO();
         }
