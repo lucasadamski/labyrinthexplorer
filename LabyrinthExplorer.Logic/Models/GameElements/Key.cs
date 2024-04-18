@@ -1,11 +1,5 @@
 ﻿using LabyrinthExplorer.Data.Helpers;
-using LabyrinthExplorer.Logic.DTOs;
-using LabyrinthExplorer.Logic.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using LabyrinthExplorer.Data.DTOs;
 
 namespace LabyrinthExplorer.Logic.Models.GameElements
 {

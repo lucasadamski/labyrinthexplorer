@@ -1,10 +1,5 @@
-﻿using LabyrinthExplorer.Logic.DTOs;
-using LabyrinthExplorer.Logic.Models.GameElements;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LabyrinthExplorer.Logic.Models.GameElements;
+using LabyrinthExplorer.Data.DTOs;
 
 namespace LabyrinthExplorer.Logic.Infrastructure
 {
