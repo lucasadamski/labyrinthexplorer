@@ -130,7 +130,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
             return output;
         }
 
-        public bool PingFor(object pingFor, InterActionDTO input)
+        public bool PingAroundMeFor(object pingFor, InterActionDTO input)
         {
             InterActionDTO output = input;
             for (int i = 0; i < output.MapOfElements.Length; i++)
@@ -143,6 +143,20 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                         return true;
                     }
                 }
+            }
+            return false;
+        }
+
+        public bool PingNextToMeFor(object pingFor, InterActionDTO input)
+        {
+            InterActionDTO output = input;
+           
+            if ((output.MapOfElements[0][1].GetType() == pingFor.GetType()) 
+                || (output.MapOfElements[1][0].GetType() == pingFor.GetType())
+                || (output.MapOfElements[1][2].GetType() == pingFor.GetType())
+                || (output.MapOfElements[2][1].GetType() == pingFor.GetType()))
+            {
+                return true;
             }
             return false;
         }

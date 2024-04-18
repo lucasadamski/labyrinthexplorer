@@ -45,10 +45,9 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
         override public InterActionDTO ReceiveInterActionDTO(InterActionDTO input)
         {
             InterActionDTO output = input;
-            if (PingFor(new UserPlayer(), input))
+            if (PingNextToMeFor(new UserPlayer(), input))
             {
                 UseWeapon(input);
-
             }
             else if (goingUp)
             {
@@ -57,9 +56,7 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 if (tempPosition.X == Position.X && tempPosition.Y == Position.Y)
                 {
                     goingUp = false;
-                    //output = MoveDown(input);
                 }
-                
             }
             else
             {
@@ -68,11 +65,8 @@ namespace LabyrinthExplorer.Logic.Models.GameElements
                 if (tempPosition.X == Position.X && tempPosition.Y == Position.Y)
                 {
                     goingUp = true;
-                    //output = MoveUp(input);
                 }
             }
-
-                 
             return output;
         }
 

@@ -39,6 +39,7 @@ namespace LabyrinthExplorer.ConsoleUI
             //GE = new GameEngine(Settings.ALL_LEVELS);
             Input = new GameEngineInputDTO();
             Output = new GameEngineOutputDTO();
+            DrawLogo();
         }
 
 
@@ -55,7 +56,6 @@ namespace LabyrinthExplorer.ConsoleUI
             }
             if (Output.IsGameActive) //draws game
             {
-                DrawLogo();
                 DrawFrame(Output.Frame);
                 DrawHUD(Output.HUD);
                 DrawLog(Output.Log);
@@ -63,30 +63,12 @@ namespace LabyrinthExplorer.ConsoleUI
             }
             else   //draws menu only
             {
-                DrawLogo();
+                ClearScreenWithLogo();
                 DrawMenu(Output.Menu);
                 DrawLog(Output.Log);
                 return Output.DTO.Success;
             }
         }
-
-        private void DrawFinishedLevelSummary(string summary)
-        {
-            WriteLine("*****************************************");
-            WriteLine("*****      LEVEL FINISHED       *********");
-            WriteLine("*****************************************");
-            WriteLine(summary);
-        }
-
-        private void DrawGameFinished()
-        {
-            WriteLine("*****************************************");
-            WriteLine("*****************************************");
-            WriteLine("*****      GAME FINISHED       *********");
-            WriteLine("*****************************************");
-            WriteLine("*****************************************");
-        }
-
         private void DrawMenu(MenuDTO menu)
         {
             WriteLine(menu.Title);
@@ -171,7 +153,6 @@ namespace LabyrinthExplorer.ConsoleUI
         }
         private void DrawLogo()
         {
-            ClearScreen();
             foreach (char character in MAIN_LOGO)
             {
                 if (character == '|')
@@ -241,7 +222,17 @@ namespace LabyrinthExplorer.ConsoleUI
         {
             if (CONSOLE_UI_DISPLAY_CLEAR_SCREEN_PER_FRAME)
             {
+                //Clear();
+                SetCursorPosition(0, 18);
+            }
+        }
+        private void ClearScreenWithLogo()
+        {
+            if (CONSOLE_UI_DISPLAY_CLEAR_SCREEN_PER_FRAME)
+            {
                 Clear();
+                DrawLogo();
+                SetCursorPosition(0, 18);
             }
         }
     }
