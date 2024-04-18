@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Console;
 using static LabyrinthExplorer.Data.Helpers.Settings;
-using System.Runtime.CompilerServices; //configuration file mock
+using LabyrinthExplorer.Data.DTOs; //configuration file mock
 
 namespace LabyrinthExplorer.ConsoleUI
 {
@@ -91,9 +91,20 @@ namespace LabyrinthExplorer.ConsoleUI
             WriteLine("*****************************************");
         }
 
-        private void DrawMenu(string menu)
+        private void DrawMenu(MenuDTO menu)
         {
-            WriteLine(menu);
+            WriteLine(menu.Title);
+            for (int i = 0; i < menu.Options.Count(); i++)
+            {
+                if (menu.ActiveOptionIndex == i)
+                {
+                    SwitchMenuActiveOptionIndex();
+                    WriteLine(menu.Options.ElementAt(i));
+                    SwitchMenuActiveOptionIndex();
+                    continue;
+                }
+                WriteLine(menu.Options.ElementAt(i));
+            }
         }
 
         private void DrawFrame(char[][] frame)
@@ -170,7 +181,7 @@ namespace LabyrinthExplorer.ConsoleUI
                 if (character == '|')
                 {
                     Write(character);
-                    SwitchLogoColor();
+                    SwitchLogoInnerColor();
                 }
                 else
                 {
@@ -178,7 +189,18 @@ namespace LabyrinthExplorer.ConsoleUI
                 }
             }
         }
-        private void SwitchLogoColor()
+        private void SwitchLogoInnerColor()
+        {
+            if (BackgroundColor == (ConsoleColor)COLOR_LOGO_INNER)
+            {
+                BackgroundColor = (ConsoleColor)COLOR_LOGO_OUTER;
+            }
+            else
+            {
+                BackgroundColor = (ConsoleColor)COLOR_LOGO_INNER;
+            }
+        }
+        private void SwitchMenuActiveOptionIndex()
         {
             if (BackgroundColor == (ConsoleColor)COLOR_LOGO_INNER)
             {

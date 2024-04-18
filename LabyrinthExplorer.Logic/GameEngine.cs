@@ -13,9 +13,11 @@ using LabyrinthExplorer.Logic.Models.GameElements.BuildingElements;
 using System.ComponentModel.Design;
 using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using static LabyrinthExplorer.Data.Helpers.Settings;
 
 
 [assembly: InternalsVisibleTo("LabyrinthExplorer.Test")]
@@ -568,25 +570,53 @@ namespace LabyrinthExplorer.Logic
             output.IsApplicationActive = internalDTO.IsApplicationActive;
 
             //Prepare Menu
-            if (internalDTO.Menu != null)
+            if (internalDTO.IsMenuActive)
             {
-                StringBuilder menu = new StringBuilder();
-                menu = menu.AppendLine($"Title: {internalDTO.Menu.Title}");
-                menu = menu.AppendLine($"Message: {internalDTO.Menu.Message}");
-                menu = menu.AppendLine($"ActiveOption: {internalDTO.Menu.ActiveOptionIndex}");
-                menu = menu.AppendLine($"Options:");
-                foreach (var option in internalDTO.Menu.Options)
+                output.Menu.Title = internalDTO.Menu.Title; //change to consts
+                output.Menu.Message = internalDTO.Menu.Message;
+                output.Menu.ActiveOptionIndex = internalDTO.Menu.ActiveOptionIndex;
+                output.Menu.Options.Clear();
+                foreach (Event option in internalDTO.Menu.Options)
                 {
-                    menu = menu.AppendLine(option.ToString());
+                    switch (option)
+                    {
+                        case Event.GameStep:
+                            output.Menu.Options.Add(EVENT_GAME_STEP);
+                            break;
+                        case Event.MenuGameSummary:
+                            output.Menu.Options.Add(EVENT_MENU_GAME_SUMMARY);
+                            break;
+                        case Event.MenuMainPaused:
+                            output.Menu.Options.Add(EVENT_MENU_MAIN_PAUSED);
+                            break;
+                        case Event.MenuMainNewGame:
+                            output.Menu.Options.Add(EVENT_MENU_NEW_GAME);
+                            break;
+                        case Event.MenuLevelSummary:
+                            output.Menu.Options.Add(EVENT_LEVEL_SUMMARY);
+                            break;
+                        case Event.MenuGameOver:
+                            output.Menu.Options.Add(EVENT_GAME_OVER);
+                            break;
+                        case Event.LevelCheckNextLevel:
+                            output.Menu.Options.Add(EVENT_LEVEL_CHECK_NEXT_LEVEL);
+                            break;
+                        case Event.LevelLoadNext:
+                            output.Menu.Options.Add(EVENT_LEVEL_LOAD_NEXT);
+                            break;
+                        case Event.LevelNewGame:
+                            output.Menu.Options.Add(EVENT_LEVEL_NEW_GAME);
+                            break;
+                        case Event.LevelRestartCurrentLevel:
+                            output.Menu.Options.Add(EVENT_LEVEL_RESTART_CURRENT_LEVEL);
+                            break;
+                        case Event.UIQuitGame:
+                            output.Menu.Options.Add(EVENT_UI_QUIT_GAME);
+                            break;
+                    }
                 }
-
-                output.Menu = menu.ToString();
             }
-            else
-            {
-                output.Menu = null;
-            }
-
+           
             return output;
         }
         private GameEngineOutputDTO SetGEOutputDTOForFinishedLevel(bool isLevelFinished, GameEngineOutputDTO input)

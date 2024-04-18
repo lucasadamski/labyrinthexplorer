@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LabyrinthExplorer.Data.DTOs;
+using LabyrinthExplorer.Logic.Managers.MenuManager;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +15,7 @@ namespace LabyrinthExplorer.Logic.DTOs
         public string Log { get; set; } = "";
         public string HUD { get; set; } = ""; //not implemented
         public string LevelSummary { get; set; } = "";
-        public string? Menu { get; set; }
+        public MenuDTO Menu { get; set; } = new MenuDTO();
 
         public bool IsGameActive { get; set; } = false;
         public bool IsApplicationActive { get; set; } = true;

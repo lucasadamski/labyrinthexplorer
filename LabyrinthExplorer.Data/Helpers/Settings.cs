@@ -143,6 +143,20 @@ namespace LabyrinthExplorer.Data.Helpers
 
 ";
 
+
+        //MENU options Event to nice strings conversions consts
+        public const string EVENT_GAME_STEP = "Resume Game";
+        public const string EVENT_MENU_GAME_SUMMARY = "Game Summary";
+        public const string EVENT_MENU_MAIN_PAUSED = "Game Paused Menu";
+        public const string EVENT_MENU_NEW_GAME = "Main Menu";
+        public const string EVENT_LEVEL_SUMMARY = "Level Complete";
+        public const string EVENT_GAME_OVER = "Game Over";
+        public const string EVENT_LEVEL_CHECK_NEXT_LEVEL = "Load Next Level";
+        public const string EVENT_LEVEL_LOAD_NEXT = "Load Next Level";
+        public const string EVENT_LEVEL_NEW_GAME = "Start New Game";
+        public const string EVENT_LEVEL_RESTART_CURRENT_LEVEL = "Restart Level";
+        public const string EVENT_UI_QUIT_GAME = "Quit Game";
+        //public const string EVENT_MENU_QUIT_TO_MAIN_MENU = "Quit To Main Menu"; not implemented yet
     }                       
 }
 
