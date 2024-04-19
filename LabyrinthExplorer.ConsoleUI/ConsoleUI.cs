@@ -17,6 +17,8 @@ namespace LabyrinthExplorer.ConsoleUI
 
         private ConsoleKey userKeyPressed;
 
+        private bool isFirstGameStep = true;
+
         public ConsoleUI()
         {
             char P = Settings.MODEL_USER_PLAYER;
@@ -35,27 +37,34 @@ namespace LabyrinthExplorer.ConsoleUI
                         , new char[10] { '+', '-', '-', '-','-','-','-','-','-','+' } //9
               };
 
-            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
-            //GE = new GameEngine(Settings.ALL_LEVELS);
+            //GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+            GE = new GameEngine(Settings.ALL_LEVELS);
             Input = new GameEngineInputDTO();
             Output = new GameEngineOutputDTO();
-            DrawLogo();
         }
 
 
         public bool RunGameStep()
         {
-            userKeyPressed = ReadKey().Key;
-            Input = PrepareGameEngineInputDTO(userKeyPressed);
-            ClearScreen();
-            Output = GE.RunEngine(Input); //makes the Engine do the magic
+            if (isFirstGameStep)
+            {
+                DrawLogo();
+                isFirstGameStep = false;
+            }
             if (!Output.IsApplicationActive) //quits game
             {
-                DrawLog(Output.Log);
+                Clear();
                 return Output.IsApplicationActive; //return false, so Program.cs exits the while loop
             }
+            //bool is first run -> play video lucada software, audio
+            userKeyPressed = ReadKey().Key;
+            Input = PrepareGameEngineInputDTO(userKeyPressed);
+            Output = GE.RunEngine(Input); //makes the Engine do the magic
+            ClearScreenBelowPoint(HEIGHT_LOGO);
+            
             if (Output.IsGameActive) //draws game
             {
+                ClearWholeScreen();
                 DrawFrame(Output.Frame);
                 DrawHUD(Output.HUD);
                 DrawLog(Output.Log);
@@ -63,7 +72,8 @@ namespace LabyrinthExplorer.ConsoleUI
             }
             else   //draws menu only
             {
-                ClearScreenWithLogo();
+                ClearWholeScreen();
+                DrawLogo();
                 DrawMenu(Output.Menu);
                 DrawLog(Output.Log);
                 return Output.DTO.Success;
@@ -71,17 +81,17 @@ namespace LabyrinthExplorer.ConsoleUI
         }
         private void DrawMenu(MenuDTO menu)
         {
-            WriteLine(menu.Title);
+            WriteLine("\n\n\t\t\t\t\t" + menu.Title.ToUpper() + "\n");
             for (int i = 0; i < menu.Options.Count(); i++)
             {
                 if (menu.ActiveOptionIndex == i)
                 {
                     SwitchMenuActiveOptionIndex();
-                    WriteLine(menu.Options.ElementAt(i));
+                    WriteLine("\t\t\t\t\t" + menu.Options.ElementAt(i));
                     SwitchMenuActiveOptionIndex();
                     continue;
                 }
-                WriteLine(menu.Options.ElementAt(i));
+                WriteLine("\t\t\t\t\t" + menu.Options.ElementAt(i));
             }
         }
 
@@ -128,7 +138,7 @@ namespace LabyrinthExplorer.ConsoleUI
                         ForegroundColor = (ConsoleColor)COLOR_KEY_INNER;
                         BackgroundColor = (ConsoleColor)COLOR_KEY_OUTER;
                         break;
-                    case 'N':
+                    case 'E':
                         BackgroundColor = (ConsoleColor)COLOR_NPC_PLAYER;
                         ForegroundColor = (ConsoleColor)COLOR_NPC_PLAYER;
                         break;
@@ -149,12 +159,17 @@ namespace LabyrinthExplorer.ConsoleUI
         }
         private void DrawHUD(string hud)
         {
-            WriteLine(hud);
+            //WriteLine(hud);
+            foreach (string line in hud.Split('\n'))
+            {
+                Write("\r" + new string(' ', WindowWidth) + "\r");
+                WriteLine(line);
+            }
         }
         private void DrawLogo()
         {
             foreach (char character in MAIN_LOGO)
-            {
+            { 
                 if (character == '|')
                 {
                     Write(character);
@@ -218,22 +233,26 @@ namespace LabyrinthExplorer.ConsoleUI
                     return InputAction.Unknown;
             }
         }
-        private void ClearScreen()
-        {
-            if (CONSOLE_UI_DISPLAY_CLEAR_SCREEN_PER_FRAME)
-            {
-                //Clear();
-                SetCursorPosition(0, 18);
-            }
-        }
-        private void ClearScreenWithLogo()
+        private void ClearWholeScreen()
         {
             if (CONSOLE_UI_DISPLAY_CLEAR_SCREEN_PER_FRAME)
             {
                 Clear();
-                DrawLogo();
-                SetCursorPosition(0, 18);
+                //SetCursorPosition(0, 18);
             }
         }
+        private void ClearScreenBelowPoint(int heightPoint)
+        {
+            if (CONSOLE_UI_DISPLAY_CLEAR_SCREEN_PER_FRAME)
+            {
+                SetCursorPosition(0, heightPoint + 1);
+                for (int i = (WindowHeight - (heightPoint + 2)); i > 0; i--)
+                {
+                    WriteLine(new string(' ', WindowWidth));
+                }
+                SetCursorPosition(0, heightPoint + 1);
+            }
+        }
+
     }
 }

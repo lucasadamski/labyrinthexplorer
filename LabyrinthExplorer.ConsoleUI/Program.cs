@@ -7,8 +7,6 @@
             ConsoleUI UI = new ConsoleUI(); //creates User Interface, UI creates GameEngine inside
 
             while (UI.RunGameStep()) { } //running game until false returned
-            
-            Console.ReadKey();
         }
     }
 }
