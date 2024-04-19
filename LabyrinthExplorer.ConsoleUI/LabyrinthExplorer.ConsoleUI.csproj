@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Windows.Extensions" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\LabyrinthExplorer.Logic\LabyrinthExplorer.Logic.csproj" />
   </ItemGroup>
 

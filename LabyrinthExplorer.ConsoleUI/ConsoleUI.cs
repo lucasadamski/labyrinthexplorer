@@ -6,6 +6,7 @@ using System.Text;
 using static System.Console;
 using static LabyrinthExplorer.Data.Helpers.Settings;
 using LabyrinthExplorer.Data.DTOs; //configuration file mock
+using System.Media;
 
 namespace LabyrinthExplorer.ConsoleUI
 {
@@ -46,8 +47,8 @@ namespace LabyrinthExplorer.ConsoleUI
                         , new char[20] { '+', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', 'F', '+' }
                   };
 
-            GE = new GameEngine(Settings.INJECTED_LEVEL, map);
-            //GE = new GameEngine(Settings.ALL_LEVELS);
+            //GE = new GameEngine(Settings.INJECTED_LEVEL, map);
+            GE = new GameEngine(Settings.ALL_LEVELS);
             Input = new GameEngineInputDTO();
             Output = new GameEngineOutputDTO();
         }
@@ -58,6 +59,7 @@ namespace LabyrinthExplorer.ConsoleUI
             if (isFirstGameStep)
             {
                 DrawLogo();
+                PlayLabirythExplorerLogoSound();
                 isFirstGameStep = false;
             }
             if (!Output.IsApplicationActive) //quits game
@@ -173,6 +175,21 @@ namespace LabyrinthExplorer.ConsoleUI
             {
                 Write("\r" + new string(' ', WindowWidth) + "\r");
                 WriteLine(line);
+                if (line.Contains(NAME_USER_PLAYER) && line.Contains("damage"))
+                {
+                    PlayReceiveDamageSound();
+                    continue;
+                }
+                if (line.Contains(NAME_USER_PLAYER) && line.Contains("picked"))
+                {
+                    PlayPickUpItemSound();
+                    continue;  
+                }
+                if (line.Contains(NAME_USER_PLAYER) && line.Contains("dead"))
+                {
+                    PlayGameOverSound();
+                    continue;
+                }
             }
         }
         private void DrawLogo()
@@ -262,6 +279,35 @@ namespace LabyrinthExplorer.ConsoleUI
                 SetCursorPosition(0, heightPoint + 1);
             }
         }
-
+        private void PlayLabirythExplorerLogoSound()
+        {
+            SoundPlayer player = new SoundPlayer();
+            player.SoundLocation = @"C:\temp\labexsounds\LebirynthExplorer.wav";
+            player.Play();
+        }
+        private void PlayPickUpItemSound()
+        {
+            SoundPlayer player = new SoundPlayer();
+            player.SoundLocation = @"C:\temp\labexsounds\KeyPickUp.wav";
+            player.Play();
+        }
+        private void PlayReceiveDamageSound()
+        {
+            SoundPlayer player = new SoundPlayer();
+            player.SoundLocation = @"C:\temp\labexsounds\ReceivedDamage.wav";
+            player.Play();
+        }
+        private void PlayGameOverSound()
+        {
+            SoundPlayer player = new SoundPlayer();
+            player.SoundLocation = @"C:\temp\labexsounds\GameOver.wav";
+            player.Play();
+        }
+        private void PlayLucadaSoftwareIntroSound()
+        {
+            SoundPlayer player = new SoundPlayer();
+            player.SoundLocation = @"C:\temp\labexsounds\LucadaSoftware.wav";
+            player.Play();
+        }
     }
 }
