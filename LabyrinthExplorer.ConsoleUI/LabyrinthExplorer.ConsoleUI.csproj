@@ -15,4 +15,22 @@
     <ProjectReference Include="..\LabyrinthExplorer.Logic\LabyrinthExplorer.Logic.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Sounds\GameOver.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sounds\KeyPickUp.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sounds\LebirynthExplorer.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sounds\LucadaSoftware.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sounds\ReceivedDamage.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

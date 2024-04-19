@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LabyrinthExplorer.Logic.Models;
+using LabyrinthExplorer.Data.DTOs;
 
 namespace LabyrinthExplorer.Test
 {
@@ -21,7 +22,7 @@ namespace LabyrinthExplorer.Test
             {
                 InputAction = Logic.Models.InputAction.Down,
                 Event = Event.MenuMainNewGame,
-                DTO = new Logic.DTOs.DTO(),
+                DTO = new DTO(),
                 Logger = new Logic.Loggers.Logger()
             };
             Menu menu = new Menu("Test Menu");
@@ -42,7 +43,7 @@ namespace LabyrinthExplorer.Test
             {
                 InputAction = Logic.Models.InputAction.Down,
                 Event = Event.MenuMainNewGame,
-                DTO = new Logic.DTOs.DTO(),
+                DTO = new DTO(),
                 Logger = new Logic.Loggers.Logger()
             };
             Menu menu = new Menu("Test Menu", Event.LevelNewGame, Event.GameStep, Event.LevelRestartCurrentLevel, Event.UIQuitGame);
@@ -67,7 +68,7 @@ namespace LabyrinthExplorer.Test
             {
                 InputAction = Logic.Models.InputAction.Use,
                 Event = Event.MenuMainNewGame,
-                DTO = new Logic.DTOs.DTO(),
+                DTO = new DTO(),
                 Logger = new Logic.Loggers.Logger()
             };
             menu = new Menu("Test Menu", Event.LevelNewGame);

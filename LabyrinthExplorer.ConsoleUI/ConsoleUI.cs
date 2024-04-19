@@ -5,6 +5,7 @@ using LabyrinthExplorer.Logic.Models;
 using System.Text;
 using static System.Console;
 using static LabyrinthExplorer.Data.Helpers.Settings;
+using static LabyrinthExplorer.ConsoleUI.UISettings;
 using LabyrinthExplorer.Data.DTOs; //configuration file mock
 using System.Media;
 
@@ -282,31 +283,31 @@ namespace LabyrinthExplorer.ConsoleUI
         private void PlayLabirythExplorerLogoSound()
         {
             SoundPlayer player = new SoundPlayer();
-            player.SoundLocation = @"C:\temp\labexsounds\LebirynthExplorer.wav";
+            player.SoundLocation = PATH_SOUND_LAB_EX_LOGO;
             player.Play();
         }
         private void PlayPickUpItemSound()
         {
             SoundPlayer player = new SoundPlayer();
-            player.SoundLocation = @"C:\temp\labexsounds\KeyPickUp.wav";
+            player.SoundLocation = PATH_SOUND_ITEM_PICKUP;
             player.Play();
         }
         private void PlayReceiveDamageSound()
         {
             SoundPlayer player = new SoundPlayer();
-            player.SoundLocation = @"C:\temp\labexsounds\ReceivedDamage.wav";
+            player.SoundLocation = PATH_SOUND_RECEIVE_DAMAGE;
             player.Play();
         }
         private void PlayGameOverSound()
         {
             SoundPlayer player = new SoundPlayer();
-            player.SoundLocation = @"C:\temp\labexsounds\GameOver.wav";
+            player.SoundLocation = PATH_SOUND_GAME_OVER;
             player.Play();
         }
         private void PlayLucadaSoftwareIntroSound()
         {
             SoundPlayer player = new SoundPlayer();
-            player.SoundLocation = @"C:\temp\labexsounds\LucadaSoftware.wav";
+            player.SoundLocation = PATH_SOUND_LUCADA_LOGO;
             player.Play();
         }
     }
